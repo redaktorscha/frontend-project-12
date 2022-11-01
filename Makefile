@@ -13,8 +13,5 @@ start-frontend:
 start-backend:
 	npx start-server -s ./frontend/build
 
-deploy:
-	
-
 start:
 	make start-backend & make start-frontend

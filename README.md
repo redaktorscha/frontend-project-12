@@ -33,4 +33,4 @@ make build-frontend
 make start
 ```
 
-#### [App Link](https://frontend-project-lvl3-redaktorscha.vercel.app)
+#### [App Link deployed to Railway](https://frontend-project-12-production-c30e.up.railway.app/)
