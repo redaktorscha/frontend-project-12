@@ -9,3 +9,5 @@ build:
 
 lint:
 	npx eslint .
+
+.PHONY: build
