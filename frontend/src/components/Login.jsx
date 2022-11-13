@@ -1,18 +1,66 @@
 // ts-check
+import React, {
+  useContext, useState, useEffect, useRef,
+} from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Container, Row, Col, Card, Form, Image, Button,
 } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import isEmpty from 'lodash/isEmpty';
 import Wrapper from './Wrapper';
 import login from '../assets/login.svg';
+import AuthContext from './AuthContext';
+import getRoute from '../getRoute';
 
 const Login = () => {
-  const schema = yup.object().shape({
-    username: yup.string().required(),
-    password: yup.string().required(),
-  });
+  const [formLoginData, setFormLoginData] = useState({ username: null, password: null });
+  const [formAuthError, setFormAuthError] = useState('');
+  const [formIsValid, setFormIsValid] = useState(false);
+  const navigate = useNavigate();
+  const inputPassword = useRef();
+
+  const schema = yup
+    .object()
+    .shape({
+      username: yup
+        .string()
+        .trim()
+        .required(),
+      password: yup
+        .string()
+        .trim()
+        .required(),
+    });
+  const { setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!formIsValid) {
+      return;
+    }
+    const getAuthToken = async () => {
+      const loginRoute = getRoute('login');
+      try {
+        setFormAuthError('');
+        const response = await axios.post(loginRoute, formLoginData);
+        const { data: { token, username } } = response;
+        localStorage.setItem('user', JSON.stringify({ token, username }));
+        setUser(username);
+        navigate('/');
+      } catch (e) {
+        setUser(null);
+        setFormAuthError('wrong username or password');
+      }
+    };
+    getAuthToken();
+  }, [formIsValid, formLoginData, setUser, navigate]);
+
+  useEffect(() => {
+    inputPassword.current.classList.remove('is-valid');
+    inputPassword.current.classList.add('is-invalid');
+  }, [formAuthError]);
 
   return (
     <Wrapper>
@@ -45,7 +93,18 @@ const Login = () => {
                       touched,
                       errors,
                     }) => (
-                      <Form noValidate onSubmit={handleSubmit}>
+                      <Form
+                        noValidate
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          setFormLoginData({ ...values });
+                          setFormIsValid(isEmpty(errors));
+                          // console.log('from submit errors 1', errors);
+                          // console.log('from submit values 1', values);
+
+                          handleSubmit();
+                        }}
+                      >
                         <Form.Group
                           className="form-floating mb-4"
                           controlId="f-username"
@@ -79,10 +138,14 @@ const Login = () => {
                             onChange={handleChange}
                             isValid={touched.password && !errors.password}
                             isInvalid={!!errors.password}
+                            ref={inputPassword}
                           />
                           <Form.Label>Your password</Form.Label>
                           <Form.Control.Feedback type="invalid" tooltip>
                             {errors.password}
+                          </Form.Control.Feedback>
+                          <Form.Control.Feedback type="invalid" tooltip>
+                            {formAuthError}
                           </Form.Control.Feedback>
                         </Form.Group>
                         <Button

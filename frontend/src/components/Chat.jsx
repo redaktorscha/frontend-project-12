@@ -1,11 +1,12 @@
 // ts-check
 import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Container, Button, Col, Row, Nav, Form, InputGroup,
 } from 'react-bootstrap';
 import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
+import { isNull } from 'lodash';
 import Wrapper from './Wrapper';
 import AuthContext from './AuthContext';
 
@@ -56,14 +57,15 @@ const AddMessageForm = () => (
 const Chat = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-
   useEffect(() => {
-    if (user === null) {
+    if (isNull(user)) {
       navigate('/login');
     }
-  }, [user, navigate]);
+  }, [navigate, user]);
 
   return (
+    user
+    && (
     <Wrapper showCopyrightCredit={false}>
       <Container className="my-4 h-100 overflow-hidden rounded shadow">
         <Row className="bg-white h-100 flex-md-row">
@@ -107,6 +109,7 @@ const Chat = () => {
         </Row>
       </Container>
     </Wrapper>
+    )
   );
 };
 export default Chat;

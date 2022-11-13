@@ -2,15 +2,24 @@ import { Link } from 'react-router-dom';
 import {
   Container, Navbar, Button,
 } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import AuthContext from './AuthContext';
 
-const Header = () => (
-  <Navbar expand="lg" className="shadow-sm bg-white">
-    <Container>
-      <Link className="navbar-brand" to="/">Hexlet Chat</Link>
-      <Button variant="primary">Logout</Button>
-    </Container>
-  </Navbar>
-);
+const Header = () => {
+  const { user, setUser } = useContext(AuthContext);
+  const logOut = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+  return (
+    <Navbar expand="lg" className="shadow-sm bg-white">
+      <Container>
+        <Link className="navbar-brand" to="/">Hexlet Chat</Link>
+        <Button variant="primary" onClick={() => { logOut(); }}>{user ? 'Logout' : 'Login'}</Button>
+      </Container>
+    </Navbar>
+  );
+};
 
 const Footer = () => (
   <footer className="container-fluid fixed-bottom d-flex justify-content-center bg-light border-top border-light">
