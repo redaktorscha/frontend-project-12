@@ -58,8 +58,10 @@ const Login = () => {
   }, [formIsValid, formLoginData, setUser, navigate]);
 
   useEffect(() => {
-    inputPassword.current.classList.remove('is-valid');
-    inputPassword.current.classList.add('is-invalid');
+    if (formAuthError !== '') {
+      inputPassword.current.classList.remove('is-valid');
+      inputPassword.current.classList.add('is-invalid');
+    }
   }, [formAuthError]);
 
   return (
