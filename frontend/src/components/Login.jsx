@@ -13,7 +13,7 @@ import isEmpty from 'lodash/isEmpty';
 import Wrapper from './Wrapper';
 import login from '../assets/login.svg';
 import AuthContext from './AuthContext';
-import getRoute from '../getRoute';
+import getRoute from '../utils/getRoute';
 
 const Login = () => {
   const [formLoginData, setFormLoginData] = useState({ username: null, password: null });
@@ -45,11 +45,14 @@ const Login = () => {
       try {
         setFormAuthError('');
         const response = await axios.post(loginRoute, formLoginData);
-        const { data: { token, username } } = response;
-        localStorage.setItem('user', JSON.stringify({ token, username }));
-        setUser(username);
-        navigate('/');
+        const { data } = response;
+        if (data) {
+          localStorage.setItem('user', JSON.stringify(data));
+          setUser(data.username);
+          navigate('/');
+        }
       } catch (e) {
+        console.log('LoginErr', e);
         setUser(null);
         setFormAuthError('wrong username or password');
       }

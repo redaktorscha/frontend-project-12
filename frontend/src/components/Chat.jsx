@@ -1,14 +1,16 @@
 // ts-check
 import { useNavigate } from 'react-router-dom';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Container, Button, Col, Row, Nav, Form, InputGroup,
 } from 'react-bootstrap';
 import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
 import { isNull } from 'lodash';
+import axios from 'axios';
 import Wrapper from './Wrapper';
 import AuthContext from './AuthContext';
+import getRoute from '../utils/getRoute';
 
 const channels = ['general', 'random', 'new channel'];
 
@@ -55,13 +57,45 @@ const AddMessageForm = () => (
 );
 
 const Chat = () => {
+  // eslint-disable-next-line no-unused-vars
+  const [chatData, setChatData] = useState([]);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const initChat = async () => {
+      if (!user) {
+        return;
+      }
+
+      const dataRoute = getRoute('data');
+
+      try {
+        const { token } = JSON.parse(localStorage.getItem('user'));
+        const authRequestConfig = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const response = await axios.get(dataRoute, authRequestConfig);
+        const { data } = response;
+        if (data) {
+          console.log('data', data);
+          setChatData(response.data);
+        }
+      } catch (e) {
+        console.log('getChatDataErr', e);
+      }
+    };
+
+    initChat();
+  }, [user]);
+
   useEffect(() => {
     if (isNull(user)) {
       navigate('/login');
     }
-  }, [navigate, user]);
+  }, [user, navigate]);
 
   return (
     user
