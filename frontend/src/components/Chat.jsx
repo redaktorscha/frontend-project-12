@@ -53,10 +53,11 @@ const Channel = (props) => {
 };
 
 const ChannelsList = () => {
-  const channels = useSelector(channelSelectors.selectAll);
+  const channels = useSelector(channelSelectors.selectAll) || null;
   const currentChannelId = useSelector((state) => state.currentChannel);
 
   console.log('channels', channels);
+  console.log('currentChannelId', currentChannelId);
   return (
     <Nav
       as="ul"
@@ -64,7 +65,7 @@ const ChannelsList = () => {
       fill
       className="flex-column px-2"
     >
-      {channels.map(({ id, name, removable }) => {
+      {channels && channels.map(({ id, name, removable }) => {
         const color = id === currentChannelId ? 'secondary' : '';
 
         return (
@@ -135,15 +136,17 @@ const Message = (props) => {
   );
 };
 
-const Messages = () => {
-  const currentChannelId = useSelector((state) => state.currentChannel);
-  const messages = useSelector(messagesSelectors.selectAll);
+const Messages = ({ currentChannelId }) => {
+  const messages = useSelector(messagesSelectors.selectAll) || 0;
+  if (!messages) {
+    return null;
+  }
   const currentChannelMessages = messages.filter(({ channelId }) => channelId === currentChannelId);
 
   return (
     <Col className="w-100 h-100 d-flex flex-column">
       {
-        currentChannelMessages
+        currentChannelMessages.length > 0
           ? currentChannelMessages.map(({ body, id }) => (<Message key={id} text={body} />))
           : null
 }
@@ -152,10 +155,10 @@ const Messages = () => {
 };
 
 const Main = () => {
-  const currentChannelId = useSelector((state) => state.currentChannel);
+  const currentChannelId = useSelector((state) => state.currentChannel) || null;
   const currentChannel = useSelector((state) => channelSelectors
-    .selectById(state, currentChannelId));
-  const messagesCount = useSelector(messagesSelectors.selectTotal);
+    .selectById(state, currentChannelId)) || null;
+  const messagesCount = useSelector(messagesSelectors.selectTotal) || null;
 
   return (
     <Col className="col p-0 h-100">
@@ -165,7 +168,7 @@ const Main = () => {
             <b>
               #
               {' '}
-              {currentChannel.name}
+              {currentChannel?.name}
             </b>
           </p>
           <span className="text-muted">
@@ -176,7 +179,7 @@ const Main = () => {
         </div>
         <Container fluid className="h-100">
           <Row className="d-flex h-100 flex-column align-items-center justify-content-end">
-            <Messages />
+            <Messages currentChannelId={currentChannelId} />
             <div className="mt-auto py-2">
               <AddMessageForm />
             </div>
