@@ -93,29 +93,25 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
 
   // waitForMessage(socket, (messageFromServer) => dispatch(addMessage(messageFromServer)));
 
-  useEffect(() => {
-    if (!userMessage.length) {
-      return;
-    }
-    try {
-      // console.log('userMessage', userMessage);
-      // console.log('currentChannelId', currentChannelId);
-      // console.log('username', user);
-      setSocketConnectionError('');
-      const messageToSend = {
-        body: userMessage,
-        channelId: currentChannelId,
-        username: user,
-      };
-      console.log('messageToSend', messageToSend);
+  // useEffect(() => {
+  //   if (!userMessage.length) {
+  //     return;
+  //   }
+  //   try {
+  //     setSocketConnectionError('');
+  //     const messageToSend = {
+  //       body: userMessage,
+  //       channelId: currentChannelId,
+  //       username: user,
+  //     };
+  //     console.log('messageToSend', messageToSend);
 
-      sendMessage(socket, messageToSend);
-      // socket.emit('newMessage', messageToSend);
-    } catch (e) {
-      console.log('socketError', e);
-      setSocketConnectionError(e.message);
-    }
-  }, [currentChannelId, dispatch, user, userMessage, socket]);
+  //     sendMessage(socket, messageToSend);
+  //   } catch (e) {
+  //     console.log('socketError', e);
+  //     setSocketConnectionError(e.message);
+  //   }
+  // }, [currentChannelId, dispatch, user, userMessage, socket]);
 
   const schema = yup
     .object()
@@ -134,9 +130,28 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
       }}
       onSubmit={(values, { resetForm }) => {
         console.log('values', values);
-        setUserMessage(values.message.trim());
+        // setUserMessage(values.message.trim());
+        try {
+          setSocketConnectionError('');
+          const messageToSend = {
+            body: values.message.trim(),
+            channelId: currentChannelId,
+            username: user,
+          };
+          console.log('messageToSend', messageToSend);
+
+          sendMessage(socket, messageToSend, (response) => {
+            if (response.status === 'ok') {
+              return;
+            }
+            setSocketConnectionError('network error, try again later');
+          });
+        } catch (e) {
+          console.log('socketError', e);
+          setSocketConnectionError(e.message);
+        }
         resetForm({ values: { message: '' } });
-      }} // _noop
+      }}
     >
       {
       ({
@@ -192,9 +207,12 @@ const Sidebar = () => (
 );
 
 const Message = (props) => {
-  const { text } = props;
+  const { username, text } = props;
+  console.log('from message', username);
   return (
-    <div className="text-break">
+    <div className="text-break mb-2">
+      <b>{username}</b>
+      {': '}
       {text}
     </div>
   );
@@ -211,7 +229,8 @@ const Messages = ({ currentChannelId }) => {
     <Col className="w-100 h-100 d-flex flex-column">
       {
         currentChannelMessages.length > 0
-          ? currentChannelMessages.map(({ body, id }) => (<Message key={id} text={body} />))
+          ? currentChannelMessages
+            .map(({ username, body, id }) => (<Message key={id} text={body} username={username} />))
           : null
 }
     </Col>
@@ -260,7 +279,7 @@ const Chat = () => {
   console.log('user', user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const socket = io();
+  const socket = initSocketClient();
 
   useEffect(() => {
     receiveMessage(socket, (payload) => {
