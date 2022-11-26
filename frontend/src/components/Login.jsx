@@ -85,7 +85,7 @@ const Login = () => {
                   <h1 className="text-center mb-4">Login</h1>
                   <Formik
                     validationSchema={schema}
-                    onSubmit={() => {}}
+                    onSubmit={() => {}} // _noop
                     initialValues={{
                       username: '',
                       password: '',
@@ -100,7 +100,7 @@ const Login = () => {
                     }) => (
                       <Form
                         noValidate
-                        onSubmit={async (e) => {
+                        onSubmit={(e) => {
                           e.preventDefault();
                           setFormLoginData({ ...values });
                           setFormIsValid(isEmpty(errors));
