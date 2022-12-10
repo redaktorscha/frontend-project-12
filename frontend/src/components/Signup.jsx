@@ -48,7 +48,7 @@ const Signup = () => {
                       errors,
                     }) => (
                       <Form noValidate onSubmit={handleSubmit}>
-                        {console.log(values)}
+                        {/* {console.log(values)} */}
                         <Form.Group
                           className="form-floating mb-4"
                           controlId="f-username"

@@ -8,4 +8,4 @@ export const receiveMessage = (websocket, callback) => {
   websocket.on('newMessage', callback);
 };
 
-export default () => io();
+export default () => io(); // rename -> index.js

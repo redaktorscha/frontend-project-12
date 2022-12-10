@@ -22,20 +22,28 @@ import getRoute from '../utils/getRoute.js';
 import getAuthConfig from '../utils/getAuthConfig.js';
 import initSocketClient, { sendMessage, receiveMessage } from '../socket-client/socket';
 
+const ChannelButton = ({ color, onClick, channelName }) => (
+  <Button
+    variant={color}
+    type="button"
+    className="w-100 rounded-0 text-start text-truncate"
+    onClick={onClick}
+  >
+    {`# ${channelName}`}
+
+  </Button>
+);
+
 const Channel = (props) => {
-  const { color, channelName, hasDropDown } = props;
+  const {
+    onClick, color, channelName, hasDropDown,
+  } = props;
 
   return (
     <Nav.Item as="li" className="w-100">
       {hasDropDown ? (
         <Dropdown as={ButtonGroup}>
-          <Button
-            variant={color}
-            type="button"
-            className="w-100 rounded-0 text-start text-truncate"
-          >
-            {`# ${channelName}`}
-          </Button>
+          <ChannelButton color={color} onClick={onClick} channelName={channelName} />
           <Dropdown.Toggle split variant={color} id="dropdown-split-basic" />
           <Dropdown.Menu>
             <Dropdown.Item href="#/action-1">Delete Channel</Dropdown.Item>
@@ -44,13 +52,7 @@ const Channel = (props) => {
 
         </Dropdown>
       ) : (
-        <Button
-          variant={color}
-          type="button"
-          className="w-100 rounded-0 text-start"
-        >
-          {`# ${channelName}`}
-        </Button>
+        <ChannelButton color={color} onClick={onClick} channelName={channelName} />
       )}
     </Nav.Item>
   );
@@ -59,9 +61,11 @@ const Channel = (props) => {
 const ChannelsList = () => {
   const channels = useSelector(channelSelectors.selectAll) || null;
   const currentChannelId = useSelector((state) => state.currentChannel);
+  const dispatch = useDispatch();
+  const setChannel = (channelId) => () => dispatch(setCurrentChannel(channelId));
 
-  console.log('channels', channels);
-  console.log('currentChannelId', currentChannelId);
+  // console.log('channels', channels);
+  // console.log('currentChannelId', currentChannelId);
   return (
     <Nav
       as="ul"
@@ -74,7 +78,8 @@ const ChannelsList = () => {
 
         return (
           <Channel
-            key={uniqueId()}
+            onClick={setChannel(id)}
+            key={uniqueId()} // id
             color={color}
             channelName={name}
             hasDropDown={removable}
@@ -129,7 +134,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
         message: '',
       }}
       onSubmit={(values, { resetForm }) => {
-        console.log('values', values);
+        // console.log('values', values);
         // setUserMessage(values.message.trim());
         try {
           setSocketConnectionError('');
@@ -138,7 +143,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
             channelId: currentChannelId,
             username: user,
           };
-          console.log('messageToSend', messageToSend);
+          // console.log('messageToSend', messageToSend);
 
           sendMessage(socket, messageToSend, (response) => {
             if (response.status === 'ok') {
@@ -208,7 +213,7 @@ const Sidebar = () => (
 
 const Message = (props) => {
   const { username, text } = props;
-  console.log('from message', username);
+  // console.log('from message', username);
   return (
     <div className="text-break mb-2">
       <b>{username}</b>
@@ -276,14 +281,14 @@ const Main = (props) => {
 
 const Chat = () => {
   const { user } = useContext(AuthContext);
-  console.log('user', user);
+  // console.log('user', user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const socket = initSocketClient();
 
   useEffect(() => {
     receiveMessage(socket, (payload) => {
-      console.log('from socket with love', payload);
+      // console.log('from socket with love', payload);
       dispatch(addMessage(payload));
     });
     // socket.on('newMessage', );
@@ -308,7 +313,7 @@ const Chat = () => {
         const response = await axios.get(dataRoute, authConfig);
         const { data } = response;
         if (data) {
-          console.log('data', data);
+          // console.log('data', data);
           dispatch(setChannels(data.channels));
           dispatch(setCurrentChannel(data.currentChannelId));
           dispatch(setMessages(data.messages));
