@@ -223,31 +223,28 @@ const Message = (props) => {
   );
 };
 
-const Messages = ({ currentChannelId }) => {
-  const messages = useSelector(messagesSelectors.selectAll) || 0;
-  if (!messages) {
-    return null;
-  }
-  const currentChannelMessages = messages.filter(({ channelId }) => channelId === currentChannelId);
-
-  return (
-    <Col className="w-100 h-100 d-flex flex-column">
-      {
+const Messages = ({ currentChannelMessages }) => (
+  <Col className="w-100 h-100 d-flex flex-column">
+    {
         currentChannelMessages.length > 0
           ? currentChannelMessages
             .map(({ username, body, id }) => (<Message key={id} text={body} username={username} />))
           : null
 }
-    </Col>
-  );
-};
+  </Col>
+);
 
 const Main = (props) => {
   const { socket } = props;
   const currentChannelId = useSelector((state) => state.currentChannel) || null;
   const currentChannel = useSelector((state) => channelSelectors
     .selectById(state, currentChannelId)) || null;
-  const messagesCount = useSelector(messagesSelectors.selectTotal) || null;
+  // const messagesCount = useSelector(messagesSelectors.selectTotal) || null;
+  const messages = useSelector(messagesSelectors.selectAll) || null;
+  const currentChannelMessages = messages
+    ? messages.filter(({ channelId }) => channelId === currentChannelId)
+    : null;
+  const messagesCount = currentChannelMessages?.length ?? 0;
 
   return (
     <Col className="col p-0 h-100">
@@ -268,7 +265,7 @@ const Main = (props) => {
         </div>
         <Container fluid className="h-100">
           <Row className="d-flex h-100 flex-column align-items-center justify-content-end">
-            <Messages currentChannelId={currentChannelId} />
+            <Messages currentChannelMessages={currentChannelMessages} />
             <div className="mt-auto py-2">
               <AddMessageForm currentChannelId={currentChannelId} socket={socket} />
             </div>
