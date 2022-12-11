@@ -2,26 +2,10 @@ import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 
 const channelsAdapter = createEntityAdapter();
 
-// export const addChannel = createAsyncThunk(
-//   'channels/addChannel',
-//   async (payload) => {
-//     const response = await axios.post(getRoute(''), { name: payload });
-//     return response.data;
-//   },
-// );
-
 // export const removeChannel = createAsyncThunk(
 //   'channels/removeChannel',
 //   async (payload) => {
 //     await axios.delete(getRoute(''));
-//     return payload;
-//   },
-// );
-
-// export const updateChannel = createAsyncThunk(
-//   'channels/updateChannel',
-//   async (payload) => {
-//     await axios.patch(getRoute(''));
 //     return payload;
 //   },
 // );
@@ -31,6 +15,9 @@ const channelsSlice = createSlice({
   initialState: channelsAdapter.getInitialState(),
   reducers: {
     setChannels: channelsAdapter.addMany,
+    addChannel: channelsAdapter.addOne,
+    renameChannel: channelsAdapter.updateOne,
+    deleteChannel: channelsAdapter.removeOne,
   },
   // extraReducers: (builder) => {
   //   builder
@@ -40,6 +27,8 @@ const channelsSlice = createSlice({
   //   // .addCase(updateChannel.fulfilled, channelsAdapter.updateOne);
   // },
 });
-export const { setChannels } = channelsSlice.actions;
+export const {
+  setChannels, addChannel, renameChannel, deleteChannel,
+} = channelsSlice.actions;
 export const selectors = channelsAdapter.getSelectors((state) => state.channels);
 export default channelsSlice.reducer;

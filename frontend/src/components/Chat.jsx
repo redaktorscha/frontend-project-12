@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
 // ts-check
 import { useNavigate } from 'react-router-dom';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useContext, useEffect, useState, useRef,
+} from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -14,13 +16,15 @@ import isEmpty from 'lodash/isEmpty';
 import isNull from 'lodash/isNull';
 import { io } from 'socket.io-client';
 import Wrapper from './Wrapper';
+import AddChannelModal from './modals/AddChannelModal';
 import AuthContext from './AuthContext';
 import { setChannels, selectors as channelSelectors } from '../slices/channelsSlice.js';
 import { setCurrentChannel } from '../slices/currentChannelSlice.js';
 import { setMessages, addMessage, selectors as messagesSelectors } from '../slices/messagesSlice.js';
+import { setIsOpen, setType } from '../slices/modalSlice.js';
 import getRoute from '../utils/getRoute.js';
 import getAuthConfig from '../utils/getAuthConfig.js';
-import initSocketClient, { sendMessage, receiveMessage } from '../socket-client/socket';
+import initSocketClient, { send, receive } from '../socket-client/socket';
 
 const ChannelButton = ({ color, onClick, channelName }) => (
   <Button
@@ -46,8 +50,8 @@ const Channel = (props) => {
           <ChannelButton color={color} onClick={onClick} channelName={channelName} />
           <Dropdown.Toggle split variant={color} id="dropdown-split-basic" />
           <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1">Delete Channel</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Rename Channel</Dropdown.Item>
+            <Dropdown.Item role="button" href="#/action-1">Delete Channel</Dropdown.Item>
+            <Dropdown.Item role="button" href="#/action-2">Rename Channel</Dropdown.Item>
           </Dropdown.Menu>
 
         </Dropdown>
@@ -64,8 +68,6 @@ const ChannelsList = () => {
   const dispatch = useDispatch();
   const setChannel = (channelId) => () => dispatch(setCurrentChannel(channelId));
 
-  // console.log('channels', channels);
-  // console.log('currentChannelId', currentChannelId);
   return (
     <Nav
       as="ul"
@@ -145,7 +147,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
           };
           // console.log('messageToSend', messageToSend);
 
-          sendMessage(socket, messageToSend, (response) => {
+          send(socket, 'newMessage', messageToSend, (response) => {
             if (response.status === 'ok') {
               return;
             }
@@ -189,27 +191,61 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
   );
 };
 
-const Sidebar = () => (
-  <Col className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
-    <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-      <span>Channels</span>
-      <Button variant="outline-light" className="p-0 text-primary btn btn-group-vertical">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 16 16"
-          width="20"
-          height="20"
-          fill="currentColor"
+const Sidebar = () => {
+  const dispatch = useDispatch();
+  const [btnFocused, setBtnFocused] = useState(false);
+  const { isOpen } = useSelector((state) => state.modal);
+
+  const buttonRef = useRef(null);
+
+  const handleOpenModal = (modalType) => () => {
+    setBtnFocused(false);
+    dispatch(setIsOpen(true));
+    dispatch(setType(modalType));
+  };
+
+  useEffect(() => {
+    console.log('btnFocused', btnFocused);
+    if (btnFocused && !isOpen) {
+      console.log(' buttonRef.current', buttonRef.current);
+      buttonRef.current.focus();
+    }
+  }, [isOpen, btnFocused]);
+
+  const buttonNormalStyle = {
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+  };
+
+  const buttonFocusedStyle = {
+    boxShadow: '0 0 0 0.25rem rgb(13 110 253 / 25%)',
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+  };
+
+  return (
+    <Col className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
+      <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
+        <span>Channels</span>
+        <Button
+          variant="outline-primary"
+          style={btnFocused ? buttonFocusedStyle : buttonNormalStyle}
+          ref={buttonRef}
+          className="p-0 text-primary btn-group-vertical"
+          onClick={handleOpenModal('add')}
         >
-          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-        </svg>
-        <span className="visually-hidden">+</span>
-      </Button>
-    </div>
-    <ChannelsList />
-  </Col>
-);
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor">
+            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+          </svg>
+          <span className="visually-hidden">+</span>
+        </Button>
+      </div>
+      <ChannelsList />
+      <AddChannelModal setBtnFocused={setBtnFocused} />
+    </Col>
+  );
+};
 
 const Message = (props) => {
   const { username, text } = props;
@@ -284,7 +320,7 @@ const Chat = () => {
   const socket = initSocketClient();
 
   useEffect(() => {
-    receiveMessage(socket, (payload) => {
+    receive(socket, 'newMessage', (payload) => {
       // console.log('from socket with love', payload);
       dispatch(addMessage(payload));
     });
