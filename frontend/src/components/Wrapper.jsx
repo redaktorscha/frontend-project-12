@@ -3,7 +3,7 @@ import {
   Container, Navbar, Button,
 } from 'react-bootstrap';
 import React, { useContext } from 'react';
-import AuthContext from './AuthContext';
+import AuthContext from '../contexts/AuthContext';
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext);

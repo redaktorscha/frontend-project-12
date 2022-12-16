@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 // ts-check
-import React, { useRef, useEffect } from 'react';
+import React, {
+  useRef, useEffect, useContext, useState,
+} from 'react';
 import {
   Button, Modal as BootstrapModal, Form,
 } from 'react-bootstrap';
@@ -9,9 +11,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
+import SocketContext from '../../contexts/SocketContext';
 
 const AddChannelForm = ({ handleClose, shouldOpen }) => {
+  const [socketConnectionError, setSocketConnectionError] = useState('');
   const inputRef = useRef(null);
+  const { addChannel } = useContext(SocketContext);
 
   useEffect(() => {
     if (shouldOpen) {
@@ -39,8 +44,23 @@ const AddChannelForm = ({ handleClose, shouldOpen }) => {
       initialValues={{
         channelName: '',
       }}
-      onSubmit={(values) => {
-        console.log('values: ', values);
+      onSubmit={(values, { resetForm }) => {
+        try {
+          setSocketConnectionError('');
+          const newChannel = {
+            name: values.channelName.trim(),
+          };
+          addChannel(newChannel, (response) => {
+            if (response.status === 'ok') {
+              return;
+            }
+            setSocketConnectionError('network error, try again later');
+          });
+        } catch (e) {
+          console.log('add channel error', e);
+          setSocketConnectionError(e.message);
+        }
+        resetForm({ values: { channelName: '' } });
       }}
     >
       {

@@ -12,7 +12,7 @@ import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import Wrapper from './Wrapper';
 import login from '../assets/login.svg';
-import AuthContext from './AuthContext';
+import AuthContext from '../contexts/AuthContext';
 import getRoute from '../utils/getRoute';
 
 const Login = () => {

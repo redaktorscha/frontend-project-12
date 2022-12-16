@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isOpen: false,
   type: null,
+  targetChannel: null,
 };
 
 const modalSlice = createSlice({
@@ -16,7 +17,10 @@ const modalSlice = createSlice({
     setType(state, { payload }) {
       state.type = payload;
     },
+    setTargetChannel(state, { payload }) {
+      state.targetChannel = payload;
+    },
   },
 });
-export const { setIsOpen, setType } = modalSlice.actions;
+export const { setIsOpen, setType, setTargetChannel } = modalSlice.actions;
 export default modalSlice.reducer;
