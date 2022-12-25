@@ -104,9 +104,6 @@ const Login = () => {
                           e.preventDefault();
                           setFormLoginData({ ...values });
                           setFormIsValid(isEmpty(errors));
-                          // console.log('from submit errors 1', errors);
-                          // console.log('from submit values 1', values);
-
                           handleSubmit();
                         }}
                       >

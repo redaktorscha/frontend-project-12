@@ -289,7 +289,6 @@ const Main = () => {
 
 const Chat = () => {
   const { user } = useContext(AuthContext);
-  console.log('user from chat', user);
   const {
     receiveMessage, confirmAddChannel, confirmRemoveChannel, confirmRenameChannel,
   } = useContext(SocketContext);

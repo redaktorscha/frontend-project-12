@@ -28,8 +28,6 @@ const DeleteChannelModal = () => {
     }
     const [{ id }] = channels
       .filter(({ name, removable }) => removable && (name === targetChannel));
-    console.log('targetChannel', targetChannel);
-    console.log('id', id);
     if (targetChannel) {
       try {
         setSocketConnectionError('');
@@ -38,7 +36,6 @@ const DeleteChannelModal = () => {
         };
         console.log('channelForDeletion', channelForDeletion);
         removeChannel(channelForDeletion, (response) => {
-          console.log('response', response);
           if (response.status === 'ok') {
             return;
           }

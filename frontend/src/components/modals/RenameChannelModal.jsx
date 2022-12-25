@@ -113,9 +113,7 @@ const RenameChannelModal = () => {
           id,
           name: data.channelName.trim(),
         };
-        console.log('renamedChannel', renamedChannel);
         renameChannel(renamedChannel, (response) => {
-          console.log('response', response);
           if (response.status === 'ok') {
             return;
           }
