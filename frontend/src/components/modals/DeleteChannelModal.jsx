@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // ts-check
 import React, { useState, useContext } from 'react';
 import { Button, Modal as BootstrapModal } from 'react-bootstrap';
@@ -48,6 +47,7 @@ const DeleteChannelModal = () => {
       } catch (e) {
         console.log('delete channel error', e);
         setSocketConnectionError(e.message);
+        console.log(socketConnectionError);
       }
     }
 

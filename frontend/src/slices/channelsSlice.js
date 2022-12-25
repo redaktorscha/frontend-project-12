@@ -2,14 +2,6 @@ import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 
 const channelsAdapter = createEntityAdapter();
 
-// export const removeChannel = createAsyncThunk(
-//   'channels/removeChannel',
-//   async (payload) => {
-//     await axios.delete(getRoute(''));
-//     return payload;
-//   },
-// );
-
 const channelsSlice = createSlice({
   name: 'channels',
   initialState: channelsAdapter.getInitialState(),
@@ -19,13 +11,6 @@ const channelsSlice = createSlice({
     updateChannel: channelsAdapter.updateOne,
     deleteChannel: channelsAdapter.removeOne,
   },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(getChannels.fulfilled, channelsAdapter.addMany);
-  //   // .addCase(addChannel.fulfilled, channelsAdapter.addOne)
-  //   // .addCase(removeChannel.fulfilled, channelsAdapter.removeOne)
-  //   // .addCase(updateChannel.fulfilled, channelsAdapter.updateOne);
-  // },
 });
 export const {
   setChannels, addChannel, updateChannel, deleteChannel,

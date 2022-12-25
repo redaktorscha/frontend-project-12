@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // ts-check
 import React, {
   useRef, useEffect, useContext, useState,
@@ -59,6 +58,7 @@ const AddChannelForm = ({ handleClose, shouldOpen }) => {
         } catch (e) {
           console.log('add channel error', e);
           setSocketConnectionError(e.message);
+          console.log(socketConnectionError);
         }
         resetForm({ values: { channelName: '' } });
       }}

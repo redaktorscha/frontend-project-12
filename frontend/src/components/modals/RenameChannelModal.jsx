@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // ts-check
 import React, {
   useState, useContext, useRef, useEffect,
@@ -12,7 +11,6 @@ import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js
 import SocketContext from '../../contexts/SocketContext';
 
 const RenameChannelForm = ({ shouldOpen, handleClose, handleRename }) => {
-  const [socketConnectionError, setSocketConnectionError] = useState('');
   const inputRef = useRef(null);
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
@@ -126,6 +124,7 @@ const RenameChannelModal = () => {
       } catch (e) {
         console.log('rename channel error', e);
         setSocketConnectionError(e.message);
+        console.log(socketConnectionError);
       }
     }
     handleClose();

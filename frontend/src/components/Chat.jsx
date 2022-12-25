@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 // ts-check
 import { useNavigate } from 'react-router-dom';
 import React, {
@@ -15,9 +14,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import isNull from 'lodash/isNull';
 import Wrapper from './Wrapper';
-import AddChannelModal from './modals/AddChannelModal';
-import DeleteChannelModal from './modals/DeleteChannelModal';
-import RenameChannelModal from './modals/RenameChannelModal';
+import { AddChannelModal, DeleteChannelModal, RenameChannelModal } from './modals';
 import AuthContext from '../contexts/AuthContext';
 import SocketContext from '../contexts/SocketContext';
 import {
@@ -96,34 +93,10 @@ const ChannelsList = ({ handleOpenModal }) => {
   );
 };
 
-const AddMessageForm = ({ currentChannelId, socket }) => {
-  const [userMessage, setUserMessage] = useState('');
+const AddMessageForm = ({ currentChannelId }) => {
   const [socketConnectionError, setSocketConnectionError] = useState('');
   const { user } = useContext(AuthContext);
   const { sendMessage } = useContext(SocketContext);
-  const dispatch = useDispatch();
-
-  // waitForMessage(socket, (messageFromServer) => dispatch(addMessage(messageFromServer)));
-
-  // useEffect(() => {
-  //   if (!userMessage.length) {
-  //     return;
-  //   }
-  //   try {
-  //     setSocketConnectionError('');
-  //     const messageToSend = {
-  //       body: userMessage,
-  //       channelId: currentChannelId,
-  //       username: user,
-  //     };
-  //     console.log('messageToSend', messageToSend);
-
-  //     sendMessage(socket, messageToSend);
-  //   } catch (e) {
-  //     console.log('socketError', e);
-  //     setSocketConnectionError(e.message);
-  //   }
-  // }, [currentChannelId, dispatch, user, userMessage, socket]);
 
   const addMessageSchema = yup
     .object()
@@ -141,8 +114,6 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
         message: '',
       }}
       onSubmit={(values, { resetForm }) => {
-        // console.log('values', values);
-        // setUserMessage(values.message.trim());
         try {
           setSocketConnectionError('');
           const messageToSend = {
@@ -150,7 +121,6 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
             channelId: currentChannelId,
             username: user,
           };
-          // console.log('messageToSend', messageToSend);
 
           sendMessage(messageToSend, (response) => {
             if (response.status === 'ok') {
@@ -161,6 +131,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
         } catch (e) {
           console.log('socketError', e);
           setSocketConnectionError(e.message);
+          console.log(socketConnectionError);
         }
         resetForm({ values: { message: '' } });
       }}
@@ -176,7 +147,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
         >
           <InputGroup className="d-flex align-items-center">
             <Form.Control
-              className="border-0 p-1"
+              className="border-0 py-1 px-2"
               placeholder="Enter your message..."
               type="text"
               name="message"
@@ -258,7 +229,6 @@ const Sidebar = () => {
 
 const Message = (props) => {
   const { username, text } = props;
-  // console.log('from message', username);
   return (
     <div className="text-break mb-2">
       <b>{username}</b>
@@ -269,25 +239,20 @@ const Message = (props) => {
 };
 
 const Messages = ({ currentChannelMessages }) => (
-  <Col className="w-100 overflow-auto h-20  border border-primary">
-    <div>
-      {
+  <div className="d-flex flex-column w-100 overflow-auto border border-primary px-5">
+    {
         currentChannelMessages.length > 0
           ? currentChannelMessages
             .map(({ username, body, id }) => (<Message key={id} text={body} username={username} />))
           : null
 }
-    </div>
-
-  </Col>
+  </div>
 );
 
-const Main = (props) => {
-  const { socket } = props;
+const Main = () => {
   const currentChannelId = useSelector((state) => state.currentChannel) || null;
   const currentChannel = useSelector((state) => channelSelectors
     .selectById(state, currentChannelId)) || null;
-  // const messagesCount = useSelector(messagesSelectors.selectTotal) || null;
   const messages = useSelector(messagesSelectors.selectAll) || null;
   const currentChannelMessages = messages
     ? messages.filter(({ channelId }) => channelId === currentChannelId)
@@ -311,14 +276,12 @@ const Main = (props) => {
             messages
           </span>
         </div>
-        <Container fluid className="h-100">
-          <Row className="d-flex h-100 flex-column align-items-center justify-content-end px-5">
-            <Messages currentChannelMessages={currentChannelMessages} />
-            <div className="py-2">
-              <AddMessageForm currentChannelId={currentChannelId} socket={socket} />
-            </div>
-          </Row>
-        </Container>
+        <Messages currentChannelMessages={currentChannelMessages} />
+        <div className="py-3 mt-auto">
+          <Container fluid>
+            <AddMessageForm currentChannelId={currentChannelId} />
+          </Container>
+        </div>
       </div>
     </Col>
   );
@@ -382,7 +345,6 @@ const Chat = () => {
         const response = await axios.get(dataRoute, authConfig);
         const { data } = response;
         if (data) {
-          // console.log('data', data);
           dispatch(setChannels(data.channels));
           dispatch(setCurrentChannel(data.currentChannelId));
           dispatch(setMessages(data.messages));
