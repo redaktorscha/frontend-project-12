@@ -26,7 +26,7 @@ const AddChannelForm = ({ handleClose, shouldOpen }) => {
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 
-  const schema = yup
+  const addChannelSchema = yup
     .object()
     .shape({
       channelName: yup
@@ -40,7 +40,7 @@ const AddChannelForm = ({ handleClose, shouldOpen }) => {
 
   return (
     <Formik
-      validationSchema={schema}
+      validationSchema={addChannelSchema}
       initialValues={{
         channelName: '',
       }}

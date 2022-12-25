@@ -39,8 +39,8 @@ const addChannel = send(socket, 'newChannel');
 const confirmAddChannel = receive(socket, 'newChannel');
 const renameChannel = send(socket, 'renameChannel');
 const confirmRenameChannel = receive(socket, 'renameChannel');
-const deleteChannel = send(socket, 'removeChannel');
-const confirmDeleteChannel = receive(socket, 'removeChannel');
+const removeChannel = send(socket, 'removeChannel');
+const confirmRemoveChannel = receive(socket, 'removeChannel');
 
 export default {
   sendMessage,
@@ -49,6 +49,6 @@ export default {
   confirmAddChannel,
   renameChannel,
   confirmRenameChannel,
-  deleteChannel,
-  confirmDeleteChannel,
+  removeChannel,
+  confirmRemoveChannel,
 };

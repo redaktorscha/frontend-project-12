@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 // ts-check
 import { useNavigate } from 'react-router-dom';
@@ -12,19 +13,21 @@ import {
 import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import isEmpty from 'lodash/isEmpty';
 import isNull from 'lodash/isNull';
-import { io } from 'socket.io-client';
 import Wrapper from './Wrapper';
 import AddChannelModal from './modals/AddChannelModal';
-import AuthContext from './AuthContext';
-import { setChannels, selectors as channelSelectors } from '../slices/channelsSlice.js';
+import DeleteChannelModal from './modals/DeleteChannelModal';
+import RenameChannelModal from './modals/RenameChannelModal';
+import AuthContext from '../contexts/AuthContext';
+import SocketContext from '../contexts/SocketContext';
+import {
+  setChannels, addChannel, updateChannel, deleteChannel, selectors as channelSelectors,
+} from '../slices/channelsSlice.js';
 import { setCurrentChannel } from '../slices/currentChannelSlice.js';
 import { setMessages, addMessage, selectors as messagesSelectors } from '../slices/messagesSlice.js';
-import { setIsOpen, setType } from '../slices/modalSlice.js';
+import { setIsOpen, setType, setTargetChannel } from '../slices/modalSlice.js';
 import getRoute from '../utils/getRoute.js';
 import getAuthConfig from '../utils/getAuthConfig.js';
-import initSocketClient, { send, receive } from '../socket-client/socket';
 
 const ChannelButton = ({ color, onClick, channelName }) => (
   <Button
@@ -40,18 +43,18 @@ const ChannelButton = ({ color, onClick, channelName }) => (
 
 const Channel = (props) => {
   const {
-    onClick, color, channelName, hasDropDown,
+    onClick, color, channelName, hasDropDown, handleOpenModal,
   } = props;
 
   return (
     <Nav.Item as="li" className="w-100">
       {hasDropDown ? (
-        <Dropdown as={ButtonGroup}>
+        <Dropdown as={ButtonGroup} className="w-100">
           <ChannelButton color={color} onClick={onClick} channelName={channelName} />
           <Dropdown.Toggle split variant={color} id="dropdown-split-basic" />
           <Dropdown.Menu>
-            <Dropdown.Item role="button" href="#/action-1">Delete Channel</Dropdown.Item>
-            <Dropdown.Item role="button" href="#/action-2">Rename Channel</Dropdown.Item>
+            <Dropdown.Item role="button" href="#/action-1" onClick={handleOpenModal('delete', channelName)}>Delete</Dropdown.Item>
+            <Dropdown.Item role="button" href="#/action-2" onClick={handleOpenModal('rename', channelName)}>Rename</Dropdown.Item>
           </Dropdown.Menu>
 
         </Dropdown>
@@ -62,7 +65,7 @@ const Channel = (props) => {
   );
 };
 
-const ChannelsList = () => {
+const ChannelsList = ({ handleOpenModal }) => {
   const channels = useSelector(channelSelectors.selectAll) || null;
   const currentChannelId = useSelector((state) => state.currentChannel);
   const dispatch = useDispatch();
@@ -73,13 +76,14 @@ const ChannelsList = () => {
       as="ul"
       variant="pills"
       fill
-      className="flex-column px-2"
+      className="px-2 overflow-auto nav-stacked py-4 "
     >
       {channels && channels.map(({ id, name, removable }) => {
         const color = id === currentChannelId ? 'secondary' : '';
 
         return (
           <Channel
+            handleOpenModal={handleOpenModal}
             onClick={setChannel(id)}
             key={uniqueId()} // id
             color={color}
@@ -96,6 +100,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
   const [userMessage, setUserMessage] = useState('');
   const [socketConnectionError, setSocketConnectionError] = useState('');
   const { user } = useContext(AuthContext);
+  const { sendMessage } = useContext(SocketContext);
   const dispatch = useDispatch();
 
   // waitForMessage(socket, (messageFromServer) => dispatch(addMessage(messageFromServer)));
@@ -120,7 +125,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
   //   }
   // }, [currentChannelId, dispatch, user, userMessage, socket]);
 
-  const schema = yup
+  const addMessageSchema = yup
     .object()
     .shape({
       message: yup
@@ -131,7 +136,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
 
   return (
     <Formik
-      validationSchema={schema}
+      validationSchema={addMessageSchema}
       initialValues={{
         message: '',
       }}
@@ -147,7 +152,7 @@ const AddMessageForm = ({ currentChannelId, socket }) => {
           };
           // console.log('messageToSend', messageToSend);
 
-          send(socket, 'newMessage', messageToSend, (response) => {
+          sendMessage(messageToSend, (response) => {
             if (response.status === 'ok') {
               return;
             }
@@ -198,17 +203,19 @@ const Sidebar = () => {
 
   const buttonRef = useRef(null);
 
-  const handleOpenModal = (modalType) => () => {
-    setBtnFocused(false);
+  const handleOpenModal = (modalType, channel = null) => () => {
     dispatch(setIsOpen(true));
     dispatch(setType(modalType));
+    if (channel !== null) {
+      dispatch(setTargetChannel(channel));
+    }
   };
 
   useEffect(() => {
-    console.log('btnFocused', btnFocused);
     if (btnFocused && !isOpen) {
-      console.log(' buttonRef.current', buttonRef.current);
       buttonRef.current.focus();
+    } else {
+      setBtnFocused(false);
     }
   }, [isOpen, btnFocused]);
 
@@ -224,7 +231,7 @@ const Sidebar = () => {
   };
 
   return (
-    <Col className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
+    <Col className="col-4 col-md-2 border-end pt-5 px-0 bg-light h-100">
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
         <span>Channels</span>
         <Button
@@ -241,8 +248,10 @@ const Sidebar = () => {
           <span className="visually-hidden">+</span>
         </Button>
       </div>
-      <ChannelsList />
+      <ChannelsList handleOpenModal={handleOpenModal} />
       <AddChannelModal setBtnFocused={setBtnFocused} />
+      <DeleteChannelModal />
+      <RenameChannelModal />
     </Col>
   );
 };
@@ -260,13 +269,16 @@ const Message = (props) => {
 };
 
 const Messages = ({ currentChannelMessages }) => (
-  <Col className="w-100 h-100 d-flex flex-column">
-    {
+  <Col className="w-100 overflow-auto h-20  border border-primary">
+    <div>
+      {
         currentChannelMessages.length > 0
           ? currentChannelMessages
             .map(({ username, body, id }) => (<Message key={id} text={body} username={username} />))
           : null
 }
+    </div>
+
   </Col>
 );
 
@@ -296,13 +308,13 @@ const Main = (props) => {
           <span className="text-muted">
             {messagesCount}
             {' '}
-            сообщений
+            messages
           </span>
         </div>
         <Container fluid className="h-100">
-          <Row className="d-flex h-100 flex-column align-items-center justify-content-end">
+          <Row className="d-flex h-100 flex-column align-items-center justify-content-end px-5">
             <Messages currentChannelMessages={currentChannelMessages} />
-            <div className="mt-auto py-2">
+            <div className="py-2">
               <AddMessageForm currentChannelId={currentChannelId} socket={socket} />
             </div>
           </Row>
@@ -314,18 +326,41 @@ const Main = (props) => {
 
 const Chat = () => {
   const { user } = useContext(AuthContext);
-  // console.log('user', user);
+  console.log('user from chat', user);
+  const {
+    receiveMessage, confirmAddChannel, confirmRemoveChannel, confirmRenameChannel,
+  } = useContext(SocketContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const socket = initSocketClient();
 
   useEffect(() => {
-    receive(socket, 'newMessage', (payload) => {
-      // console.log('from socket with love', payload);
+    receiveMessage((payload) => {
       dispatch(addMessage(payload));
     });
-    // socket.on('newMessage', );
-  }, [socket, dispatch]);
+  }, []);
+
+  useEffect(() => {
+    confirmAddChannel((payload) => {
+      const { id } = payload;
+      dispatch(addChannel(payload));
+      dispatch(setCurrentChannel(id));
+    });
+  }, []);
+
+  useEffect(() => {
+    confirmRemoveChannel((payload) => {
+      const { id } = payload;
+      dispatch(deleteChannel(id));
+      dispatch(setCurrentChannel(1)); // ?
+    });
+  }, []);
+
+  useEffect(() => {
+    confirmRenameChannel((payload) => {
+      const { id, name } = payload;
+      dispatch(updateChannel({ id, changes: { name } }));
+    });
+  }, []);
 
   useEffect(() => {
     if (isNull(user)) {
@@ -336,6 +371,7 @@ const Chat = () => {
   useEffect(() => {
     const initChat = async () => {
       if (!user) {
+        console.error('user undefined');
         return;
       }
 
@@ -366,7 +402,7 @@ const Chat = () => {
       <Container className="my-4 h-100 overflow-hidden rounded shadow">
         <Row className="bg-white h-100 flex-md-row">
           <Sidebar />
-          <Main socket={socket} />
+          <Main />
         </Row>
       </Container>
     </Wrapper>

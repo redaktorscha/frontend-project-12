@@ -5,22 +5,22 @@ import { Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setMessages, selectors as messagesSelectors } from '../../slices/messagesSlice.js';
-import { setIsOpen, setType } from '../../slices/modalSlice.js';
+import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
 import SocketContext from '../../contexts/SocketContext';
 
 const DeleteChannelModal = () => {
+  const { removeChannel } = useContext(SocketContext);
   const [socketConnectionError, setSocketConnectionError] = useState('');
   const dispatch = useDispatch();
-  const { deleteChannel } = useContext(SocketContext);
 
   const { targetChannel } = useSelector((state) => state.modal);
   const channels = useSelector(channelSelectors.selectAll) || null;
-  console.log('channels', channels);
   const messages = useSelector(messagesSelectors.selectAll) || null; // add extra reducer
 
   const handleClose = () => {
     dispatch(setIsOpen(false));
     dispatch(setType(null));
+    dispatch(setTargetChannel(null));
   };
 
   const handleDelete = () => {
@@ -37,7 +37,9 @@ const DeleteChannelModal = () => {
         const channelForDeletion = {
           id,
         };
-        deleteChannel(channelForDeletion, (response) => {
+        console.log('channelForDeletion', channelForDeletion);
+        removeChannel(channelForDeletion, (response) => {
+          console.log('response', response);
           if (response.status === 'ok') {
             return;
           }
@@ -48,6 +50,7 @@ const DeleteChannelModal = () => {
         setSocketConnectionError(e.message);
       }
     }
+
     if (messages) {
       const filteredMessages = messages.filter(({ channelId }) => channelId !== id);
       dispatch(setMessages(filteredMessages));
