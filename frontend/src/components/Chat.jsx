@@ -239,7 +239,7 @@ const Message = (props) => {
 };
 
 const Messages = ({ currentChannelMessages }) => (
-  <div className="d-flex flex-column w-100 overflow-auto border border-primary px-5">
+  <div className="d-flex flex-column w-100 overflow-auto px-5">
     {
         currentChannelMessages.length > 0
           ? currentChannelMessages
@@ -313,7 +313,7 @@ const Chat = () => {
     confirmRemoveChannel((payload) => {
       const { id } = payload;
       dispatch(deleteChannel(id));
-      dispatch(setCurrentChannel(1)); // ?
+      dispatch(setCurrentChannel(1));
     });
   }, []);
 

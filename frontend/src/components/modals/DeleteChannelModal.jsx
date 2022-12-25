@@ -3,7 +3,6 @@ import React, { useState, useContext } from 'react';
 import { Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
-import { setMessages, selectors as messagesSelectors } from '../../slices/messagesSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
 import SocketContext from '../../contexts/SocketContext';
 
@@ -14,7 +13,6 @@ const DeleteChannelModal = () => {
 
   const { targetChannel } = useSelector((state) => state.modal);
   const channels = useSelector(channelSelectors.selectAll) || null;
-  const messages = useSelector(messagesSelectors.selectAll) || null; // add extra reducer
 
   const handleClose = () => {
     dispatch(setIsOpen(false));
@@ -46,11 +44,6 @@ const DeleteChannelModal = () => {
         setSocketConnectionError(e.message);
         console.log(socketConnectionError);
       }
-    }
-
-    if (messages) {
-      const filteredMessages = messages.filter(({ channelId }) => channelId !== id);
-      dispatch(setMessages(filteredMessages));
     }
 
     handleClose();
