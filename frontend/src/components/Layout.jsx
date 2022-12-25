@@ -34,7 +34,9 @@ const Layout = () => {
   return (
     <div className="vh-100 vw-100 d-flex flex-column bg-light">
       <Header logOut={logOut} user={user} hasBtn={hasBtn} />
-      <Outlet />
+      <div className="d-flex h-100 align-items-center py-4">
+        <Outlet />
+      </div>
       {hasFooter && <Footer />}
     </div>
   );

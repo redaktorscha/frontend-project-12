@@ -1,12 +1,30 @@
+/* eslint-disable no-unused-vars */
 // ts-check
+import React, {
+  useEffect, useState, useContext, useRef,
+} from 'react';
 import {
   Container, Row, Col, Card, Form, Image, Button,
 } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import isEmpty from 'lodash/isEmpty';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import axios from 'axios';
 import signup from '../assets/signup.svg';
+import AuthContext from '../contexts/AuthContext';
+import getRoute from '../utils/getRoute';
 
 const Signup = () => {
+  const [formIsValid, setFormIsValid] = useState(false);
+  const [formSignupError, setFormSignupError] = useState('');
+  const [formSignupData, setFormSignupData] = useState({ username: null, password: null });
+  const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
+  const inputUsername = useRef(null);
+  const inputPassword = useRef(null);
+  const inputConfirmPassword = useRef(null);
+
   const signupSchema = yup
     .object()
     .shape({
@@ -28,9 +46,48 @@ const Signup = () => {
         .oneOf([yup.ref('password'), null], 'Passwords must match'),
     });
 
+  useEffect(() => {
+    if (!formIsValid) {
+      return;
+    }
+    const registerUser = async () => {
+      const signupRoute = getRoute('signup');
+      try {
+        setFormSignupError('');
+        const response = await axios.post(signupRoute, formSignupData);
+        const { data } = response;
+        console.log('signup data', data);
+        if (data) {
+          localStorage.setItem('user', JSON.stringify(data));
+          setUser(data.username);
+          navigate('/');
+        }
+      } catch (e) {
+        console.log('SignUpErr', e);
+        if (e.response.status === 409) {
+          setFormSignupError('User already exist');
+        } else {
+          setFormSignupError('unknown error');
+        }
+        setUser(null);
+      }
+    };
+
+    registerUser();
+  }, [formIsValid, formSignupData, navigate, setUser]);
+
+  useEffect(() => {
+    if (formSignupError !== '') {
+      [inputUsername, inputPassword, inputConfirmPassword].forEach((ref) => {
+        ref.current.classList.remove('is-valid');
+        ref.current.classList.add('is-invalid');
+      });
+    }
+  }, [formSignupError]);
+
   return (
     <Container fluid>
-      <Row className="justify-content-center align-items-center min-vh-100">
+      <Row className="justify-content-center align-items-center">
         <Col className="col-12 col-md-8 col-xxl-6">
           <Card className="shadow-sm">
             <Card.Body as={Row} className="p-5">
@@ -46,7 +103,7 @@ const Signup = () => {
                 <h1 className="text-center mb-4">Signup</h1>
                 <Formik
                   validationSchema={signupSchema}
-                  onSubmit={() => { console.log('submit'); }}
+                  onSubmit={() => { console.log('signup submit'); }}
                   initialValues={{
                     username: '',
                     password: '',
@@ -60,7 +117,16 @@ const Signup = () => {
                     touched,
                     errors,
                   }) => (
-                    <Form noValidate onSubmit={handleSubmit}>
+                    <Form
+                      noValidate
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const { username, password } = values;
+                        setFormSignupData({ username, password });
+                        setFormIsValid(isEmpty(errors));
+                        handleSubmit();
+                      }}
+                    >
                       <Form.Group
                         className="form-floating mb-4"
                         controlId="f-username"
@@ -69,11 +135,13 @@ const Signup = () => {
                           type="text"
                           name="username"
                           autoComplete="off"
+                          required
                           placeholder="Username"
                           value={values.username}
                           onChange={handleChange}
                           isValid={touched.username && !errors.username}
                           isInvalid={!!errors.username}
+                          ref={inputUsername}
                         />
                         <Form.Label>Username</Form.Label>
                         <Form.Control.Feedback type="invalid" tooltip>
@@ -94,6 +162,7 @@ const Signup = () => {
                           onChange={handleChange}
                           isValid={touched.password && !errors.password}
                           isInvalid={!!errors.password}
+                          ref={inputPassword}
                         />
                         <Form.Label>Password</Form.Label>
                         <Form.Control.Feedback type="invalid" tooltip>
@@ -114,10 +183,14 @@ const Signup = () => {
                           onChange={handleChange}
                           isValid={touched.confirmPassword && !errors.confirmPassword}
                           isInvalid={!!errors.confirmPassword}
+                          ref={inputConfirmPassword}
                         />
                         <Form.Label>Confirm password</Form.Label>
                         <Form.Control.Feedback type="invalid" tooltip>
                           {errors.confirmPassword}
+                        </Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid" tooltip>
+                          {formSignupError}
                         </Form.Control.Feedback>
                       </Form.Group>
                       <Button

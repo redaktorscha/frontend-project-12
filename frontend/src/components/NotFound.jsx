@@ -6,7 +6,7 @@ import notfound from '../assets/404.svg';
 
 const NotFound = () => (
   <Container fluid>
-    <Row className="min-vh-100 d-flex justify-content-center">
+    <Row className="d-flex justify-content-center">
       <Col className="col-sm-8 col-md-6 col-lg-4 d-flex flex-column align-items-center">
         <Image
           fluid

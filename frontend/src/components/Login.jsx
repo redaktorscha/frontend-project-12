@@ -19,7 +19,9 @@ const Login = () => {
   const [formAuthError, setFormAuthError] = useState('');
   const [formIsValid, setFormIsValid] = useState(false);
   const navigate = useNavigate();
-  const inputPassword = useRef();
+  const inputUsername = useRef(null);
+  const inputPassword = useRef(null);
+  const usernameTooltip = useRef(null);
 
   const loginSchema = yup
     .object()
@@ -52,8 +54,12 @@ const Login = () => {
         }
       } catch (e) {
         console.log('LoginErr', e);
+        if (e.response.status === 401) {
+          setFormAuthError('wrong username or password');
+        } else {
+          setFormAuthError('unknown error');
+        }
         setUser(null);
-        setFormAuthError('wrong username or password');
       }
     };
     getAuthToken();
@@ -61,14 +67,17 @@ const Login = () => {
 
   useEffect(() => {
     if (formAuthError !== '') {
-      inputPassword.current.classList.remove('is-valid');
-      inputPassword.current.classList.add('is-invalid');
+      [inputUsername, inputPassword].forEach((ref) => {
+        ref.current.classList.remove('is-valid');
+        ref.current.classList.add('is-invalid');
+      });
+      // usernameTooltip.current.style.display = 'none';
     }
   }, [formAuthError]);
 
   return (
     <Container fluid>
-      <Row className="justify-content-center align-items-center min-vh-100">
+      <Row className="justify-content-center align-items-center">
         <Col className="col-12 col-md-8 col-xxl-6">
           <Card className="shadow-sm">
             <Card.Body as={Row} className="p-5">
@@ -83,7 +92,7 @@ const Login = () => {
                 <h1 className="text-center mb-4">Login</h1>
                 <Formik
                   validationSchema={loginSchema}
-                  onSubmit={() => {}} // _noop
+                  onSubmit={() => { console.log('login submit'); }} // _noop
                   initialValues={{
                     username: '',
                     password: '',
@@ -113,14 +122,16 @@ const Login = () => {
                           type="text"
                           name="username"
                           autoComplete="off"
+                          required
                           placeholder="Your nick"
                           value={values.username}
                           onChange={handleChange}
                           isValid={touched.username && !errors.username}
                           isInvalid={!!errors.username}
+                          ref={inputUsername}
                         />
                         <Form.Label>Your nick</Form.Label>
-                        <Form.Control.Feedback type="invalid" tooltip>
+                        <Form.Control.Feedback type="invalid" tooltip ref={usernameTooltip}>
                           {errors.username}
                         </Form.Control.Feedback>
                       </Form.Group>

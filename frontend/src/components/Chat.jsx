@@ -358,7 +358,7 @@ const Chat = () => {
   return (
     user
     && (
-      <Container className="my-4 h-100 overflow-hidden rounded shadow">
+      <Container className="h-100 overflow-hidden rounded shadow">
         <Row className="bg-white h-100 flex-md-row">
           <Sidebar />
           <Main />
