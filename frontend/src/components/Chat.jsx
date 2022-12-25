@@ -13,7 +13,6 @@ import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import isNull from 'lodash/isNull';
-import Wrapper from './Wrapper';
 import { AddChannelModal, DeleteChannelModal, RenameChannelModal } from './modals';
 import AuthContext from '../contexts/AuthContext';
 import SocketContext from '../contexts/SocketContext';
@@ -359,14 +358,12 @@ const Chat = () => {
   return (
     user
     && (
-    <Wrapper showCopyrightCredit={false}>
       <Container className="my-4 h-100 overflow-hidden rounded shadow">
         <Row className="bg-white h-100 flex-md-row">
           <Sidebar />
           <Main />
         </Row>
       </Container>
-    </Wrapper>
     )
   );
 };
