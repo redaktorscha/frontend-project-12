@@ -8,7 +8,7 @@ import AuthContext from '../contexts/AuthContext';
 const rootRoute = '/';
 
 const Header = ({ logOut, user, hasBtn }) => (
-  <Navbar expand="lg" className="shadow-sm bg-white">
+  <Navbar expand="lg" className="shadow-sm bg-white mb-2">
     <Container>
       <Link className="navbar-brand" to="/">Hexlet Chat</Link>
       { hasBtn && <Button variant="primary" onClick={() => { logOut(); }}>{user ? 'Logout' : 'Login'}</Button>}
@@ -17,7 +17,7 @@ const Header = ({ logOut, user, hasBtn }) => (
 );
 
 const Footer = () => (
-  <footer className="container-fluid fixed-bottom d-flex justify-content-center bg-light border-top border-light">
+  <footer className="container-fluid mt-auto d-flex justify-content-center bg-light border-top border-light">
     <a href="https://storyset.com/online" target="_blank" className="py-3 link-dark text-muted" rel="noreferrer">Online illustrations by Storyset</a>
   </footer>
 );
@@ -34,7 +34,7 @@ const Layout = () => {
   return (
     <div className="vh-100 vw-100 d-flex flex-column bg-light">
       <Header logOut={logOut} user={user} hasBtn={hasBtn} />
-      <div className="d-flex h-100 align-items-center py-4">
+      <div className={`${hasFooter ? '' : 'h-100'} d-flex my-auto`}>
         <Outlet />
       </div>
       {hasFooter && <Footer />}
