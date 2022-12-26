@@ -7,11 +7,11 @@ import AuthContext from '../contexts/AuthContext';
 
 const rootRoute = '/';
 
-const Header = ({ logOut, user, hasBtn }) => (
+const Header = ({ logOut, hasBtn }) => (
   <Navbar expand="lg" className="shadow-sm bg-white mb-2">
     <Container>
       <Link className="navbar-brand" to="/">Hexlet Chat</Link>
-      { hasBtn && <Button variant="primary" onClick={() => { logOut(); }}>{user ? 'Logout' : 'Login'}</Button>}
+      { hasBtn && <Button variant="primary" onClick={() => { logOut(); }}>Logout</Button>}
     </Container>
   </Navbar>
 );
@@ -23,7 +23,7 @@ const Footer = () => (
 );
 
 const Layout = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
   const logOut = () => {
     setUser(null);
     localStorage.removeItem('user');
@@ -33,7 +33,7 @@ const Layout = () => {
   const hasBtn = pathname === rootRoute;
   return (
     <div className="vh-100 vw-100 d-flex flex-column bg-light">
-      <Header logOut={logOut} user={user} hasBtn={hasBtn} />
+      <Header logOut={logOut} hasBtn={hasBtn} />
       <div className={`${hasFooter ? '' : 'h-100'} d-flex my-auto`}>
         <Outlet />
       </div>

@@ -24,7 +24,6 @@ const App = () => (
       </BrowserRouter>
     </SocketProvider>
   </AuthProvider>
-
 );
 
 export default App;
