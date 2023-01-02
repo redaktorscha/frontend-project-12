@@ -321,6 +321,7 @@ const Chat = () => {
 
   useEffect(() => {
     const initChat = async () => {
+      console.log('user', user);
       if (!user) {
         navigate('/login');
         return;
@@ -339,6 +340,7 @@ const Chat = () => {
         }
       } catch (e) {
         console.log('getChatDataErr', e);
+        navigate('/login');
       }
     };
 

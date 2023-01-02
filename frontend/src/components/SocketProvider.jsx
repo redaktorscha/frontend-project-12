@@ -1,8 +1,7 @@
 import SocketContext from '../contexts/SocketContext';
-import socketFunctions from '../socket-client';
 
-const SocketProvider = ({ children }) => (
-  <SocketContext.Provider value={socketFunctions}>
+const SocketProvider = ({ functions, children }) => (
+  <SocketContext.Provider value={functions}>
     {children}
   </SocketContext.Provider>
 );
