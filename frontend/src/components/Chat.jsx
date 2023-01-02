@@ -12,7 +12,7 @@ import {
 import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import isNull from 'lodash/isNull';
+
 import { AddChannelModal, DeleteChannelModal, RenameChannelModal } from './modals';
 import AuthContext from '../contexts/AuthContext';
 import SocketContext from '../contexts/SocketContext';
@@ -238,7 +238,7 @@ const Message = (props) => {
 };
 
 const Messages = ({ currentChannelMessages }) => (
-  <div className="d-flex flex-column w-100 overflow-auto px-5">
+  <div className="d-flex flex-column w-100 overflow-auto px-5 flex-grow-1">
     {
         currentChannelMessages.length > 0
           ? currentChannelMessages
@@ -259,28 +259,24 @@ const Main = () => {
   const messagesCount = currentChannelMessages?.length ?? 0;
 
   return (
-    <Col className="col p-0 h-100">
-      <div className="d-flex flex-column h-100">
-        <div className="bg-light mb-4 p-3 shadow-sm small">
-          <p className="m-0">
-            <b>
-              #
-              {' '}
-              {currentChannel?.name}
-            </b>
-          </p>
-          <span className="text-muted">
-            {messagesCount}
+    <Col className="col p-0 h-100 d-flex flex-column">
+      <div className="bg-light mb-4 p-3 shadow-sm small">
+        <p className="m-0">
+          <b>
+            #
             {' '}
-            messages
-          </span>
-        </div>
-        <Messages currentChannelMessages={currentChannelMessages} />
-        <div className="py-3 mt-auto">
-          <Container fluid>
-            <AddMessageForm currentChannelId={currentChannelId} />
-          </Container>
-        </div>
+            {currentChannel?.name}
+          </b>
+        </p>
+        <span className="text-muted">
+          {messagesCount}
+          {' '}
+          messages
+        </span>
+      </div>
+      <Messages currentChannelMessages={currentChannelMessages} />
+      <div className="p-3">
+        <AddMessageForm currentChannelId={currentChannelId} />
       </div>
     </Col>
   );
@@ -324,15 +320,9 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    if (isNull(user)) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
-
-  useEffect(() => {
     const initChat = async () => {
       if (!user) {
-        console.error('user undefined');
+        navigate('/login');
         return;
       }
 
@@ -357,14 +347,14 @@ const Chat = () => {
 
   return (
     user
-    && (
-      <Container className="h-100 overflow-hidden rounded shadow">
-        <Row className="bg-white h-100 flex-md-row">
-          <Sidebar />
-          <Main />
-        </Row>
-      </Container>
-    )
+      && (
+        <Container className="h-100 overflow-hidden rounded shadow">
+          <Row className="bg-white h-100 flex-md-row">
+            <Sidebar />
+            <Main />
+          </Row>
+        </Container>
+      )
   );
 };
 export default Chat;

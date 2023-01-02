@@ -1,16 +1,25 @@
 export default {
   translation: {
     errors: {
-      notOneOf: 'RSS already exists',
-      required: 'Should not be empty',
-      url: 'RSS should be a valid URL',
-      noRss: 'Resource does not contain a valid RSS',
-      network: 'Network error',
-      unknown: 'Sorry, something went wrong',
+      login: {
+        invalid: 'Wrong username or password',
+      },
+      signup: {
+        required: 'Required field',
+        oneOf: 'Passwords must match',
+        size: 'From 3 to 20 symbols',
+        min: 'No less than 6 symbols',
+        notOneOf: 'User already exists',
+      },
+      addChannel: {
+        notOneOf: 'Should be unique',
+      },
     },
-    success: 'RSS loaded successfully',
     ui: {
-      btnRead: 'View',
+      btnLogout: 'Logout',
+    },
+    network: {
+      fail: 'network error, try again later',
     },
   },
 };
