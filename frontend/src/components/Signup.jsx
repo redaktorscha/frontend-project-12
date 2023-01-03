@@ -82,7 +82,7 @@ const Signup = () => {
     };
 
     registerUser();
-  }, [formIsValid, formSignupData, navigate, setUser]);
+  }, [t, formIsValid, formSignupData, navigate, setUser]);
 
   useEffect(() => {
     if (formSignupError !== '') {
