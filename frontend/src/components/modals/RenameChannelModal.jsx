@@ -4,13 +4,16 @@ import React, {
 } from 'react';
 import { Form, Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
 import SocketContext from '../../contexts/SocketContext';
 
-const RenameChannelForm = ({ shouldOpen, handleClose, handleRename }) => {
+const RenameChannelForm = ({
+  t, shouldOpen, handleClose, handleRename,
+}) => {
   const inputRef = useRef(null);
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
@@ -65,17 +68,17 @@ const RenameChannelForm = ({ shouldOpen, handleClose, handleRename }) => {
               isInvalid={!!errors.channelName}
               ref={inputRef}
             />
-            <Form.Label className="visually-hidden">Add channel</Form.Label>
+            <Form.Label className="visually-hidden">{t('ui.modals.renameChannelHeader')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip>
               {errors.channelName}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="d-flex align-items-center justify-content-end pt-3">
             <Button className="me-2" variant="secondary" onClick={handleClose}>
-              Cancel
+              {t('ui.modals.cancel')}
             </Button>
             <Button type="submit" variant="primary">
-              Send
+              {t('ui.modals.send')}
             </Button>
           </Form.Group>
 
@@ -90,6 +93,7 @@ const RenameChannelModal = () => {
   const { renameChannel } = useContext(SocketContext);
   const [socketConnectionError, setSocketConnectionError] = useState('');
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const { targetChannel } = useSelector((state) => state.modal);
   const channels = useSelector(channelSelectors.selectAll) || null;
@@ -134,10 +138,11 @@ const RenameChannelModal = () => {
   return (
     <BootstrapModal centered show={shouldOpen} onHide={handleClose}>
       <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>Rename channel</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('ui.modals.addChannelHeader')}</BootstrapModal.Title>
       </BootstrapModal.Header>
       <BootstrapModal.Body>
         <RenameChannelForm
+          t={t}
           shouldOpen={shouldOpen}
           handleClose={handleClose}
           handleRename={handleRename}

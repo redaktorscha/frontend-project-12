@@ -7,6 +7,7 @@ import {
   Container, Row, Col, Card, Form, Image, Button,
 } from 'react-bootstrap';
 import { Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -18,6 +19,7 @@ const Login = () => {
   const [formLoginData, setFormLoginData] = useState({ username: null, password: null });
   const [formAuthError, setFormAuthError] = useState('');
   const [formIsValid, setFormIsValid] = useState(false);
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const inputUsername = useRef(null);
   const inputPassword = useRef(null);
@@ -35,6 +37,13 @@ const Login = () => {
         .trim()
         .required(),
     });
+
+  yup.setLocale({
+    mixed: {
+      required: t('errors.login.required'),
+    },
+  });
+
   const { setUser } = useContext(AuthContext);
 
   useEffect(() => {
@@ -55,15 +64,15 @@ const Login = () => {
       } catch (e) {
         console.log('LoginErr', e);
         if (e.response.status === 401) {
-          setFormAuthError('wrong username or password');
+          setFormAuthError(t('errors.login.invalid'));
         } else {
-          setFormAuthError('unknown error');
+          setFormAuthError(t('errors.unknown'));
         }
         setUser(null);
       }
     };
     getAuthToken();
-  }, [formIsValid, formLoginData, setUser, navigate]);
+  }, [t, formIsValid, formLoginData, setUser, navigate]);
 
   useEffect(() => {
     if (formAuthError !== '') {
@@ -89,7 +98,7 @@ const Login = () => {
                 />
               </Col>
               <Col className="col-12 col-md-6 mt-3 mt-mb-0">
-                <h1 className="text-center mb-4">Login</h1>
+                <h1 className="text-center mb-4">{t('ui.login.enter')}</h1>
                 <Formik
                   validationSchema={loginSchema}
                   onSubmit={() => { console.log('login submit'); }} // _noop
@@ -123,14 +132,13 @@ const Login = () => {
                           name="username"
                           autoComplete="off"
                           required
-                          placeholder="Your nick"
                           value={values.username}
                           onChange={handleChange}
                           isValid={touched.username && !errors.username}
                           isInvalid={!!errors.username}
                           ref={inputUsername}
                         />
-                        <Form.Label>Your nick</Form.Label>
+                        <Form.Label>{t('ui.login.username')}</Form.Label>
                         <Form.Control.Feedback type="invalid" tooltip ref={usernameTooltip}>
                           {errors.username}
                         </Form.Control.Feedback>
@@ -144,14 +152,13 @@ const Login = () => {
                           name="password"
                           autoComplete="off"
                           required
-                          placeholder="Your password"
                           value={values.password}
                           onChange={handleChange}
                           isValid={touched.password && !errors.password}
                           isInvalid={!!errors.password}
                           ref={inputPassword}
                         />
-                        <Form.Label>Your password</Form.Label>
+                        <Form.Label>{t('ui.login.password')}</Form.Label>
                         <Form.Control.Feedback type="invalid" tooltip>
                           {errors.password}
                         </Form.Control.Feedback>
@@ -164,7 +171,7 @@ const Login = () => {
                         variant="outline-primary"
                         className="w-100 mb-3"
                       >
-                        Enter
+                        {t('ui.login.btnLogin')}
                       </Button>
                     </Form>
                   )}
@@ -172,8 +179,8 @@ const Login = () => {
               </Col>
             </Card.Body>
             <Card.Footer className="d-flex justify-content-center p-4">
-              <span className="me-2">No account?</span>
-              <Link to="/signup">Register</Link>
+              <span className="me-2">{t('ui.login.spanNoAcc')}</span>
+              <Link to="/signup">{t('ui.login.linkRegister')}</Link>
             </Card.Footer>
           </Card>
         </Col>

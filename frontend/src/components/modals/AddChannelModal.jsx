@@ -2,6 +2,7 @@
 import React, {
   useRef, useEffect, useContext, useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Button, Modal as BootstrapModal, Form,
 } from 'react-bootstrap';
@@ -12,11 +13,10 @@ import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
 import SocketContext from '../../contexts/SocketContext';
 
-const AddChannelForm = ({ handleClose, shouldOpen }) => {
+const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
   const [socketConnectionError, setSocketConnectionError] = useState('');
   const inputRef = useRef(null);
   const { addChannel } = useContext(SocketContext);
-
   useEffect(() => {
     if (shouldOpen) {
       inputRef.current.focus();
@@ -53,7 +53,7 @@ const AddChannelForm = ({ handleClose, shouldOpen }) => {
             if (response.status === 'ok') {
               return;
             }
-            setSocketConnectionError('network error, try again later');
+            setSocketConnectionError(t('network.fail'));
           });
         } catch (e) {
           console.log('add channel error', e);
@@ -86,17 +86,17 @@ const AddChannelForm = ({ handleClose, shouldOpen }) => {
               isInvalid={!!errors.channelName}
               ref={inputRef}
             />
-            <Form.Label className="visually-hidden">Add channel</Form.Label>
+            <Form.Label className="visually-hidden">{t('ui.modals.addChannelHeader')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip>
               {errors.channelName}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="d-flex align-items-center justify-content-end pt-3">
             <Button className="me-2" variant="secondary" onClick={handleClose}>
-              Cancel
+              {t('ui.modals.cancel')}
             </Button>
             <Button type="submit" variant="primary">
-              Send
+              {t('ui.modals.send')}
             </Button>
           </Form.Group>
 
@@ -114,6 +114,9 @@ const AddChannelModal = ({ setBtnFocused }) => {
     dispatch(setType(null));
     setBtnFocused(true);
   };
+
+  const { t } = useTranslation();
+
   const modalType = 'add';
   const { isOpen, type } = useSelector((state) => state.modal);
   const shouldOpen = isOpen && type === modalType;
@@ -121,10 +124,10 @@ const AddChannelModal = ({ setBtnFocused }) => {
   return (
     <BootstrapModal centered show={shouldOpen} onHide={handleClose}>
       <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>Add Channel</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('ui.modals.addChannelHeader')}</BootstrapModal.Title>
       </BootstrapModal.Header>
       <BootstrapModal.Body>
-        <AddChannelForm shouldOpen={shouldOpen} handleClose={handleClose} />
+        <AddChannelForm t={t} shouldOpen={shouldOpen} handleClose={handleClose} />
       </BootstrapModal.Body>
     </BootstrapModal>
   );

@@ -3,6 +3,7 @@
 import React, {
   useEffect, useState, useContext, useRef,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Container, Row, Col, Card, Form, Image, Button,
 } from 'react-bootstrap';
@@ -24,6 +25,7 @@ const Signup = () => {
   const inputUsername = useRef(null);
   const inputPassword = useRef(null);
   const inputConfirmPassword = useRef(null);
+  const { t } = useTranslation();
 
   const signupSchema = yup
     .object()
@@ -43,8 +45,14 @@ const Signup = () => {
         .string()
         .trim()
         .required()
-        .oneOf([yup.ref('password'), null], 'Passwords must match'),
+        .oneOf([yup.ref('password'), null]),
     });
+  yup.setLocale({
+    mixed: {
+      required: t('errors.signup.required'),
+      oneOf: t('errors.signup.oneOf'),
+    },
+  });
 
   useEffect(() => {
     if (!formIsValid) {
@@ -65,9 +73,9 @@ const Signup = () => {
       } catch (e) {
         console.log('SignUpErr', e);
         if (e.response.status === 409) {
-          setFormSignupError('User already exist');
+          setFormSignupError(t('errors.signup.exists'));
         } else {
-          setFormSignupError('unknown error');
+          setFormSignupError(t('errors.unknown'));
         }
         setUser(null);
       }
@@ -100,7 +108,7 @@ const Signup = () => {
                 />
               </Col>
               <Col className="col-12 col-md-6 mt-3 mt-mb-0">
-                <h1 className="text-center mb-4">Signup</h1>
+                <h1 className="text-center mb-4">{t('ui.signup.signup')}</h1>
                 <Formik
                   validationSchema={signupSchema}
                   onSubmit={() => { console.log('signup submit'); }}
@@ -143,7 +151,7 @@ const Signup = () => {
                           isInvalid={!!errors.username}
                           ref={inputUsername}
                         />
-                        <Form.Label>Username</Form.Label>
+                        <Form.Label>{t('ui.signup.username')}</Form.Label>
                         <Form.Control.Feedback type="invalid" tooltip>
                           {errors.username}
                         </Form.Control.Feedback>
@@ -164,7 +172,7 @@ const Signup = () => {
                           isInvalid={!!errors.password}
                           ref={inputPassword}
                         />
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>{t('ui.signup.password')}</Form.Label>
                         <Form.Control.Feedback type="invalid" tooltip>
                           {errors.password}
                         </Form.Control.Feedback>
@@ -185,7 +193,7 @@ const Signup = () => {
                           isInvalid={!!errors.confirmPassword}
                           ref={inputConfirmPassword}
                         />
-                        <Form.Label>Confirm password</Form.Label>
+                        <Form.Label>{t('ui.signup.confirmPassword')}</Form.Label>
                         <Form.Control.Feedback type="invalid" tooltip>
                           {errors.confirmPassword}
                         </Form.Control.Feedback>
@@ -198,7 +206,7 @@ const Signup = () => {
                         variant="outline-primary"
                         className="w-100 mb-3"
                       >
-                        Signup
+                        {t('ui.signup.btnSignup')}
                       </Button>
                     </Form>
                   )}

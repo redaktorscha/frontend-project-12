@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // ts-check
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import React, {
   useContext, useEffect, useState, useRef,
@@ -39,7 +40,7 @@ const ChannelButton = ({ color, onClick, channelName }) => (
 
 const Channel = (props) => {
   const {
-    onClick, color, channelName, hasDropDown, handleOpenModal,
+    t, onClick, color, channelName, hasDropDown, handleOpenModal,
   } = props;
 
   return (
@@ -49,8 +50,8 @@ const Channel = (props) => {
           <ChannelButton color={color} onClick={onClick} channelName={channelName} />
           <Dropdown.Toggle split variant={color} id="dropdown-split-basic" />
           <Dropdown.Menu>
-            <Dropdown.Item role="button" href="#/action-1" onClick={handleOpenModal('delete', channelName)}>Delete</Dropdown.Item>
-            <Dropdown.Item role="button" href="#/action-2" onClick={handleOpenModal('rename', channelName)}>Rename</Dropdown.Item>
+            <Dropdown.Item role="button" href="#/action-1" onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
+            <Dropdown.Item role="button" href="#/action-2" onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
           </Dropdown.Menu>
 
         </Dropdown>
@@ -61,7 +62,7 @@ const Channel = (props) => {
   );
 };
 
-const ChannelsList = ({ handleOpenModal }) => {
+const ChannelsList = ({ t, handleOpenModal }) => {
   const channels = useSelector(channelSelectors.selectAll) || null;
   const currentChannelId = useSelector((state) => state.currentChannel);
   const dispatch = useDispatch();
@@ -79,6 +80,7 @@ const ChannelsList = ({ handleOpenModal }) => {
 
         return (
           <Channel
+            t={t}
             handleOpenModal={handleOpenModal}
             onClick={setChannel(id)}
             key={uniqueId()} // id
@@ -92,7 +94,7 @@ const ChannelsList = ({ handleOpenModal }) => {
   );
 };
 
-const AddMessageForm = ({ currentChannelId }) => {
+const AddMessageForm = ({ t, currentChannelId }) => {
   const [socketConnectionError, setSocketConnectionError] = useState('');
   const { user } = useContext(AuthContext);
   const { sendMessage } = useContext(SocketContext);
@@ -125,7 +127,7 @@ const AddMessageForm = ({ currentChannelId }) => {
             if (response.status === 'ok') {
               return;
             }
-            setSocketConnectionError('network error, try again later');
+            setSocketConnectionError(t('network.fail'));
           });
         } catch (e) {
           console.log('socketError', e);
@@ -147,7 +149,7 @@ const AddMessageForm = ({ currentChannelId }) => {
           <InputGroup className="d-flex align-items-center">
             <Form.Control
               className="border-0 py-1 px-2"
-              placeholder="Enter your message..."
+              placeholder={t('ui.chat.enterMessage')}
               type="text"
               name="message"
               value={values.message}
@@ -156,7 +158,7 @@ const AddMessageForm = ({ currentChannelId }) => {
             />
             <Button disabled={!isValid} type="submit" variant="outline-light" className="btn btn-group-vertical">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="#000"><path fillRule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" /></svg>
-              <span className="visually-hidden">Отправить</span>
+              <span className="visually-hidden">{t('ui.chat.send')}</span>
             </Button>
           </InputGroup>
         </Form>
@@ -166,7 +168,7 @@ const AddMessageForm = ({ currentChannelId }) => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ t }) => {
   const dispatch = useDispatch();
   const [btnFocused, setBtnFocused] = useState(false);
   const { isOpen } = useSelector((state) => state.modal);
@@ -203,7 +205,7 @@ const Sidebar = () => {
   return (
     <Col className="col-4 col-md-2 border-end pt-5 px-0 bg-light h-100">
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-        <span>Channels</span>
+        <span>{t('ui.chat.channels')}</span>
         <Button
           variant="outline-primary"
           style={btnFocused ? buttonFocusedStyle : buttonNormalStyle}
@@ -218,7 +220,7 @@ const Sidebar = () => {
           <span className="visually-hidden">+</span>
         </Button>
       </div>
-      <ChannelsList handleOpenModal={handleOpenModal} />
+      <ChannelsList t={t} handleOpenModal={handleOpenModal} />
       <AddChannelModal setBtnFocused={setBtnFocused} />
       <DeleteChannelModal />
       <RenameChannelModal />
@@ -248,7 +250,7 @@ const Messages = ({ currentChannelMessages }) => (
   </div>
 );
 
-const Main = () => {
+const Main = ({ t }) => {
   const currentChannelId = useSelector((state) => state.currentChannel) || null;
   const currentChannel = useSelector((state) => channelSelectors
     .selectById(state, currentChannelId)) || null;
@@ -271,18 +273,19 @@ const Main = () => {
         <span className="text-muted">
           {messagesCount}
           {' '}
-          messages
+          {t('ui.chat.messagesCount')}
         </span>
       </div>
       <Messages currentChannelMessages={currentChannelMessages} />
       <div className="p-3">
-        <AddMessageForm currentChannelId={currentChannelId} />
+        <AddMessageForm t={t} currentChannelId={currentChannelId} />
       </div>
     </Col>
   );
 };
 
 const Chat = () => {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const {
     receiveMessage, confirmAddChannel, confirmRemoveChannel, confirmRenameChannel,
@@ -352,8 +355,8 @@ const Chat = () => {
       && (
         <Container className="h-100 overflow-hidden rounded shadow">
           <Row className="bg-white h-100 flex-md-row">
-            <Sidebar />
-            <Main />
+            <Sidebar t={t} />
+            <Main t={t} />
           </Row>
         </Container>
       )
