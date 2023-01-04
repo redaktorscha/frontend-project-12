@@ -3,6 +3,7 @@
 import React, {
   useEffect, useState, useContext, useRef,
 } from 'react';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
   Container, Row, Col, Card, Form, Image, Button,
@@ -75,7 +76,7 @@ const Signup = () => {
         if (e.response.status === 409) {
           setFormSignupError(t('errors.signup.exists'));
         } else {
-          setFormSignupError(t('errors.unknown'));
+          toast.error(t('toasts.networkError'));
         }
         setUser(null);
       }

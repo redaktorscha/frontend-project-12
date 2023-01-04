@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import React, {
   useContext, useEffect, useState, useRef,
 } from 'react';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -95,7 +96,6 @@ const ChannelsList = ({ t, handleOpenModal }) => {
 };
 
 const AddMessageForm = ({ t, currentChannelId }) => {
-  const [socketConnectionError, setSocketConnectionError] = useState('');
   const { user } = useContext(AuthContext);
   const { sendMessage } = useContext(SocketContext);
 
@@ -116,7 +116,6 @@ const AddMessageForm = ({ t, currentChannelId }) => {
       }}
       onSubmit={(values, { resetForm }) => {
         try {
-          setSocketConnectionError('');
           const messageToSend = {
             body: values.message.trim(),
             channelId: currentChannelId,
@@ -127,14 +126,13 @@ const AddMessageForm = ({ t, currentChannelId }) => {
             if (response.status === 'ok') {
               return;
             }
-            setSocketConnectionError(t('network.fail'));
+            toast.error(t('toasts.networkError'));
           });
+          resetForm({ values: { message: '' } });
         } catch (e) {
-          console.log('socketError', e);
-          setSocketConnectionError(e.message);
-          console.log(socketConnectionError);
+          console.log('add msg e', e);
+          toast.error(t('toasts.networkError'));
         }
-        resetForm({ values: { message: '' } });
       }}
     >
       {

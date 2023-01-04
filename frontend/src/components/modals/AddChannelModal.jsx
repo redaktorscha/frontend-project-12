@@ -1,11 +1,10 @@
 // ts-check
-import React, {
-  useRef, useEffect, useContext, useState,
-} from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button, Modal as BootstrapModal, Form,
 } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
@@ -14,7 +13,6 @@ import { setIsOpen, setType } from '../../slices/modalSlice.js';
 import SocketContext from '../../contexts/SocketContext';
 
 const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
-  const [socketConnectionError, setSocketConnectionError] = useState('');
   const inputRef = useRef(null);
   const { addChannel } = useContext(SocketContext);
   useEffect(() => {
@@ -45,22 +43,21 @@ const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
       }}
       onSubmit={(values, { resetForm }) => {
         try {
-          setSocketConnectionError('');
           const newChannel = {
             name: values.channelName.trim(),
           };
           addChannel(newChannel, (response) => {
             if (response.status === 'ok') {
+              toast.success(t('toasts.channelCreated'));
               return;
             }
-            setSocketConnectionError(t('network.fail'));
+            toast.error(t('toasts.networkError'));
           });
+          resetForm({ values: { channelName: '' } });
         } catch (e) {
-          console.log('add channel error', e);
-          setSocketConnectionError(e.message);
-          console.log(socketConnectionError);
+          console.log('add channel e', e);
+          toast.error(t('toasts.networkError'));
         }
-        resetForm({ values: { channelName: '' } });
       }}
     >
       {

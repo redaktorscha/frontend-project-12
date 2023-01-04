@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import { toast } from 'react-toastify';
 import login from '../assets/login.svg';
 import AuthContext from '../contexts/AuthContext';
 import getRoute from '../utils/getRoute';
@@ -66,7 +67,8 @@ const Login = () => {
         if (e.response.status === 401) {
           setFormAuthError(t('errors.login.invalid'));
         } else {
-          setFormAuthError(t('errors.unknown'));
+          console.log('e', e);
+          toast.error(t('toasts.networkError'));
         }
         setUser(null);
       }

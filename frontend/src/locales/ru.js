@@ -1,7 +1,7 @@
 export default {
   translation: {
     errors: {
-      network: 'Ошибка сети, попробуйте позже',
+      network: 'Ошибка соединения',
       unknown: 'Неизвестная ошибка',
       required: 'Обязательное поле',
       login: {
@@ -20,6 +20,12 @@ export default {
         channelNameSize: 'От 3 до 20 символов',
         notOneOf: 'Должно быть уникальным',
       },
+    },
+    toasts: {
+      networkError: 'Ошибка соединения',
+      channelCreated: 'Канал создан',
+      channelDeleted: 'Канал удален',
+      channelRenamed: 'Канал переименован',
     },
     ui: {
       header: {

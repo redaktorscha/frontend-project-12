@@ -1,5 +1,6 @@
 // ts-check
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +10,6 @@ import SocketContext from '../../contexts/SocketContext';
 
 const DeleteChannelModal = () => {
   const { removeChannel } = useContext(SocketContext);
-  const [socketConnectionError, setSocketConnectionError] = useState('');
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -30,21 +30,17 @@ const DeleteChannelModal = () => {
       .filter(({ name, removable }) => removable && (name === targetChannel));
     if (targetChannel) {
       try {
-        setSocketConnectionError('');
-        const channelForDeletion = {
-          id,
-        };
-        console.log('channelForDeletion', channelForDeletion);
+        const channelForDeletion = { id };
         removeChannel(channelForDeletion, (response) => {
           if (response.status === 'ok') {
+            toast.success(t('toasts.channelDeleted'));
             return;
           }
-          setSocketConnectionError(t('network.fail'));
+          toast.error(t('toasts.networkError'));
         });
       } catch (e) {
         console.log('delete channel error', e);
-        setSocketConnectionError(e.message);
-        console.log(socketConnectionError);
+        toast.error(t('toasts.networkError'));
       }
     }
 

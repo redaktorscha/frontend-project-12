@@ -1,6 +1,7 @@
 export default {
   translation: {
     errors: {
+      network: 'Network error',
       unknown: 'Unknown error',
       login: {
         invalid: 'Wrong username or password',
@@ -18,6 +19,12 @@ export default {
         channelNameSize: 'From 3 to 20 symbols',
         notOneOf: 'Should be unique',
       },
+    },
+    toasts: {
+      networkError: 'Network error',
+      channelCreated: 'Channel created',
+      channelDeleted: 'Channel removed',
+      channelRenamed: 'Channel renamed',
     },
     ui: {
       header: {

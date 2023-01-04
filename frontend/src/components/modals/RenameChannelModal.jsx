@@ -1,9 +1,10 @@
 // ts-check
 import React, {
-  useState, useContext, useRef, useEffect,
+  useContext, useRef, useEffect,
 } from 'react';
 import { Form, Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -91,7 +92,6 @@ const RenameChannelForm = ({
 
 const RenameChannelModal = () => {
   const { renameChannel } = useContext(SocketContext);
-  const [socketConnectionError, setSocketConnectionError] = useState('');
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -112,21 +112,20 @@ const RenameChannelModal = () => {
       .filter(({ name, removable }) => removable && (name === targetChannel));
     if (targetChannel) {
       try {
-        setSocketConnectionError('');
         const renamedChannel = {
           id,
           name: data.channelName.trim(),
         };
         renameChannel(renamedChannel, (response) => {
           if (response.status === 'ok') {
+            toast.success(t('toasts.channelRenamed'));
             return;
           }
-          setSocketConnectionError('network error, try again later');
+          toast.error(t('toasts.networkError'));
         });
       } catch (e) {
         console.log('rename channel error', e);
-        setSocketConnectionError(e.message);
-        console.log(socketConnectionError);
+        toast.error(t('toasts.networkError'));
       }
     }
     handleClose();
