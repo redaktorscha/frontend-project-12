@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Button, Modal as BootstrapModal, Form,
 } from 'react-bootstrap';
+import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +12,8 @@ import * as yup from 'yup';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
 import SocketContext from '../../contexts/SocketContext';
+
+filter.loadDictionary('ru');
 
 const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
   const inputRef = useRef(null);
@@ -44,7 +47,7 @@ const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
       onSubmit={(values, { resetForm }) => {
         try {
           const newChannel = {
-            name: values.channelName.trim(),
+            name: filter.clean(values.channelName.trim()),
           };
           addChannel(newChannel, (response) => {
             if (response.status === 'ok') {

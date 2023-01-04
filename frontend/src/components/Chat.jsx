@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import filter from 'leo-profanity';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Container, Button, ButtonGroup, Col, Row, Nav, Form, InputGroup, Dropdown,
@@ -26,6 +27,8 @@ import { setMessages, addMessage, selectors as messagesSelectors } from '../slic
 import { setIsOpen, setType, setTargetChannel } from '../slices/modalSlice.js';
 import getRoute from '../utils/getRoute.js';
 import getAuthConfig from '../utils/getAuthConfig.js';
+
+filter.loadDictionary('ru');
 
 const ChannelButton = ({ color, onClick, channelName }) => (
   <Button
@@ -117,7 +120,7 @@ const AddMessageForm = ({ t, currentChannelId }) => {
       onSubmit={(values, { resetForm }) => {
         try {
           const messageToSend = {
-            body: values.message.trim(),
+            body: filter.clean(values.message.trim()),
             channelId: currentChannelId,
             username: user,
           };

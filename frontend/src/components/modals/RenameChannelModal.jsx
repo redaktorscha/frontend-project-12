@@ -5,12 +5,15 @@ import React, {
 import { Form, Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import filter from 'leo-profanity';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
 import SocketContext from '../../contexts/SocketContext';
+
+filter.loadDictionary('ru');
 
 const RenameChannelForm = ({
   t, shouldOpen, handleClose, handleRename,
@@ -114,7 +117,7 @@ const RenameChannelModal = () => {
       try {
         const renamedChannel = {
           id,
-          name: data.channelName.trim(),
+          name: filter.clean(data.channelName.trim()),
         };
         renameChannel(renamedChannel, (response) => {
           if (response.status === 'ok') {
