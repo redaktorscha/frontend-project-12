@@ -31,18 +31,18 @@ const Login = () => {
       username: yup
         .string()
         .trim()
-        .required(),
+        .required(t('errors.login.required')),
       password: yup
         .string()
         .trim()
-        .required(),
+        .required(t('errors.login.required')),
     });
 
-  yup.setLocale({
-    mixed: {
-      required: t('errors.login.required'),
-    },
-  });
+  // yup.setLocale({
+  //   mixed: {
+  //     required: t('errors.login.required'),
+  //   },
+  // });
 
   const { setUser } = useContext(AuthContext);
 
@@ -132,6 +132,7 @@ const Login = () => {
                           name="username"
                           autoComplete="off"
                           required
+                          placeholder="Username"
                           value={values.username}
                           onChange={handleChange}
                           isValid={touched.username && !errors.username}
@@ -152,6 +153,7 @@ const Login = () => {
                           name="password"
                           autoComplete="off"
                           required
+                          placeholder="Password"
                           value={values.password}
                           onChange={handleChange}
                           isValid={touched.password && !errors.password}

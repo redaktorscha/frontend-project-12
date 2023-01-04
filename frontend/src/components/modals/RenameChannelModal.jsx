@@ -31,10 +31,10 @@ const RenameChannelForm = ({
       channelName: yup
         .string()
         .trim()
-        .min(3)
-        .max(20)
-        .required('required')
-        .notOneOf(channelsNames, 'channel name should be unique'),
+        .min(3, t('errors.modals.channelNameSize'))
+        .max(20, t('errors.modals.channelNameSize'))
+        .required(t('errors.modals.required'))
+        .notOneOf(channelsNames, t('errors.modals.notOneOf')),
     });
 
   return (

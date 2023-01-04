@@ -33,33 +33,33 @@ const Signup = () => {
       username: yup
         .string()
         .trim()
-        .required()
-        .min(3)
-        .max(20),
+        .required(t('errors.signup.required'))
+        .min(3, t('errors.signup.usernameSize'))
+        .max(20, t('errors.signup.usernameSize')),
       password: yup
         .string()
         .trim()
-        .required()
-        .min(6),
+        .required(t('errors.signup.required'))
+        .min(6, t('errors.signup.passwordSize')),
       confirmPassword: yup
         .string()
         .trim()
-        .required()
-        .oneOf([yup.ref('password'), null]),
+        .required(t('errors.signup.required'))
+        .oneOf([yup.ref('password'), null], t('errors.signup.oneOf')),
     });
-  yup.setLocale({
-    mixed: {
-      required: t('errors.signup.required'),
-      oneOf: t('errors.signup.oneOf'),
-    },
-  });
+  // yup.setLocale({
+  //   mixed: {
+  //     required: t('errors.signup.required'),
+  //     oneOf: t('errors.signup.oneOf'),
+  //   },
+  // });
 
   useEffect(() => {
-    if (!formIsValid) {
-      return;
-    }
+    console.log('formIsValid', formIsValid);
+
     const registerUser = async () => {
       const signupRoute = getRoute('signup');
+      console.log('formSignupData', formSignupData);
       try {
         setFormSignupError('');
         const response = await axios.post(signupRoute, formSignupData);
@@ -80,7 +80,9 @@ const Signup = () => {
         setUser(null);
       }
     };
-
+    if (!formIsValid) {
+      return;
+    }
     registerUser();
   }, [t, formIsValid, formSignupData, navigate, setUser]);
 
@@ -131,6 +133,8 @@ const Signup = () => {
                         e.preventDefault();
                         const { username, password } = values;
                         setFormSignupData({ username, password });
+                        console.log('errors', isEmpty(errors));
+                        console.log('formSignupData', formSignupData);
                         setFormIsValid(isEmpty(errors));
                         handleSubmit();
                       }}

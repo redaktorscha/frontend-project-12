@@ -9,11 +9,13 @@ export default {
       signup: {
         required: 'Required field',
         oneOf: 'Passwords must match',
-        size: 'From 3 to 20 symbols',
-        min: 'No less than 6 symbols',
+        usernameSize: 'From 3 to 20 symbols',
+        passwordSize: 'No less than 6 symbols',
         exists: 'User already exists',
       },
-      addChannel: {
+      modals: {
+        required: 'Required field',
+        channelNameSize: 'From 3 to 20 symbols',
         notOneOf: 'Should be unique',
       },
     },

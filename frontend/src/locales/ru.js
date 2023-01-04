@@ -11,11 +11,13 @@ export default {
       signup: {
         required: 'Обязательное поле',
         oneOf: 'Пароли должны совпадать',
-        minmax: 'От 3 до 20 символов',
-        min: 'Не менее 6 символов',
+        usernameSize: 'От 3 до 20 символов',
+        passwordSize: 'Не менее 6 символов',
         exists: 'Такой пользователь уже существует',
       },
-      addChannel: {
+      modals: {
+        required: 'Обязательное поле',
+        channelNameSize: 'От 3 до 20 символов',
         notOneOf: 'Должно быть уникальным',
       },
     },
