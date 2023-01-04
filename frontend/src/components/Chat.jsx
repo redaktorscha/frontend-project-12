@@ -54,8 +54,8 @@ const Channel = (props) => {
           <ChannelButton color={color} onClick={onClick} channelName={channelName} />
           <Dropdown.Toggle split variant={color} id="dropdown-split-basic" />
           <Dropdown.Menu>
-            <Dropdown.Item role="button" href="#/action-1" onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
-            <Dropdown.Item role="button" href="#/action-2" onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
+            <Dropdown.Item role="button" onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
+            <Dropdown.Item role="button" onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
           </Dropdown.Menu>
 
         </Dropdown>
