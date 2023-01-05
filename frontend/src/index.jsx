@@ -17,14 +17,20 @@ import AuthProvider from './components/AuthProvider';
   const { i18n, socketFunctions } = await initApp();
 
   const rollbarConfig = {
-    accessToken: process.env.ROLLBAR_APP_ACCESS_TOKEN,
+    accessToken: '22d25b6fe1cc4581912848457337ef97',
     environment: 'production',
+  };
+
+  const TestError = () => {
+    const a = null;
+    return a.hello();
   };
 
   root.render(
     <React.StrictMode>
       <RollbarProvider config={rollbarConfig}>
         <ErrorBoundary>
+          <TestError />
           <ReduxProvider store={store}>
             <I18nextProvider i18n={i18n}>
               <AuthProvider>
@@ -35,9 +41,7 @@ import AuthProvider from './components/AuthProvider';
             </I18nextProvider>
           </ReduxProvider>
         </ErrorBoundary>
-
       </RollbarProvider>
-
     </React.StrictMode>,
   );
 })();
