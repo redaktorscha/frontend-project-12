@@ -35,9 +35,7 @@ import AuthProvider from './components/AuthProvider';
             </I18nextProvider>
           </ReduxProvider>
         </ErrorBoundary>
-
       </RollbarProvider>
-
     </React.StrictMode>,
   );
 })();
