@@ -16,11 +16,6 @@ import login from '../assets/login.svg';
 import AuthContext from '../contexts/AuthContext';
 import getRoute from '../utils/getRoute';
 
-const TestError = () => {
-  const a = null;
-  return a.hello();
-};
-
 const Login = () => {
   const [formLoginData, setFormLoginData] = useState({ username: null, password: null });
   const [formAuthError, setFormAuthError] = useState('');
@@ -191,7 +186,6 @@ const Login = () => {
               <span className="me-2">{t('ui.login.spanNoAcc')}</span>
               <Link to="/signup">{t('ui.login.linkRegister')}</Link>
             </Card.Footer>
-            <TestError />
           </Card>
         </Col>
       </Row>
