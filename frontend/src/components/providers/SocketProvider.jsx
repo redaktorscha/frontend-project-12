@@ -1,4 +1,4 @@
-import SocketContext from '../contexts/SocketContext';
+import { SocketContext } from '../../contexts';
 
 const SocketProvider = ({ functions, children }) => (
   <SocketContext.Provider value={functions}>

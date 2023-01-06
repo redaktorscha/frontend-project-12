@@ -14,9 +14,9 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
-import signup from '../assets/signup.svg';
-import AuthContext from '../contexts/AuthContext';
-import getRoute from '../utils/getRoute';
+import signup from '../../../assets/signup.svg';
+import { AuthContext } from '../../../contexts';
+import getRoute from '../../../utils/getRoute';
 
 const Signup = () => {
   const [formIsValid, setFormIsValid] = useState(false);
@@ -88,7 +88,7 @@ const Signup = () => {
       return;
     }
     registerUser();
-  }, [t, formIsValid, formSignupData, navigate, setUser]);
+  }, [t, rollbar, formIsValid, formSignupData, navigate, setUser]);
 
   useEffect(() => {
     if (formSignupError !== '') {

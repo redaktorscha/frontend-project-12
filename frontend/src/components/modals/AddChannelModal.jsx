@@ -12,7 +12,7 @@ import * as yup from 'yup';
 import { useRollbar } from '@rollbar/react';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
-import SocketContext from '../../contexts/SocketContext';
+import { SocketContext } from '../../contexts';
 
 filter.loadDictionary('ru');
 

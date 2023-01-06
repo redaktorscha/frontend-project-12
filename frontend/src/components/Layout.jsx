@@ -7,7 +7,7 @@ import React, { useContext } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
-import AuthContext from '../contexts/AuthContext';
+import { AuthContext } from '../contexts';
 
 const rootRoute = '/';
 

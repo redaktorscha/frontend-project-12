@@ -13,9 +13,9 @@ import * as yup from 'yup';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import { toast } from 'react-toastify';
-import login from '../assets/login.svg';
-import AuthContext from '../contexts/AuthContext';
-import getRoute from '../utils/getRoute';
+import login from '../../../assets/login.svg';
+import { AuthContext } from '../../../contexts';
+import getRoute from '../../../utils/getRoute';
 
 const Login = () => {
   const [formLoginData, setFormLoginData] = useState({ username: null, password: null });

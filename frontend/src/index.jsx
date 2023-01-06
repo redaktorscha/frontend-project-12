@@ -8,8 +8,8 @@ import App from './components/App';
 import store from './slices/index.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import initApp from './init';
-import SocketProvider from './components/SocketProvider';
-import AuthProvider from './components/AuthProvider';
+import SocketProvider from './components/providers/SocketProvider';
+import AuthProvider from './components/providers/AuthProvider';
 
 (async () => {
   const root = createRoot(document.getElementById('root'));

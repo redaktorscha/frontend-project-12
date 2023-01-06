@@ -17,17 +17,17 @@ import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import { AddChannelModal, DeleteChannelModal, RenameChannelModal } from './modals';
-import AuthContext from '../contexts/AuthContext';
-import SocketContext from '../contexts/SocketContext';
+import { AddChannelModal, DeleteChannelModal, RenameChannelModal } from '../../modals';
+import AuthContext from '../../../contexts/AuthContext';
+import SocketContext from '../../../contexts/SocketContext';
 import {
   setChannels, addChannel, updateChannel, deleteChannel, selectors as channelSelectors,
-} from '../slices/channelsSlice.js';
-import { setCurrentChannel } from '../slices/currentChannelSlice.js';
-import { setMessages, addMessage, selectors as messagesSelectors } from '../slices/messagesSlice.js';
-import { setIsOpen, setType, setTargetChannel } from '../slices/modalSlice.js';
-import getRoute from '../utils/getRoute.js';
-import getAuthConfig from '../utils/getAuthConfig.js';
+} from '../../../slices/channelsSlice.js';
+import { setCurrentChannel } from '../../../slices/currentChannelSlice.js';
+import { setMessages, addMessage, selectors as messagesSelectors } from '../../../slices/messagesSlice.js';
+import { setIsOpen, setType, setTargetChannel } from '../../../slices/modalSlice.js';
+import getRoute from '../../../utils/getRoute.js';
+import getAuthConfig from '../../../utils/getAuthConfig.js';
 
 filter.loadDictionary('ru');
 

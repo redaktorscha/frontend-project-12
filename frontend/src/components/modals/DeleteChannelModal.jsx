@@ -7,7 +7,7 @@ import { Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
-import SocketContext from '../../contexts/SocketContext';
+import { SocketContext } from '../../contexts';
 
 const DeleteChannelModal = () => {
   const { removeChannel } = useContext(SocketContext);

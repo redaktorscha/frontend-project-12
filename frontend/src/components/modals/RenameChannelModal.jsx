@@ -12,7 +12,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
-import SocketContext from '../../contexts/SocketContext';
+import { SocketContext } from '../../contexts';
 
 filter.loadDictionary('ru');
 
