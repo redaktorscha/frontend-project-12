@@ -2,6 +2,7 @@
 import React, {
   useContext, useState, useEffect, useRef,
 } from 'react';
+import { useRollbar } from '@rollbar/react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Container, Row, Col, Card, Form, Image, Button,
@@ -25,6 +26,8 @@ const Login = () => {
   const inputUsername = useRef(null);
   const inputPassword = useRef(null);
   const usernameTooltip = useRef(null);
+
+  const rollbar = useRollbar();
 
   const loginSchema = yup
     .object()
@@ -63,18 +66,17 @@ const Login = () => {
           navigate('/');
         }
       } catch (e) {
-        console.log('LoginErr', e);
         if (e.response.status === 401) {
           setFormAuthError(t('errors.login.invalid'));
         } else {
-          console.log('e', e);
+          rollbar.error('Auth error', e);
           toast.error(t('toasts.networkError'));
         }
         setUser(null);
       }
     };
     getAuthToken();
-  }, [t, formIsValid, formLoginData, setUser, navigate]);
+  }, [t, rollbar, formIsValid, formLoginData, setUser, navigate]);
 
   useEffect(() => {
     if (formAuthError !== '') {

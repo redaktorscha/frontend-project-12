@@ -16,21 +16,26 @@ import AuthProvider from './components/AuthProvider';
 
   const { i18n, socketFunctions } = await initApp();
 
+  const NODE_ENV = process.env.NODE_ENV || 'production';
+  const IS_DEV_ENV = NODE_ENV === 'development';
+  const IS_PROD_ENV = NODE_ENV === 'production';
+
   const rollbarConfig = {
-    accessToken: '22d25b6fe1cc4581912848457337ef97',
-    environment: 'production',
+    accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
+    environment: NODE_ENV,
+    enabled: IS_DEV_ENV || IS_PROD_ENV,
   };
 
-  const TestError = () => {
-    const a = null;
-    return a.hello();
-  };
+  // const TestError = () => {
+  //   const a = null;
+  //   return a.hello();
+  // };
 
   root.render(
     <React.StrictMode>
       <RollbarProvider config={rollbarConfig}>
         <ErrorBoundary>
-          <TestError />
+          {/* <TestError /> */}
           <ReduxProvider store={store}>
             <I18nextProvider i18n={i18n}>
               <AuthProvider>

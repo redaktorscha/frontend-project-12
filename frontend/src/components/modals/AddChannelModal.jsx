@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import { useRollbar } from '@rollbar/react';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
 import SocketContext from '../../contexts/SocketContext';
@@ -37,6 +38,7 @@ const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
         .required(t('errors.modals.required'))
         .notOneOf(channelsNames, t('errors.modals.notOneOf')),
     });
+  const rollbar = useRollbar();
 
   return (
     <Formik
@@ -58,7 +60,7 @@ const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
           });
           resetForm({ values: { channelName: '' } });
         } catch (e) {
-          console.log('add channel e', e);
+          rollbar.error('Add channel error', e);
           toast.error(t('toasts.networkError'));
         }
       }}
