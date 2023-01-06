@@ -2,6 +2,7 @@
 import React, { useContext } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { useRollbar } from '@rollbar/react';
 import { Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
@@ -12,6 +13,8 @@ const DeleteChannelModal = () => {
   const { removeChannel } = useContext(SocketContext);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const rollbar = useRollbar();
 
   const { targetChannel } = useSelector((state) => state.modal);
   const channels = useSelector(channelSelectors.selectAll) || null;
@@ -39,7 +42,7 @@ const DeleteChannelModal = () => {
           toast.error(t('toasts.networkError'));
         });
       } catch (e) {
-        console.log('delete channel error', e);
+        rollbar.error('Delete channel error', e);
         toast.error(t('toasts.networkError'));
       }
     }

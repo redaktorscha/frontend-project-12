@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import React, {
   useContext, useEffect, useState, useRef,
 } from 'react';
+import { useRollbar } from '@rollbar/react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import filter from 'leo-profanity';
@@ -101,6 +102,7 @@ const ChannelsList = ({ t, handleOpenModal }) => {
 const AddMessageForm = ({ t, currentChannelId }) => {
   const { user } = useContext(AuthContext);
   const { sendMessage } = useContext(SocketContext);
+  const rollbar = useRollbar();
 
   const addMessageSchema = yup
     .object()
@@ -133,7 +135,7 @@ const AddMessageForm = ({ t, currentChannelId }) => {
           });
           resetForm({ values: { message: '' } });
         } catch (e) {
-          console.log('add msg e', e);
+          rollbar.error('Add msg error', e);
           toast.error(t('toasts.networkError'));
         }
       }}
@@ -294,6 +296,8 @@ const Chat = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const rollbar = useRollbar();
+
   useEffect(() => {
     receiveMessage((payload) => {
       dispatch(addMessage(payload));
@@ -325,7 +329,6 @@ const Chat = () => {
 
   useEffect(() => {
     const initChat = async () => {
-      console.log('user', user);
       if (!user) {
         navigate('/login');
         return;
@@ -343,7 +346,7 @@ const Chat = () => {
           dispatch(setMessages(data.messages));
         }
       } catch (e) {
-        console.log('getChatDataErr', e);
+        rollbar.error('getChatDataErr', e);
         navigate('/login');
       }
     };

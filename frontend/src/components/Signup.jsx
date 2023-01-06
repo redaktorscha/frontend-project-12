@@ -13,6 +13,7 @@ import isEmpty from 'lodash/isEmpty';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
+import { useRollbar } from '@rollbar/react';
 import signup from '../assets/signup.svg';
 import AuthContext from '../contexts/AuthContext';
 import getRoute from '../utils/getRoute';
@@ -27,6 +28,8 @@ const Signup = () => {
   const inputPassword = useRef(null);
   const inputConfirmPassword = useRef(null);
   const { t } = useTranslation();
+
+  const rollbar = useRollbar();
 
   const signupSchema = yup
     .object()
@@ -72,10 +75,10 @@ const Signup = () => {
           navigate('/');
         }
       } catch (e) {
-        console.log('SignUpErr', e);
         if (e.response.status === 409) {
           setFormSignupError(t('errors.signup.exists'));
         } else {
+          rollbar.error('Signup error', e);
           toast.error(t('toasts.networkError'));
         }
         setUser(null);

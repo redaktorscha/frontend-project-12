@@ -5,6 +5,7 @@ import React, {
 import { Form, Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import filter from 'leo-profanity';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
@@ -98,6 +99,8 @@ const RenameChannelModal = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const rollbar = useRollbar();
+
   const { targetChannel } = useSelector((state) => state.modal);
   const channels = useSelector(channelSelectors.selectAll) || null;
 
@@ -127,7 +130,7 @@ const RenameChannelModal = () => {
           toast.error(t('toasts.networkError'));
         });
       } catch (e) {
-        console.log('rename channel error', e);
+        rollbar.error('Rename channel error', e);
         toast.error(t('toasts.networkError'));
       }
     }
