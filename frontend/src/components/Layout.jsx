@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import {
   Container, Navbar, Button,
