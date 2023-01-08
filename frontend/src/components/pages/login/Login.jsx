@@ -1,21 +1,20 @@
 // ts-check
-import React, {
-  useContext, useState, useEffect, useRef,
-} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useRollbar } from '@rollbar/react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Container, Row, Col, Card, Form, Image, Button,
+  Container, Row, Col, Card, Image,
 } from 'react-bootstrap';
-import { Formik } from 'formik';
+
 import { useTranslation } from 'react-i18next';
-import * as yup from 'yup';
+
 import axios from 'axios';
-import isEmpty from 'lodash/isEmpty';
+
 import { toast } from 'react-toastify';
 import login from '../../../assets/login.svg';
 import { AuthContext } from '../../../contexts';
 import getRoute from '../../../utils/getRoute';
+import LoginForm from './LoginForm';
 
 const Login = () => {
   const [formLoginData, setFormLoginData] = useState({ username: null, password: null });
@@ -23,30 +22,8 @@ const Login = () => {
   const [formIsValid, setFormIsValid] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const inputUsername = useRef(null);
-  const inputPassword = useRef(null);
-  const usernameTooltip = useRef(null);
 
   const rollbar = useRollbar();
-
-  const loginSchema = yup
-    .object()
-    .shape({
-      username: yup
-        .string()
-        .trim()
-        .required(t('errors.login.required')),
-      password: yup
-        .string()
-        .trim()
-        .required(t('errors.login.required')),
-    });
-
-  // yup.setLocale({
-  //   mixed: {
-  //     required: t('errors.login.required'),
-  //   },
-  // });
 
   const { setUser } = useContext(AuthContext);
 
@@ -78,16 +55,6 @@ const Login = () => {
     getAuthToken();
   }, [t, rollbar, formIsValid, formLoginData, setUser, navigate]);
 
-  useEffect(() => {
-    if (formAuthError !== '') {
-      [inputUsername, inputPassword].forEach((ref) => {
-        ref.current.classList.remove('is-valid');
-        ref.current.classList.add('is-invalid');
-      });
-      // usernameTooltip.current.style.display = 'none';
-    }
-  }, [formAuthError]);
-
   return (
     <Container fluid>
       <Row className="justify-content-center align-items-center">
@@ -103,85 +70,11 @@ const Login = () => {
               </Col>
               <Col className="col-12 col-md-6 mt-3 mt-mb-0">
                 <h1 className="text-center mb-4">{t('ui.login.enter')}</h1>
-                <Formik
-                  validationSchema={loginSchema}
-                  onSubmit={() => { console.log('login submit'); }} // _noop
-                  initialValues={{
-                    username: '',
-                    password: '',
-                  }}
-                >
-                  {({
-                    handleSubmit,
-                    handleChange,
-                    values,
-                    touched,
-                    errors,
-                  }) => (
-                    <Form
-                      noValidate
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        setFormLoginData({ ...values });
-                        setFormIsValid(isEmpty(errors));
-                        handleSubmit();
-                      }}
-                    >
-                      <Form.Group
-                        className="form-floating mb-4"
-                        controlId="f-username"
-                      >
-                        <Form.Control
-                          type="text"
-                          name="username"
-                          autoComplete="off"
-                          required
-                          placeholder="Username"
-                          value={values.username}
-                          onChange={handleChange}
-                          isValid={touched.username && !errors.username}
-                          isInvalid={!!errors.username}
-                          ref={inputUsername}
-                        />
-                        <Form.Label>{t('ui.login.username')}</Form.Label>
-                        <Form.Control.Feedback type="invalid" tooltip ref={usernameTooltip}>
-                          {errors.username}
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                      <Form.Group
-                        controlId="f-password"
-                        className="form-floating mb-4"
-                      >
-                        <Form.Control
-                          type="password"
-                          name="password"
-                          autoComplete="off"
-                          required
-                          placeholder="Password"
-                          value={values.password}
-                          onChange={handleChange}
-                          isValid={touched.password && !errors.password}
-                          isInvalid={!!errors.password}
-                          ref={inputPassword}
-                        />
-                        <Form.Label>{t('ui.login.password')}</Form.Label>
-                        <Form.Control.Feedback type="invalid" tooltip>
-                          {errors.password}
-                        </Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid" tooltip>
-                          {formAuthError}
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                      <Button
-                        type="submit"
-                        variant="outline-primary"
-                        className="w-100 mb-3"
-                      >
-                        {t('ui.login.btnLogin')}
-                      </Button>
-                    </Form>
-                  )}
-                </Formik>
+                <LoginForm
+                  setFormLoginData={setFormLoginData}
+                  setFormIsValid={setFormIsValid}
+                  formAuthError={formAuthError}
+                />
               </Col>
             </Card.Body>
             <Card.Footer className="d-flex justify-content-center p-4">
