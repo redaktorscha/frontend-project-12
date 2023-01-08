@@ -1,12 +1,29 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  useContext, useState, useEffect, useRef,
+} from 'react';
+import { useRollbar } from '@rollbar/react';
+import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { Formik } from 'formik';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import isEmpty from 'lodash/isEmpty';
+import { AuthContext } from '../../../contexts';
+import getRoute from '../../../utils/getRoute';
 
-const LoginForm = ({ setFormLoginData, setFormIsValid, formAuthError }) => {
+const LoginForm = () => {
+  const [formLoginData, setFormLoginData] = useState({ username: null, password: null });
+  const [formAuthError, setFormAuthError] = useState('');
+  const [formIsValid, setFormIsValid] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const rollbar = useRollbar();
+
+  const { setUser } = useContext(AuthContext);
+
   const usernameTooltip = useRef(null);
   const inputUsername = useRef(null);
   const inputPassword = useRef(null);
@@ -20,6 +37,34 @@ const LoginForm = ({ setFormLoginData, setFormIsValid, formAuthError }) => {
       // usernameTooltip.current.style.display = 'none';
     }
   }, [formAuthError]);
+
+  useEffect(() => {
+    if (!formIsValid) {
+      return;
+    }
+    const getAuthToken = async () => {
+      const loginRoute = getRoute('login');
+      try {
+        setFormAuthError('');
+        const response = await axios.post(loginRoute, formLoginData);
+        const { data } = response;
+        if (data) {
+          localStorage.setItem('user', JSON.stringify(data));
+          setUser(data.username);
+          navigate('/');
+        }
+      } catch (e) {
+        if (e.response.status === 401) {
+          setFormAuthError(t('errors.login.invalid'));
+        } else {
+          rollbar.error('Auth error', e);
+          toast.error(t('toasts.networkError'));
+        }
+        setUser(null);
+      }
+    };
+    getAuthToken();
+  }, [t, rollbar, formIsValid, formLoginData, setUser, navigate]);
 
   const loginSchema = yup
     .object()
