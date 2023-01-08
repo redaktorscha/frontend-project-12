@@ -48,11 +48,9 @@ const ChannelsList = ({ handleOpenModal }) => {
   const { t } = useTranslation();
 
   return (
-    <Nav
-      as="ul"
-      variant="pills"
-      fill
-      className="px-2 overflow-auto nav-stacked py-4 "
+    <nav
+      className="d-flex nav nav-pills nav-fill nav-stacked px-2 w-100 py-auto overflow-auto"
+      style={{ maxHeight: '95%' }}
     >
       {channels && channels.map(({ id, name, removable }) => {
         const color = id === currentChannelId ? 'secondary' : '';
@@ -69,7 +67,7 @@ const ChannelsList = ({ handleOpenModal }) => {
           />
         );
       })}
-    </Nav>
+    </nav>
   );
 };
 

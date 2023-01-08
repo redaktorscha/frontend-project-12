@@ -11,7 +11,7 @@ import { AuthContext } from '../contexts';
 const rootRoute = '/';
 
 const Header = ({ t, logOut, hasBtn }) => (
-  <Navbar expand="lg" className="flex-shrink-0 shadow-sm bg-white mb-2">
+  <Navbar expand="lg" className="flex-shrink-0 shadow-sm bg-white">
     <Container>
       <Link className="navbar-brand" to="/">Hexlet Chat</Link>
       { hasBtn && <Button variant="primary" onClick={() => { logOut(); }}>{t('ui.header.btnLogout')}</Button>}
@@ -46,7 +46,7 @@ const Layout = () => {
   return (
     <div className="vh-100 d-flex flex-column justify-content-between bg-light">
       <Header t={t} logOut={logOut} hasBtn={hasBtn} />
-      <main className="d-flex align-items-center flex-grow-1 py-4 h-100">
+      <main className="d-flex align-items-center flex-grow-1 my-auto" style={{ maxHeight: '88vh' }}>
         <Outlet />
       </main>
       {hasFooter && <Footer t={t} />}

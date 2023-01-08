@@ -18,7 +18,7 @@ const Message = (props) => {
 };
 
 const Messages = ({ currentChannelMessages }) => (
-  <div className="d-flex flex-column w-100 overflow-auto px-5 flex-grow-1 mh-100">
+  <div className="d-flex flex-column h-100 w-100 overflow-auto px-5">
     {
         currentChannelMessages.length > 0
           ? currentChannelMessages
@@ -40,7 +40,7 @@ const Main = () => {
   const messagesCount = currentChannelMessages?.length ?? 0;
 
   return (
-    <Col className="col p-0 h-100 d-flex flex-column">
+    <Col className="p-0 h-100 d-flex flex-column">
       <div className="bg-light mb-4 p-3 shadow-sm small">
         <p className="m-0 text-truncate">
           <b>
@@ -56,7 +56,7 @@ const Main = () => {
         </span>
       </div>
       <Messages currentChannelMessages={currentChannelMessages} />
-      <div className="p-3">
+      <div className="p-3 mt-auto">
         <AddMessageForm t={t} currentChannelId={currentChannelId} />
       </div>
     </Col>
