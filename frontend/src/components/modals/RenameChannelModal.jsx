@@ -14,8 +14,6 @@ import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
 import { SocketContext } from '../../contexts';
 
-filter.loadDictionary('ru');
-
 const RenameChannelForm = ({
   t, shouldOpen, handleClose, handleRename,
 }) => {

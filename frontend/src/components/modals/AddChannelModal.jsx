@@ -14,8 +14,6 @@ import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
 import { SocketContext } from '../../contexts';
 
-filter.loadDictionary('ru');
-
 const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
   const inputRef = useRef(null);
   const { addChannel } = useContext(SocketContext);

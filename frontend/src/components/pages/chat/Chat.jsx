@@ -5,7 +5,6 @@ import React, { useContext, useEffect } from 'react';
 import { useRollbar } from '@rollbar/react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import filter from 'leo-profanity';
 import { Container, Row } from 'react-bootstrap';
 
 import Sidebar from './Sidebar';
@@ -21,8 +20,6 @@ import { setMessages, addMessage } from '../../../slices/messagesSlice.js';
 
 import getRoute from '../../../utils/getRoute.js';
 import getAuthConfig from '../../../utils/getAuthConfig.js';
-
-filter.loadDictionary('ru');
 
 const Chat = () => {
   const { user } = useContext(AuthContext);
