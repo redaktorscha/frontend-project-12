@@ -62,7 +62,7 @@ const AddMessageForm = ({ t, currentChannelId }) => {
         >
           <InputGroup className="d-flex align-items-center">
             <Form.Control
-              className="border-0 py-1 px-2"
+              className="border-0 py-1 px-2 text-truncate"
               placeholder={t('ui.chat.enterMessage')}
               type="text"
               name="message"

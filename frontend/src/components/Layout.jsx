@@ -44,9 +44,9 @@ const Layout = () => {
   const hasBtn = pathname === rootRoute;
 
   return (
-    <div className="vh-100 vw-100 d-flex flex-column justify-content-between bg-light">
+    <div className="vh-100 d-flex flex-column justify-content-between bg-light">
       <Header t={t} logOut={logOut} hasBtn={hasBtn} />
-      <main className="d-flex align-items-center flex-grow-1 py-4">
+      <main className="d-flex align-items-center flex-grow-1 py-4 h-100">
         <Outlet />
       </main>
       {hasFooter && <Footer t={t} />}

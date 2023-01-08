@@ -18,7 +18,7 @@ const Message = (props) => {
 };
 
 const Messages = ({ currentChannelMessages }) => (
-  <div className="d-flex flex-column w-100 overflow-auto px-5 flex-grow-1">
+  <div className="d-flex flex-column w-100 overflow-auto px-5 flex-grow-1 mh-100">
     {
         currentChannelMessages.length > 0
           ? currentChannelMessages
@@ -42,7 +42,7 @@ const Main = () => {
   return (
     <Col className="col p-0 h-100 d-flex flex-column">
       <div className="bg-light mb-4 p-3 shadow-sm small">
-        <p className="m-0">
+        <p className="m-0 text-truncate">
           <b>
             #
             {' '}
