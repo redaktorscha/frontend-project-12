@@ -4,7 +4,6 @@ import {
 } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import uniqueId from 'lodash/uniqueId';
 import { selectors as channelSelectors } from '../../../slices/channelsSlice.js';
 import { setCurrentChannel } from '../../../slices/currentChannelSlice.js';
 
@@ -22,23 +21,26 @@ const ChannelButton = ({ color, onClick, channelName }) => (
 
 const Channel = ({
   t, onClick, color, channelName, hasDropDown, handleOpenModal,
-}) => (
-  <Nav.Item as="li" className="w-100">
-    {hasDropDown ? (
-      <Dropdown as={ButtonGroup} className="w-100">
-        <ChannelButton color={color} onClick={onClick} channelName={channelName} />
-        <Dropdown.Toggle split variant={color} id="dropdown-split-basic" />
-        <Dropdown.Menu>
-          <Dropdown.Item role="button" onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
-          <Dropdown.Item role="button" onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
-        </Dropdown.Menu>
+}) => {
+  const NavPill = (
+    <ChannelButton color={color} onClick={onClick} channelName={channelName} />
+  );
 
-      </Dropdown>
-    ) : (
-      <ChannelButton color={color} onClick={onClick} channelName={channelName} />
-    )}
-  </Nav.Item>
-);
+  return (
+    <Nav.Item as="li" className="w-100">
+      {hasDropDown ? (
+        <Dropdown as={ButtonGroup} className="w-100">
+          {NavPill}
+          <Dropdown.Toggle split variant={color} />
+          <Dropdown.Menu>
+            <Dropdown.Item role="button" onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
+            <Dropdown.Item role="button" onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      ) : NavPill}
+    </Nav.Item>
+  );
+};
 
 const ChannelsList = ({ handleOpenModal }) => {
   const channels = useSelector(channelSelectors.selectAll) || null;
@@ -48,8 +50,10 @@ const ChannelsList = ({ handleOpenModal }) => {
   const { t } = useTranslation();
 
   return (
-    <nav
-      className="d-flex nav nav-pills nav-fill nav-stacked px-2 w-100 py-auto overflow-auto"
+    <Nav
+      as="ul"
+      variant="pills"
+      className="h-100 flex-column justify-content-start px-2 w-100 overflow-auto"
       style={{ maxHeight: '95%' }}
     >
       {channels && channels.map(({ id, name, removable }) => {
@@ -60,14 +64,14 @@ const ChannelsList = ({ handleOpenModal }) => {
             t={t}
             handleOpenModal={handleOpenModal}
             onClick={setChannel(id)}
-            key={uniqueId()} // id
+            key={`${id}`}
             color={color}
             channelName={name}
             hasDropDown={removable}
           />
         );
       })}
-    </nav>
+    </Nav>
   );
 };
 
