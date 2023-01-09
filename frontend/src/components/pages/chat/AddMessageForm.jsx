@@ -40,6 +40,27 @@ const AddMessageForm = ({ t, currentChannelId }) => {
       initialValues={{
         message: '',
       }}
+      onSubmit={(values, { resetForm }) => {
+        setInputValue('');
+        try {
+          const messageToSend = {
+            body: filter.clean(values.message.trim()),
+            channelId: currentChannelId,
+            username,
+          };
+
+          sendMessage(messageToSend, (response) => {
+            if (response.status === 'ok') {
+              return;
+            }
+            toast.error(t('toasts.networkError'));
+          });
+          resetForm({ values: { message: '' } });
+        } catch (e) {
+          rollbar.error('Add msg error', e);
+          toast.error(t('toasts.networkError'));
+        }
+      }}
     >
       {
       ({
@@ -51,25 +72,6 @@ const AddMessageForm = ({ t, currentChannelId }) => {
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
-            setInputValue('');
-            try {
-              const messageToSend = {
-                body: filter.clean(values.message.trim()),
-                channelId: currentChannelId,
-                username,
-              };
-
-              sendMessage(messageToSend, (response) => {
-                if (response.status === 'ok') {
-                  return;
-                }
-                toast.error(t('toasts.networkError'));
-              });
-              resetForm({ values: { message: '' } });
-            } catch (err) {
-              rollbar.error('Add msg error', err);
-              toast.error(t('toasts.networkError'));
-            }
           }}
         >
           <InputGroup className="d-flex align-items-center">

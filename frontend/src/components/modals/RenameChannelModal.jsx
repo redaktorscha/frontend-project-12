@@ -51,6 +51,10 @@ const RenameChannelForm = ({
       initialValues={{
         channelName: `${targetChannel}`,
       }}
+      onSubmit={(values) => {
+        setIsFormSending(true);
+        handleRename(values);
+      }}
     >
       {
       ({
@@ -62,8 +66,6 @@ const RenameChannelForm = ({
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
-            setIsFormSending(true);
-            handleRename(values);
           }}
         >
           <Form.Group className="d-flex align-items-center">

@@ -86,6 +86,7 @@ const LoginForm = () => {
         username: '',
         password: '',
       }}
+      onSubmit={() => { console.log('login submit'); }}
     >
       {({
         handleSubmit,

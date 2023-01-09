@@ -92,6 +92,7 @@ const SignupForm = () => {
         password: '',
         confirmPassword: '',
       }}
+      onSubmit={() => {}}
     >
       {({
         handleSubmit,

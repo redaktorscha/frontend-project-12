@@ -50,10 +50,16 @@ const AddChannelForm = ({
       initialValues={{
         channelName: '',
       }}
+      onSubmit={(values, { resetForm }) => {
+        setIsFormSending(true);
+        handleAdd(values);
+        resetForm({ values: { channelName: '' } });
+        setIsFormSending(false);
+      }}
     >
       {
       ({
-        handleChange, handleSubmit, resetForm, values, errors,
+        handleChange, handleSubmit, values, errors,
       }) => (
         <Form
           className="flex-fill border rounded-2 py-2 px-2"
@@ -61,10 +67,6 @@ const AddChannelForm = ({
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
-            setIsFormSending(true);
-            handleAdd(values);
-            resetForm({ values: { channelName: '' } });
-            setIsFormSending(false);
           }}
         >
           <Form.Group className="d-flex align-items-center">
