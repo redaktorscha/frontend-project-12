@@ -13,6 +13,7 @@ const ChannelButton = ({ color, onClick, channelName }) => (
     type="button"
     className="w-100 rounded-0 text-start text-truncate"
     onClick={onClick}
+    tabIndex={0}
   >
     {`# ${channelName}`}
 
@@ -27,14 +28,14 @@ const Channel = ({
   );
 
   return (
-    <Nav.Item as="li" className="w-100">
+    <Nav.Item as="li" className="w-100" tabIndex={-1}>
       {hasDropDown ? (
         <Dropdown as={ButtonGroup} className="w-100">
           {NavPill}
           <Dropdown.Toggle split variant={color} />
           <Dropdown.Menu>
-            <Dropdown.Item role="button" onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
-            <Dropdown.Item role="button" onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
+            <Dropdown.Item role="button" tabIndex={0} onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
+            <Dropdown.Item role="button" tabIndex={0} onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       ) : NavPill}
@@ -57,7 +58,7 @@ const ChannelsList = ({ handleOpenModal }) => {
       style={{ maxHeight: '95%' }}
     >
       {channels && channels.map(({ id, name, removable }) => {
-        const color = id === currentChannelId ? 'secondary' : '';
+        const color = id === currentChannelId ? 'secondary' : 'light';
 
         return (
           <Channel
