@@ -15,7 +15,7 @@ import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js
 import { SocketContext } from '../../contexts';
 
 const RenameChannelForm = ({
-  t, shouldOpen, handleClose, handleRename,
+  shouldOpen, handleClose, handleRename,
 }) => {
   const [isFormSending, setIsFormSending] = useState(false);
 
@@ -23,6 +23,8 @@ const RenameChannelForm = ({
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
   const { targetChannel } = useSelector((state) => state.modal);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (shouldOpen) {
@@ -49,10 +51,6 @@ const RenameChannelForm = ({
       initialValues={{
         channelName: `${targetChannel}`,
       }}
-      onSubmit={(values) => {
-        setIsFormSending(true);
-        handleRename(values);
-      }}
     >
       {
       ({
@@ -64,6 +62,8 @@ const RenameChannelForm = ({
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
+            setIsFormSending(true);
+            handleRename(values);
           }}
         >
           <Form.Group className="d-flex align-items-center">
@@ -151,7 +151,6 @@ const RenameChannelModal = () => {
       </BootstrapModal.Header>
       <BootstrapModal.Body>
         <RenameChannelForm
-          t={t}
           shouldOpen={shouldOpen}
           handleClose={handleClose}
           handleRename={handleRename}

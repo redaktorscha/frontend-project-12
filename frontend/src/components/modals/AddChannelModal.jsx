@@ -17,10 +17,11 @@ import { setIsOpen, setType } from '../../slices/modalSlice.js';
 import { SocketContext } from '../../contexts';
 
 const AddChannelForm = ({
-  t, handleClose, shouldOpen, handleAdd,
+  handleClose, shouldOpen, handleAdd,
 }) => {
   const [isFormSending, setIsFormSending] = useState(false);
   const inputRef = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (shouldOpen) {
@@ -49,16 +50,10 @@ const AddChannelForm = ({
       initialValues={{
         channelName: '',
       }}
-      onSubmit={(values, { resetForm }) => {
-        setIsFormSending(true);
-        handleAdd(values);
-        resetForm({ values: { channelName: '' } });
-        setIsFormSending(false);
-      }}
     >
       {
       ({
-        handleChange, handleSubmit, values, errors,
+        handleChange, handleSubmit, resetForm, values, errors,
       }) => (
         <Form
           className="flex-fill border rounded-2 py-2 px-2"
@@ -66,6 +61,10 @@ const AddChannelForm = ({
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
+            setIsFormSending(true);
+            handleAdd(values);
+            resetForm({ values: { channelName: '' } });
+            setIsFormSending(false);
           }}
         >
           <Form.Group className="d-flex align-items-center">
@@ -141,7 +140,6 @@ const AddChannelModal = ({ setBtnFocused }) => {
       </BootstrapModal.Header>
       <BootstrapModal.Body>
         <AddChannelForm
-          t={t}
           shouldOpen={shouldOpen}
           handleClose={handleClose}
           handleAdd={handleAdd}

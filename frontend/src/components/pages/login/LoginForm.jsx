@@ -50,7 +50,7 @@ const LoginForm = () => {
         const { data } = response;
         if (data) {
           localStorage.setItem('user', JSON.stringify(data));
-          setUser(data.username);
+          setUser(data);
           navigate('/');
         }
       } catch (e) {
@@ -82,7 +82,6 @@ const LoginForm = () => {
   return (
     <Formik
       validationSchema={loginSchema}
-      onSubmit={() => { console.log('login submit'); }}
       initialValues={{
         username: '',
         password: '',

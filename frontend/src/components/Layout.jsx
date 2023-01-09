@@ -46,7 +46,7 @@ const Layout = () => {
   return (
     <div className="vh-100 d-flex flex-column justify-content-between bg-light">
       <Header t={t} logOut={logOut} hasBtn={hasBtn} />
-      <main className="d-flex align-items-center flex-grow-1 my-auto" style={{ maxHeight: '88vh' }}>
+      <main className="d-flex align-items-center flex-grow-1 my-auto py-2">
         <Outlet />
       </main>
       {hasFooter && <Footer t={t} />}

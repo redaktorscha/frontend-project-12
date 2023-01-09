@@ -28,19 +28,15 @@ const SignupForm = () => {
   const rollbar = useRollbar();
 
   useEffect(() => {
-    console.log('formIsValid', formIsValid);
-
     const registerUser = async () => {
       const signupRoute = getRoute('signup');
-      console.log('formSignupData', formSignupData);
       try {
         setFormSignupError('');
         const response = await axios.post(signupRoute, formSignupData);
         const { data } = response;
-        console.log('signup data', data);
         if (data) {
           localStorage.setItem('user', JSON.stringify(data));
-          setUser(data.username);
+          setUser(data);
           navigate('/');
         }
       } catch (e) {
@@ -92,7 +88,6 @@ const SignupForm = () => {
   return (
     <Formik
       validationSchema={signupSchema}
-      onSubmit={() => { console.log('signup submit'); }}
       initialValues={{
         username: '',
         password: '',
@@ -112,8 +107,6 @@ const SignupForm = () => {
             e.preventDefault();
             const { username, password } = values;
             setFormSignupData({ username, password });
-            console.log('errors', isEmpty(errors));
-            console.log('formSignupData', formSignupData);
             setFormIsValid(isEmpty(errors));
             handleSubmit();
           }}
