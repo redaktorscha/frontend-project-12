@@ -1,9 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { AuthContext } from '../../contexts';
+import useLocalStorage from '../../utils/useLocalStorage';
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user'))?.username || null);
-  const userData = useMemo(() => ({ user, setUser }), [user]);
+  const [user, setUser] = useLocalStorage('user', null);
+  console.log('user', user);
+  const userData = useMemo(() => ({ user: user?.username, setUser }), [user, setUser]);
 
   return (
     <AuthContext.Provider value={userData}>
