@@ -1,6 +1,6 @@
 // ts-check
 import React, {
-  useContext, useRef, useEffect,
+  useContext, useRef, useEffect, useState,
 } from 'react';
 import { Form, Button, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,8 @@ import { SocketContext } from '../../contexts';
 const RenameChannelForm = ({
   t, shouldOpen, handleClose, handleRename,
 }) => {
+  const [isFormSending, setIsFormSending] = useState(false);
+
   const inputRef = useRef(null);
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
@@ -24,6 +26,7 @@ const RenameChannelForm = ({
 
   useEffect(() => {
     if (shouldOpen) {
+      setIsFormSending(false);
       inputRef.current.focus();
     }
   }, [shouldOpen]);
@@ -46,7 +49,10 @@ const RenameChannelForm = ({
       initialValues={{
         channelName: `${targetChannel}`,
       }}
-      onSubmit={(values) => handleRename(values)}
+      onSubmit={(values) => {
+        setIsFormSending(true);
+        handleRename(values);
+      }}
     >
       {
       ({
@@ -77,10 +83,10 @@ const RenameChannelForm = ({
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="d-flex align-items-center justify-content-end pt-3">
-            <Button className="me-2" variant="secondary" onClick={handleClose}>
+            <Button className="me-2" variant="secondary" onClick={handleClose} disabled={isFormSending}>
               {t('ui.modals.cancel')}
             </Button>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" disabled={isFormSending}>
               {t('ui.modals.send')}
             </Button>
           </Form.Group>

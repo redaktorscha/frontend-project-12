@@ -1,5 +1,5 @@
 // ts-check
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useRollbar } from '@rollbar/react';
@@ -11,6 +11,7 @@ import { SocketContext } from '../../contexts';
 
 const DeleteChannelModal = () => {
   const { removeChannel } = useContext(SocketContext);
+  const [isSending, setIsSending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -32,6 +33,7 @@ const DeleteChannelModal = () => {
     const [{ id }] = channels
       .filter(({ name, removable }) => removable && (name === targetChannel));
     if (targetChannel) {
+      setIsSending(true);
       try {
         const channelForDeletion = { id };
         removeChannel(channelForDeletion, (response) => {
@@ -54,6 +56,12 @@ const DeleteChannelModal = () => {
   const { isOpen, type } = useSelector((state) => state.modal);
   const shouldOpen = isOpen && type === modalType;
 
+  useEffect(() => {
+    if (shouldOpen) {
+      setIsSending(false);
+    }
+  }, [shouldOpen]);
+
   return (
     <BootstrapModal centered show={shouldOpen} onHide={handleClose}>
       <BootstrapModal.Header closeButton>
@@ -61,10 +69,10 @@ const DeleteChannelModal = () => {
       </BootstrapModal.Header>
       <BootstrapModal.Body>{t('ui.modals.deleteChannelBody')}</BootstrapModal.Body>
       <BootstrapModal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={handleClose} disabled={isSending}>
           {t('ui.modals.cancel')}
         </Button>
-        <Button variant="danger" onClick={handleDelete}>
+        <Button variant="danger" onClick={handleDelete} disabled={isSending}>
           {t('ui.modals.delete')}
         </Button>
       </BootstrapModal.Footer>

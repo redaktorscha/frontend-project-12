@@ -1,5 +1,7 @@
 // ts-check
-import React, { useRef, useEffect, useContext } from 'react';
+import React, {
+  useRef, useEffect, useContext, useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button, Modal as BootstrapModal, Form,
@@ -14,14 +16,18 @@ import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
 import { SocketContext } from '../../contexts';
 
-const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
+const AddChannelForm = ({
+  t, handleClose, shouldOpen, handleAdd,
+}) => {
+  const [isFormSending, setIsFormSending] = useState(false);
   const inputRef = useRef(null);
-  const { addChannel } = useContext(SocketContext);
+
   useEffect(() => {
     if (shouldOpen) {
       inputRef.current.focus();
     }
   });
+
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 
@@ -36,7 +42,6 @@ const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
         .required(t('errors.modals.required'))
         .notOneOf(channelsNames, t('errors.modals.notOneOf')),
     });
-  const rollbar = useRollbar();
 
   return (
     <Formik
@@ -45,22 +50,10 @@ const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
         channelName: '',
       }}
       onSubmit={(values, { resetForm }) => {
-        try {
-          const newChannel = {
-            name: filter.clean(values.channelName.trim()),
-          };
-          addChannel(newChannel, (response) => {
-            if (response.status === 'ok') {
-              toast.success(t('toasts.channelCreated'));
-              return;
-            }
-            toast.error(t('toasts.networkError'));
-          });
-          resetForm({ values: { channelName: '' } });
-        } catch (e) {
-          rollbar.error('Add channel error', e);
-          toast.error(t('toasts.networkError'));
-        }
+        setIsFormSending(true);
+        handleAdd(values);
+        resetForm({ values: { channelName: '' } });
+        setIsFormSending(false);
       }}
     >
       {
@@ -92,10 +85,10 @@ const AddChannelForm = ({ t, handleClose, shouldOpen }) => {
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="d-flex align-items-center justify-content-end pt-3">
-            <Button className="me-2" variant="secondary" onClick={handleClose}>
+            <Button className="me-2" variant="secondary" onClick={handleClose} disabled={isFormSending}>
               {t('ui.modals.cancel')}
             </Button>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" disabled={isFormSending}>
               {t('ui.modals.send')}
             </Button>
           </Form.Group>
@@ -116,10 +109,30 @@ const AddChannelModal = ({ setBtnFocused }) => {
   };
 
   const { t } = useTranslation();
+  const rollbar = useRollbar();
+  const { addChannel } = useContext(SocketContext);
 
   const modalType = 'add';
   const { isOpen, type } = useSelector((state) => state.modal);
   const shouldOpen = isOpen && type === modalType;
+
+  const handleAdd = (data) => {
+    try {
+      const newChannel = {
+        name: filter.clean(data.channelName.trim()),
+      };
+      addChannel(newChannel, (response) => {
+        if (response.status === 'ok') {
+          toast.success(t('toasts.channelCreated'));
+          return;
+        }
+        toast.error(t('toasts.networkError'));
+      });
+    } catch (e) {
+      rollbar.error('Add channel error', e);
+      toast.error(t('toasts.networkError'));
+    }
+  };
 
   return (
     <BootstrapModal centered show={shouldOpen} onHide={handleClose}>
@@ -127,7 +140,12 @@ const AddChannelModal = ({ setBtnFocused }) => {
         <BootstrapModal.Title>{t('ui.modals.addChannelHeader')}</BootstrapModal.Title>
       </BootstrapModal.Header>
       <BootstrapModal.Body>
-        <AddChannelForm t={t} shouldOpen={shouldOpen} handleClose={handleClose} />
+        <AddChannelForm
+          t={t}
+          shouldOpen={shouldOpen}
+          handleClose={handleClose}
+          handleAdd={handleAdd}
+        />
       </BootstrapModal.Body>
     </BootstrapModal>
   );
