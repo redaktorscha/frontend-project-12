@@ -1,15 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
-const useLocalStorage = (key, defaultValue) => {
+const useLocalStorage = (key, defaultValue = null) => {
   const [storageValue, setStorageValue] = useState(() => JSON.parse(localStorage
     .getItem(key)) || defaultValue);
 
+  const prevValue = useRef(storageValue);
+
   useEffect(() => {
-    if (storageValue === null) {
-      localStorage.removeItem(key);
+    if (storageValue !== null) {
+      localStorage.setItem(key, JSON.stringify(storageValue));
+      prevValue.current = storageValue;
       return;
     }
-    localStorage.setItem(key, JSON.stringify(storageValue));
+    if (prevValue.current !== null) {
+      localStorage.removeItem(key);
+    }
   }, [storageValue, key]);
 
   return [storageValue, setStorageValue];

@@ -14,7 +14,7 @@ import AuthContext from '../../../contexts/AuthContext';
 import SocketContext from '../../../contexts/SocketContext';
 
 const AddMessageForm = ({ t, currentChannelId }) => {
-  const { user } = useContext(AuthContext);
+  const { user: { username } } = useContext(AuthContext);
   const { sendMessage } = useContext(SocketContext);
   const [inputValue, setInputValue] = useState('');
 
@@ -56,7 +56,7 @@ const AddMessageForm = ({ t, currentChannelId }) => {
               const messageToSend = {
                 body: filter.clean(values.message.trim()),
                 channelId: currentChannelId,
-                username: user,
+                username,
               };
 
               sendMessage(messageToSend, (response) => {

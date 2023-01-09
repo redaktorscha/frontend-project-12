@@ -1,12 +1,7 @@
-const getAuthConfig = () => {
-  const { token } = JSON.parse(localStorage.getItem('user'));
-  const authRequestConfig = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  return authRequestConfig;
-};
+const getAuthConfig = (token) => ({
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
 
 export default getAuthConfig;

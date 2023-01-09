@@ -34,7 +34,6 @@ const LoginForm = () => {
         ref.current.classList.remove('is-valid');
         ref.current.classList.add('is-invalid');
       });
-      // usernameTooltip.current.style.display = 'none';
     }
   }, [formAuthError]);
 
@@ -46,10 +45,11 @@ const LoginForm = () => {
       const loginRoute = getRoute('login');
       try {
         setFormAuthError('');
+        console.log('formLoginData', formLoginData);
         const response = await axios.post(loginRoute, formLoginData);
         const { data } = response;
+        console.log('data', data);
         if (data) {
-          localStorage.setItem('user', JSON.stringify(data));
           setUser(data);
           navigate('/');
         }

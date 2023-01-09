@@ -35,7 +35,6 @@ const SignupForm = () => {
         const response = await axios.post(signupRoute, formSignupData);
         const { data } = response;
         if (data) {
-          localStorage.setItem('user', JSON.stringify(data));
           setUser(data);
           navigate('/');
         }
