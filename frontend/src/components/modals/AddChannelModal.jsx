@@ -3,9 +3,7 @@ import React, {
   useRef, useEffect, useContext, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button, Modal as BootstrapModal, Form,
-} from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
 import { Formik } from 'formik';
@@ -15,6 +13,7 @@ import { useRollbar } from '@rollbar/react';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
 import { SocketContext } from '../../contexts';
+import Modal from './Modal';
 
 const AddChannelForm = ({
   handleClose, shouldOpen, handleAdd,
@@ -136,19 +135,35 @@ const AddChannelModal = ({ setBtnFocused }) => {
   };
 
   return (
-    <BootstrapModal centered show={shouldOpen} onHide={handleClose}>
-      <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>{t('ui.modals.addChannelHeader')}</BootstrapModal.Title>
-      </BootstrapModal.Header>
-      <BootstrapModal.Body>
+    <Modal
+      shouldOpen={shouldOpen}
+      handleClose={handleClose}
+      modalTitle={t('ui.modals.addChannelHeader')}
+      modalBody={(
         <AddChannelForm
           shouldOpen={shouldOpen}
           handleClose={handleClose}
           handleAdd={handleAdd}
         />
-      </BootstrapModal.Body>
-    </BootstrapModal>
+      )}
+      modalFooter={null}
+    />
   );
+
+  // return (
+  //   <BootstrapModal centered show={shouldOpen} onHide={handleClose}>
+  //     <BootstrapModal.Header closeButton>
+  //       <BootstrapModal.Title>{}</BootstrapModal.Title>
+  //     </BootstrapModal.Header>
+  //     <BootstrapModal.Body>
+  //       <AddChannelForm
+  //         shouldOpen={shouldOpen}
+  //         handleClose={handleClose}
+  //         handleAdd={handleAdd}
+  //       />
+  //     </BootstrapModal.Body>
+  //   </BootstrapModal>
+  // );
 };
 
 export default AddChannelModal;

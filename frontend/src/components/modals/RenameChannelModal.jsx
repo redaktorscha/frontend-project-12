@@ -2,7 +2,7 @@
 import React, {
   useContext, useRef, useEffect, useState,
 } from 'react';
-import { Form, Button, Modal as BootstrapModal } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
@@ -13,6 +13,7 @@ import * as yup from 'yup';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
 import { SocketContext } from '../../contexts';
+import Modal from './Modal';
 
 const RenameChannelForm = ({
   shouldOpen, handleClose, handleRename,
@@ -147,18 +148,19 @@ const RenameChannelModal = () => {
   const shouldOpen = isOpen && type === modalType;
 
   return (
-    <BootstrapModal centered show={shouldOpen} onHide={handleClose}>
-      <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>{t('ui.modals.addChannelHeader')}</BootstrapModal.Title>
-      </BootstrapModal.Header>
-      <BootstrapModal.Body>
+    <Modal
+      shouldOpen={shouldOpen}
+      handleClose={handleClose}
+      modalTitle={t('ui.modals.renameChannelHeader')}
+      modalBody={(
         <RenameChannelForm
           shouldOpen={shouldOpen}
           handleClose={handleClose}
           handleRename={handleRename}
         />
-      </BootstrapModal.Body>
-    </BootstrapModal>
+      )}
+      modalFooter={null}
+    />
   );
 };
 

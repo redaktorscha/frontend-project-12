@@ -3,11 +3,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useRollbar } from '@rollbar/react';
-import { Button, Modal as BootstrapModal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
 import { SocketContext } from '../../contexts';
+import Modal from './Modal';
 
 const DeleteChannelModal = () => {
   const { removeChannel } = useContext(SocketContext);
@@ -63,20 +64,22 @@ const DeleteChannelModal = () => {
   }, [shouldOpen]);
 
   return (
-    <BootstrapModal centered show={shouldOpen} onHide={handleClose}>
-      <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>{t('ui.modals.deleteChannelHeader')}</BootstrapModal.Title>
-      </BootstrapModal.Header>
-      <BootstrapModal.Body>{t('ui.modals.deleteChannelBody')}</BootstrapModal.Body>
-      <BootstrapModal.Footer>
-        <Button variant="secondary" onClick={handleClose} disabled={isSending}>
-          {t('ui.modals.cancel')}
-        </Button>
-        <Button variant="danger" onClick={handleDelete} disabled={isSending}>
-          {t('ui.modals.delete')}
-        </Button>
-      </BootstrapModal.Footer>
-    </BootstrapModal>
+    <Modal
+      shouldOpen={shouldOpen}
+      handleClose={handleClose}
+      modalTitle={t('ui.modals.deleteChannelHeader')}
+      modalBody={t('ui.modals.deleteChannelBody')}
+      modalFooter={(
+        <>
+          <Button variant="secondary" onClick={handleClose} disabled={isSending}>
+            {t('ui.modals.cancel')}
+          </Button>
+          <Button variant="danger" onClick={handleDelete} disabled={isSending}>
+            {t('ui.modals.delete')}
+          </Button>
+        </>
+      )}
+    />
   );
 };
 
