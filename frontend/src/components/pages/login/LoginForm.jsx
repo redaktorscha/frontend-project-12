@@ -24,7 +24,6 @@ const LoginForm = () => {
 
   const { setUser } = useContext(AuthContext);
 
-  const usernameTooltip = useRef(null);
   const inputUsername = useRef(null);
   const inputPassword = useRef(null);
 
@@ -119,7 +118,7 @@ const LoginForm = () => {
               ref={inputUsername}
             />
             <Form.Label>{t('ui.login.username')}</Form.Label>
-            <Form.Control.Feedback type="invalid" tooltip ref={usernameTooltip}>
+            <Form.Control.Feedback type="invalid" tooltip>
               {errors.username}
             </Form.Control.Feedback>
           </Form.Group>
