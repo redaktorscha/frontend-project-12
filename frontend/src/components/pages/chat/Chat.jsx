@@ -73,7 +73,6 @@ const Chat = () => {
         const authConfig = getAuthConfig(user.token);
         const response = await axios.get(dataRoute, authConfig);
         const { data } = response;
-        console.log('chat data', data);
         if (data) {
           dispatch(setChannels(data.channels));
           dispatch(setCurrentChannel(data.currentChannelId));

@@ -25,9 +25,10 @@ const AddChannelForm = ({
 
   useEffect(() => {
     if (shouldOpen) {
+      setIsFormSending(false);
       inputRef.current.focus();
     }
-  });
+  }, [shouldOpen]);
 
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
@@ -50,11 +51,9 @@ const AddChannelForm = ({
       initialValues={{
         channelName: '',
       }}
-      onSubmit={(values, { resetForm }) => {
+      onSubmit={(values) => {
         setIsFormSending(true);
         handleAdd(values);
-        resetForm({ values: { channelName: '' } });
-        setIsFormSending(false);
       }}
     >
       {
@@ -133,6 +132,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
       rollbar.error('Add channel error', e);
       toast.error(t('toasts.networkError'));
     }
+    handleClose();
   };
 
   return (

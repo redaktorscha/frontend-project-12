@@ -45,10 +45,8 @@ const LoginForm = () => {
       const loginRoute = getRoute('login');
       try {
         setFormAuthError('');
-        console.log('formLoginData', formLoginData);
         const response = await axios.post(loginRoute, formLoginData);
         const { data } = response;
-        console.log('data', data);
         if (data) {
           setUser(data);
           navigate('/');
