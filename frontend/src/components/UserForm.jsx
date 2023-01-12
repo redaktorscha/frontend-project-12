@@ -89,7 +89,7 @@ const UserForm = ({
         >
           {inputs.map(({
             type, inputName, ref, label,
-          }) => (
+          }, i) => (
             <Form.Group
               key={inputName}
               className="form-floating mb-4"
@@ -109,13 +109,10 @@ const UserForm = ({
               />
               <Form.Label>{label}</Form.Label>
               <Form.Control.Feedback type="invalid" tooltip>
-                {errors[inputName]}
+                {i === inputs.length - 1 ? errors[inputName] || formHandleError : errors[inputName]}
               </Form.Control.Feedback>
             </Form.Group>
           ))}
-          <Form.Control.Feedback type="invalid" tooltip>
-            {formHandleError}
-          </Form.Control.Feedback>
           <Button
             type="submit"
             variant="outline-primary"
