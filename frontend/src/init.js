@@ -3,22 +3,15 @@ import { initReactI18next } from 'react-i18next';
 import filter from 'leo-profanity';
 import resources from './locales';
 import initSocket from './socket-client';
-
-const defaultLocale = 'ru';
+import getI18nConfig, { defaultLocale } from './utils/getI18nConfig';
 
 export default async () => {
   const socketFunctions = initSocket();
+  const i18nConfig = getI18nConfig(resources);
 
   i18n
     .use(initReactI18next)
-    .init({
-      lng: defaultLocale,
-      debug: true,
-      resources,
-      interpolation: {
-        escapeValue: false,
-      },
-    });
+    .init(i18nConfig);
 
   filter.loadDictionary(defaultLocale);
 
