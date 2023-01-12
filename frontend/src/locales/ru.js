@@ -60,6 +60,7 @@ export default {
         send: 'Отправить',
         channels: 'Каналы',
         enterMessage: 'Введите сообщение',
+        ariaLabelMessage: 'Новое сообщение',
         delete: 'Удалить',
         rename: 'Переименовать',
         messagesCount: {

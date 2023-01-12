@@ -78,6 +78,7 @@ const AddMessageForm = ({ t, currentChannelId }) => {
             <Form.Control
               className="border-0 py-1 px-2 text-truncate"
               placeholder={t('ui.chat.enterMessage')}
+              aria-label={t('ui.chat.ariaLabelMessage')}
               type="text"
               name="message"
               value={values.message}
