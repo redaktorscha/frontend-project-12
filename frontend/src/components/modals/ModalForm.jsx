@@ -6,7 +6,7 @@ import { Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const ModalForm = ({
-  shouldOpen, handleClose, eventHandler, validationSchema, initialValues, labelText,
+  shouldOpen, handleClose, eventHandler, validationSchema, initialValues,
 }) => {
   const inputRef = useRef(null);
 
@@ -47,7 +47,7 @@ const ModalForm = ({
                 isInvalid={!!errors.channelName}
                 ref={inputRef}
               />
-              <Form.Label className="visually-hidden">{labelText}</Form.Label>
+              <Form.Label htmlFor="channelName" className="visually-hidden">{t('ui.modals.channelName')}</Form.Label>
               <Form.Control.Feedback type="invalid" tooltip>
                 {errors.channelName}
               </Form.Control.Feedback>

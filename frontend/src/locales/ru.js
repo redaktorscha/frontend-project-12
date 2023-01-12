@@ -73,6 +73,7 @@ export default {
         cancel: 'Отменить',
         send: 'Отправить',
         delete: 'Удалить',
+        channelName: 'Имя канала',
         addChannelHeader: 'Добавить канал',
         deleteChannelHeader: 'Удалить канал',
         deleteChannelBody: 'Уверены?',

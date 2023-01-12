@@ -72,6 +72,7 @@ export default {
         cancel: 'Cancel',
         send: 'Send',
         delete: 'Delete',
+        channelName: 'Channel name',
         addChannelHeader: 'Add channel',
         deleteChannelHeader: 'Remove channel',
         deleteChannelBody: 'Are you sure?',

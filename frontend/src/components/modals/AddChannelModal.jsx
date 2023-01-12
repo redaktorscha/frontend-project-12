@@ -73,7 +73,6 @@ const AddChannelModal = ({ setBtnFocused }) => {
           eventHandler={handleAdd}
           validationSchema={addChannelSchema}
           initialValues={{ channelName: '' }}
-          labelText={t('ui.modals.addChannelHeader')}
         />
       )}
       modalFooter={null}

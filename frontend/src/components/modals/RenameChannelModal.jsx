@@ -83,7 +83,6 @@ const RenameChannelModal = () => {
           eventHandler={handleRename}
           validationSchema={renameChannelSchema}
           initialValues={{ channelName: `${targetChannel}` }}
-          labelText={t('ui.modals.renameChannelHeader')}
         />
       )}
       modalFooter={null}
