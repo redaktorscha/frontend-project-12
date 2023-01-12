@@ -44,14 +44,12 @@ const UserForm = ({
         navigate('/');
       }
     } catch (e) {
-      console.log('e.response.status', e.response.status);
       if (e.response.status === errorCode) {
         if (eventType === 'signup') {
           setFormHandleError(t(`errors.${eventType}.exists`));
         } else {
           setFormHandleError(t(`errors.${eventType}.invalid`));
         }
-        console.log('formHandleError', formHandleError);
       } else {
         rollbar.error(`${eventType} error`, e);
         toast.error(t('toasts.networkError'));
@@ -72,8 +70,8 @@ const UserForm = ({
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
-      onSubmit={(values) => {
-        handleUser(values);
+      onSubmit={async (values) => {
+        await handleUser(values);
       }}
     >
       {({
@@ -82,6 +80,7 @@ const UserForm = ({
         values,
         touched,
         errors,
+        isSubmitting,
       }) => (
         <Form
           noValidate
@@ -117,6 +116,7 @@ const UserForm = ({
             type="submit"
             variant="outline-primary"
             className="w-100 mb-3"
+            disabled={isSubmitting}
           >
             {buttonText}
           </Button>

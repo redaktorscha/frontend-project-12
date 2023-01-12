@@ -13,7 +13,6 @@ const rootRoute = '/';
 const supportedLanguages = ['ru', 'en'];
 
 const switchLanguage = ({ value }, i18n) => {
-  console.log('value', value);
   i18n.changeLanguage(value);
 };
 

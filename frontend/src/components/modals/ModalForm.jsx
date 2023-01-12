@@ -1,5 +1,5 @@
 import React, {
-  useRef, useEffect, useState,
+  useRef, useEffect,
 } from 'react';
 import { Formik } from 'formik';
 import { Form, Button } from 'react-bootstrap';
@@ -8,15 +8,12 @@ import { useTranslation } from 'react-i18next';
 const ModalForm = ({
   shouldOpen, handleClose, eventHandler, validationSchema, initialValues, labelText,
 }) => {
-  const [isFormSending, setIsFormSending] = useState(false);
-
   const inputRef = useRef(null);
 
   const { t } = useTranslation();
 
   useEffect(() => {
     if (shouldOpen) {
-      setIsFormSending(false);
       inputRef.current.focus();
     }
   }, [shouldOpen]);
@@ -25,22 +22,19 @@ const ModalForm = ({
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
-      onSubmit={(values) => {
-        setIsFormSending(true);
+      onSubmit={(values, { setSubmitting }) => {
         eventHandler(values);
+        setSubmitting(false);
       }}
     >
       {
         ({
-          handleChange, handleSubmit, values, errors,
+          handleChange, handleSubmit, values, errors, isSubmitting,
         }) => (
           <Form
             className="flex-fill border rounded-2 py-2 px-2"
             noValidate
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
+            onSubmit={handleSubmit}
           >
             <Form.Group className="d-flex align-items-center">
               <Form.Control
@@ -59,10 +53,10 @@ const ModalForm = ({
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="d-flex align-items-center justify-content-end pt-3">
-              <Button className="me-2" variant="secondary" onClick={handleClose} disabled={isFormSending}>
+              <Button className="me-2" variant="secondary" onClick={handleClose} disabled={isSubmitting}>
                 {t('ui.modals.cancel')}
               </Button>
-              <Button type="submit" variant="primary" disabled={isFormSending}>
+              <Button type="submit" variant="primary" disabled={isSubmitting}>
                 {t('ui.modals.send')}
               </Button>
             </Form.Group>

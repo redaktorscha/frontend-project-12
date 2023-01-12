@@ -26,16 +26,10 @@ import AuthProvider from './components/providers/AuthProvider';
     enabled: IS_DEV_ENV || IS_PROD_ENV,
   };
 
-  // const TestError = () => {
-  //   const a = null;
-  //   return a.hello();
-  // };
-
   root.render(
     <React.StrictMode>
       <RollbarProvider config={rollbarConfig}>
         <ErrorBoundary>
-          {/* <TestError /> */}
           <ReduxProvider store={store}>
             <I18nextProvider i18n={i18n}>
               <AuthProvider>
