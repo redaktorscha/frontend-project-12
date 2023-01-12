@@ -63,7 +63,6 @@ const Layout = () => {
   const { setUser } = useContext(AuthContext);
   const logOut = () => {
     setUser(null);
-    // localStorage.removeItem('user');
   };
   const { pathname } = useLocation();
   const hasFooter = pathname !== rootRoute;
