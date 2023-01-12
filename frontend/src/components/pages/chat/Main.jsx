@@ -54,9 +54,7 @@ const Main = () => {
           </b>
         </p>
         <span className="text-muted">
-          {messagesCount}
-          {' '}
-          {t('ui.chat.messagesCount')}
+          {t('ui.chat.messagesCount.key', { count: messagesCount })}
         </span>
       </div>
       <Messages currentChannelMessages={currentChannelMessages} />

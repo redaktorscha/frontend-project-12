@@ -59,7 +59,11 @@ export default {
         enterMessage: 'Enter your message',
         delete: 'Delete',
         rename: 'Rename',
-        messagesCount: 'messages',
+        messagesCount: {
+          key_one: '{{count}} message',
+          key_few: '{{count}} messages',
+          key_many: '{{count}} messages',
+        },
       },
       modals: {
         cancel: 'Cancel',

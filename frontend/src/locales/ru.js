@@ -60,7 +60,11 @@ export default {
         enterMessage: 'Введите сообщение',
         delete: 'Удалить',
         rename: 'Переименовать',
-        messagesCount: 'сообщений',
+        messagesCount: {
+          key_one: '{{count}} сообщение',
+          key_few: '{{count}} сообщения',
+          key_many: '{{count}} сообщений',
+        },
       },
       modals: {
         cancel: 'Отменить',
