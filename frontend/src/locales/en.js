@@ -29,6 +29,9 @@ export default {
     ui: {
       header: {
         btnLogout: 'Logout',
+        language: 'Lang.',
+        ru: 'Рус.',
+        en: 'Англ.',
       },
       footer: {
         picturesCopyright: 'Online illustrations by Storyset',
@@ -61,8 +64,7 @@ export default {
         rename: 'Rename',
         messagesCount: {
           key_one: '{{count}} message',
-          key_few: '{{count}} messages',
-          key_many: '{{count}} messages',
+          key_other: '{{count}} messages',
         },
       },
       modals: {

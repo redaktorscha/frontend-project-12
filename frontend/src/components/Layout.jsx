@@ -10,10 +10,37 @@ import { AuthContext } from '../contexts';
 
 const rootRoute = '/';
 
-const Header = ({ t, logOut, hasBtn }) => (
+const supportedLanguages = ['ru', 'en'];
+
+const switchLanguage = ({ value }, i18n) => {
+  console.log('value', value);
+  i18n.changeLanguage(value);
+};
+
+const LanguagePicker = () => {
+  const { t, i18n } = useTranslation();
+  return (
+    <select id="select" className="py-2 rounded" onChange={(e) => switchLanguage(e.target, i18n)}>
+      {supportedLanguages.map((language) => (
+        <option
+          key={language}
+          value={language}
+        >
+          {t(`ui.header.${language}`)}
+
+        </option>
+      ))}
+    </select>
+  );
+};
+
+const Header = ({
+  t, logOut, hasBtn,
+}) => (
   <Navbar expand="lg" className="flex-shrink-0 shadow-sm bg-white">
     <Container>
       <Link className="navbar-brand" to="/">Hexlet Chat</Link>
+      <LanguagePicker />
       { hasBtn && <Button variant="primary" onClick={() => { logOut(); }}>{t('ui.header.btnLogout')}</Button>}
     </Container>
   </Navbar>

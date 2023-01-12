@@ -30,6 +30,8 @@ export default {
     ui: {
       header: {
         btnLogout: 'Выйти',
+        ru: 'Ru',
+        en: 'En',
       },
       footer: {
         picturesCopyright: 'Онлайн-иллюстрации: Storyset',
