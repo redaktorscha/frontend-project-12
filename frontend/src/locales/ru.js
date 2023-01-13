@@ -59,6 +59,7 @@ export default {
       chat: {
         send: 'Отправить',
         channels: 'Каналы',
+        channelControl: 'Управление каналом',
         enterMessage: 'Введите сообщение',
         ariaLabelMessage: 'Новое сообщение',
         delete: 'Удалить',

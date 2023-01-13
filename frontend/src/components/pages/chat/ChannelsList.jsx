@@ -33,6 +33,7 @@ const Channel = ({
         <Dropdown as={ButtonGroup} className="w-100">
           {NavPill}
           <Dropdown.Toggle split variant={color} />
+          <span className="visually-hidden">{t('ui.chat.channelControl')}</span>
           <Dropdown.Menu>
             <Dropdown.Item role="button" tabIndex={0} onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
             <Dropdown.Item role="button" tabIndex={0} onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
