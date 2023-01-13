@@ -49,6 +49,7 @@ const Sidebar = () => {
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
         <span>{t('ui.chat.channels')}</span>
         <Button
+          tabIndex={0}
           variant="outline-primary"
           style={btnFocused ? buttonFocusedStyle : buttonNormalStyle}
           ref={buttonRef}
