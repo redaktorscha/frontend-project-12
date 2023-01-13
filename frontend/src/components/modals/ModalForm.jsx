@@ -38,6 +38,7 @@ const ModalForm = ({
           >
             <Form.Group className="d-flex align-items-center">
               <Form.Control
+                id="modal-input"
                 className="border-0 p-1"
                 type="text"
                 name="channelName"
@@ -47,7 +48,7 @@ const ModalForm = ({
                 isInvalid={!!errors.channelName}
                 ref={inputRef}
               />
-              <Form.Label htmlFor="channelName" className="visually-hidden">{t('ui.modals.channelName')}</Form.Label>
+              <Form.Label htmlFor="modal-input" visuallyHidden>{t('ui.modals.channelName')}</Form.Label>
               <Form.Control.Feedback type="invalid" tooltip>
                 {errors.channelName}
               </Form.Control.Feedback>
