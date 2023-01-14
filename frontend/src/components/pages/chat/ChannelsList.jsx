@@ -13,7 +13,6 @@ const ChannelButton = ({ color, onClick, channelName }) => (
     type="button"
     className="w-100 rounded-0 text-start text-truncate"
     onClick={onClick}
-    tabIndex={0}
   >
     <span className="me-1">#</span>
     {channelName}
@@ -35,8 +34,8 @@ const Channel = ({
           <Dropdown.Toggle className="flex-grow-0" split variant={color} />
           <span className="visually-hidden">{t('ui.chat.channelControl')}</span>
           <Dropdown.Menu>
-            <Dropdown.Item role="button" tabIndex={0} onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
-            <Dropdown.Item role="button" tabIndex={0} onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
+            <Dropdown.Item role="button" onClick={handleOpenModal('delete', channelName)}>{t('ui.chat.delete')}</Dropdown.Item>
+            <Dropdown.Item role="button" onClick={handleOpenModal('rename', channelName)}>{t('ui.chat.rename')}</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       ) : NavPill}
