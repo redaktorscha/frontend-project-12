@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import filter from 'leo-profanity';
 import resources from './locales';
 import initSocket from './socket-client';
-import getI18nConfig, { defaultLocale } from './utils/getI18nConfig';
+import getI18nConfig from './utils/getI18nConfig';
 
 export default async () => {
   const socketFunctions = initSocket();
@@ -13,7 +13,8 @@ export default async () => {
     .use(initReactI18next)
     .init(i18nConfig);
 
-  filter.loadDictionary(defaultLocale);
+  const availableLocales = ['en', 'ru'];
+  availableLocales.forEach((locale) => filter.add(filter.getDictionary(locale)));
 
   return { i18n, socketFunctions };
 };

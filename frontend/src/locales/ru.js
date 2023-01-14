@@ -24,7 +24,7 @@ export default {
     toasts: {
       networkError: 'Ошибка соединения',
       channelCreated: 'Канал создан',
-      channelDeleted: 'Канал удален',
+      channelDeleted: 'Канал удалён',
       channelRenamed: 'Канал переименован',
     },
     ui: {

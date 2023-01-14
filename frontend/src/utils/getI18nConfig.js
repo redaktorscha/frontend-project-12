@@ -1,4 +1,4 @@
-export const defaultLocale = 'ru';
+const defaultLocale = 'ru';
 
 export default (translations) => ({
   lng: defaultLocale,
