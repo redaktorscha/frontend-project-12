@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { AuthContext } from '../../contexts';
-import useLocalStorage from '../../utils/useLocalStorage';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage('user');
