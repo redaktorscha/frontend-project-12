@@ -70,6 +70,7 @@ const UserForm = ({
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
+      validateOnChange={false}
       onSubmit={async (values) => {
         await handleUser(values);
       }}
@@ -77,6 +78,7 @@ const UserForm = ({
       {({
         handleSubmit,
         handleChange,
+        handleBlur,
         values,
         touched,
         errors,
@@ -102,8 +104,9 @@ const UserForm = ({
                 placeholder={label}
                 value={values[inputName]}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 isValid={touched[inputName] && !errors[inputName]}
-                isInvalid={!!errors[inputName]}
+                isInvalid={touched[inputName] && !!errors[inputName]}
                 ref={ref}
               />
               <Form.Label>{label}</Form.Label>
