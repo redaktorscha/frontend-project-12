@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // ts-check
 import { useNavigate } from 'react-router-dom';
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRollbar } from '@rollbar/react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Container, Row } from 'react-bootstrap';
-
+import { useAuth, useSocketFunctions } from '../../../hooks';
 import Sidebar from './Sidebar';
 import Main from './Main';
-
-import AuthContext from '../../../contexts/AuthContext';
-import SocketContext from '../../../contexts/SocketContext';
 import {
   setChannels, addChannel, updateChannel, deleteChannel,
 } from '../../../slices/channelsSlice.js';
@@ -22,10 +19,10 @@ import getRoute from '../../../utils/getRoute.js';
 import getAuthConfig from '../../../utils/getAuthConfig.js';
 
 const Chat = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const {
     receiveMessage, confirmAddChannel, confirmRemoveChannel, confirmRenameChannel,
-  } = useContext(SocketContext);
+  } = useSocketFunctions();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

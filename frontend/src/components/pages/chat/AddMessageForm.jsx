@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, {
-  useContext, useRef, useState, useEffect,
+  useRef, useState, useEffect,
 } from 'react';
 import {
   Button, Form, InputGroup,
@@ -10,12 +10,11 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import filter from 'leo-profanity';
-import AuthContext from '../../../contexts/AuthContext';
-import SocketContext from '../../../contexts/SocketContext';
+import { useAuth, useSocketFunctions } from '../../../hooks';
 
 const AddMessageForm = ({ t, currentChannelId }) => {
-  const { user: { username } } = useContext(AuthContext);
-  const { sendMessage } = useContext(SocketContext);
+  const { user: { username } } = useAuth();
+  const { sendMessage } = useSocketFunctions();
   const [inputValue, setInputValue] = useState('');
 
   const rollbar = useRollbar();

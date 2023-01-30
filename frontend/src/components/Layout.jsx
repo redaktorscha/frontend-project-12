@@ -2,11 +2,10 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import {
   Container, Navbar, Button,
 } from 'react-bootstrap';
-import React, { useContext } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
-import { AuthContext } from '../contexts';
+import { useAuth } from '../hooks';
 
 const rootRoute = '/';
 
@@ -60,7 +59,7 @@ const Footer = ({ t }) => (
 
 const Layout = () => {
   const { t } = useTranslation();
-  const { setUser } = useContext(AuthContext);
+  const { setUser } = useAuth();
   const logOut = () => {
     setUser(null);
   };

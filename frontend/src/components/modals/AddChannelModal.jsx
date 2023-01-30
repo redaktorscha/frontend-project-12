@@ -1,5 +1,4 @@
 // ts-check
-import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
@@ -8,9 +7,9 @@ import * as yup from 'yup';
 import { useRollbar } from '@rollbar/react';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType } from '../../slices/modalSlice.js';
-import { SocketContext } from '../../contexts';
 import Modal from './Modal';
 import ModalForm from './ModalForm';
+import { useSocketFunctions } from '../../hooks';
 
 const AddChannelModal = ({ setBtnFocused }) => {
   const dispatch = useDispatch();
@@ -22,7 +21,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
 
   const { t } = useTranslation();
   const rollbar = useRollbar();
-  const { addChannel } = useContext(SocketContext);
+  const { addChannel } = useSocketFunctions();
   const channels = useSelector(channelSelectors.selectAll) || null;
   const channelsNames = channels.map(({ name }) => name);
 

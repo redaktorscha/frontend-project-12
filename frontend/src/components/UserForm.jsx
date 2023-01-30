@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useState, useContext,
+  useEffect, useState,
 } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -8,15 +8,15 @@ import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
-import { AuthContext } from '../contexts';
 import getRoute from '../utils/getRoute';
+import { useAuth } from '../hooks';
 
 const UserForm = ({
   eventType, errorCode, renderData, validationSchema,
 }) => {
   const [formHandleError, setFormHandleError] = useState('');
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
+  const { setUser } = useAuth();
   const { t } = useTranslation();
 
   const rollbar = useRollbar();

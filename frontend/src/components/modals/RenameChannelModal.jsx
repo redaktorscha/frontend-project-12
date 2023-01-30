@@ -1,5 +1,4 @@
 // ts-check
-import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
@@ -8,12 +7,12 @@ import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
-import { SocketContext } from '../../contexts';
 import Modal from './Modal';
 import ModalForm from './ModalForm';
+import { useSocketFunctions } from '../../hooks';
 
 const RenameChannelModal = () => {
-  const { renameChannel } = useContext(SocketContext);
+  const { renameChannel } = useSocketFunctions();
   const dispatch = useDispatch();
   const { t } = useTranslation();
 

@@ -1,5 +1,5 @@
 // ts-check
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useRollbar } from '@rollbar/react';
@@ -7,11 +7,11 @@ import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
-import { SocketContext } from '../../contexts';
+import { useSocketFunctions } from '../../hooks';
 import Modal from './Modal';
 
 const DeleteChannelModal = () => {
-  const { removeChannel } = useContext(SocketContext);
+  const { removeChannel } = useSocketFunctions();
   const [isSending, setIsSending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
