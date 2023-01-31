@@ -15,7 +15,7 @@ import {
 import { setCurrentChannel } from '../../../slices/currentChannelSlice.js';
 import { setMessages, addMessage } from '../../../slices/messagesSlice.js';
 
-import getRoute from '../../../utils/getRoute.js';
+import { appRoutes, DATA_ENDPOINT } from '../../../utils/routes.js';
 import getAuthConfig from '../../../utils/getAuthConfig.js';
 
 const Chat = () => {
@@ -64,7 +64,7 @@ const Chat = () => {
         return;
       }
 
-      const dataRoute = getRoute('data');
+      const dataRoute = appRoutes[DATA_ENDPOINT]();
 
       try {
         const authConfig = getAuthConfig(user.token);

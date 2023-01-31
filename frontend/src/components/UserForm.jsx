@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
-import getRoute from '../utils/getRoute';
+import { appRoutes } from '../utils/routes';
 import { useAuth } from '../hooks';
 
 const UserForm = ({
@@ -34,10 +34,10 @@ const UserForm = ({
   }, {});
 
   const handleUser = async (formData) => {
-    const signupRoute = getRoute(eventType);
+    const route = appRoutes[eventType]();
     try {
       setFormHandleError('');
-      const response = await axios.post(signupRoute, formData);
+      const response = await axios.post(route, formData);
       const { data } = response;
       if (data) {
         setUser(data);
