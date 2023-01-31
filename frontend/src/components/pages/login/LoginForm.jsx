@@ -14,7 +14,7 @@ import { useAuth } from '../../../hooks';
 const LoginForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { logIn, logOut } = useAuth();
   const rollbar = useRollbar();
 
   const [loginError, setLoginError] = useState('');
@@ -56,7 +56,7 @@ const LoginForm = () => {
       const response = await axios.post(route, formData);
       const { data } = response;
       if (data) {
-        setUser(data);
+        logIn(data);
         navigate('/');
       }
     } catch (e) {
@@ -66,7 +66,7 @@ const LoginForm = () => {
         rollbar.error('login error', e);
         toast.error(t('toasts.networkError'));
       }
-      setUser(null); // ? remove?
+      logOut(); // ? remove?
     }
   };
 

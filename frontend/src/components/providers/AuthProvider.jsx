@@ -4,7 +4,15 @@ import useLocalStorage from '../../hooks/useLocalStorage';
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage('user');
-  const userData = useMemo(() => ({ user, setUser }), [user, setUser]);
+
+  const userData = useMemo(() => {
+    const logIn = (authData) => setUser(authData);
+    const logOut = () => setUser(null);
+    return {
+      user, logIn, logOut,
+    };
+  }, [user, setUser]);
+
   return (
     <AuthContext.Provider value={userData}>
       {children}

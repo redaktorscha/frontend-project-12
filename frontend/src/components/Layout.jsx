@@ -59,10 +59,7 @@ const Footer = ({ t }) => (
 
 const Layout = () => {
   const { t } = useTranslation();
-  const { setUser } = useAuth();
-  const logOut = () => {
-    setUser(null);
-  };
+  const { logOut } = useAuth();
   const { pathname } = useLocation();
   const hasFooter = pathname !== rootRoute;
   const hasBtn = pathname === rootRoute;

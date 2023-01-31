@@ -14,7 +14,7 @@ import { useAuth } from '../../../hooks';
 const SignupForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { logIn, logOut } = useAuth();
   const rollbar = useRollbar();
 
   const [signupError, setSignupError] = useState('');
@@ -66,7 +66,7 @@ const SignupForm = () => {
       const response = await axios.post(route, formData);
       const { data } = response;
       if (data) {
-        setUser(data);
+        logIn(data);
         navigate('/');
       }
     } catch (e) {
@@ -76,7 +76,7 @@ const SignupForm = () => {
         rollbar.error('signup error', e);
         toast.error(t('toasts.networkError'));
       }
-      setUser(null); // ? remove?
+      logOut(); // ? remove?
     }
   };
 
@@ -92,6 +92,7 @@ const SignupForm = () => {
       {({
         handleSubmit,
         handleChange,
+        handleBlur,
         values,
         touched,
         errors,
@@ -115,6 +116,7 @@ const SignupForm = () => {
               placeholder={t('ui.signup.username')}
               value={values.username}
               onChange={handleChange}
+              onBlur={handleBlur}
               isValid={touched.username && !errors.username}
               isInvalid={touched.username && !!errors.username}
               ref={inputUsername}
@@ -137,6 +139,7 @@ const SignupForm = () => {
               placeholder={t('ui.signup.password')}
               value={values.password}
               onChange={handleChange}
+              onBlur={handleBlur}
               isValid={touched.password && !errors.password}
               isInvalid={touched.password && !!errors.password}
               ref={inputPassword}
@@ -159,6 +162,7 @@ const SignupForm = () => {
               placeholder={t('ui.signup.confirmPassword')}
               value={values.confirmPassword}
               onChange={handleChange}
+              onBlur={handleBlur}
               isValid={touched.confirmPassword && !errors.confirmPassword}
               isInvalid={touched.confirmPassword && !!errors.confirmPassword}
               ref={inputConfirmPassword}
