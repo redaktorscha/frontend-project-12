@@ -1,11 +1,23 @@
 // ts-check
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as yup from 'yup';
+import { toast } from 'react-toastify';
+import { Formik } from 'formik';
+import axios from 'axios';
+import { Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import UserForm from '../../UserForm';
+import { useNavigate } from 'react-router-dom';
+import { useRollbar } from '@rollbar/react';
+import { appRoutes, SIGNUP_ENDPOINT } from '../../../utils/routes';
+import { useAuth } from '../../../hooks';
 
 const SignupForm = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+  const rollbar = useRollbar();
+
+  const [signupError, setSignupError] = useState('');
 
   const signupSchema = yup
     .object()
@@ -28,40 +40,145 @@ const SignupForm = () => {
         .oneOf([yup.ref('password'), null], t('errors.signup.oneOf')),
     });
 
-  const inputs = [
-    {
-      type: 'text',
-      inputName: 'username',
-      ref: useRef(null),
-      label: t('ui.signup.username'),
-    },
-    {
-      type: 'password',
-      inputName: 'password',
-      ref: useRef(null),
-      label: t('ui.signup.password'),
-    },
-    {
-      type: 'password',
-      inputName: 'confirmPassword',
-      ref: useRef(null),
-      label: t('ui.signup.confirmPassword'),
-    },
-  ];
+  const initialValues = {
+    username: '',
+    password: '',
+    confirmPassword: '',
+  };
 
-  const buttonText = t('ui.signup.btnSignup');
+  const inputUsername = useRef(null);
+  const inputPassword = useRef(null);
+  const inputConfirmPassword = useRef(null);
 
-  const renderData = {
-    inputs, buttonText,
+  useEffect(() => {
+    if (signupError !== '') {
+      [inputUsername, inputPassword, inputConfirmPassword].forEach((ref) => {
+        ref.current.classList.remove('is-valid');
+        ref.current.classList.add('is-invalid');
+      });
+    }
+  }, [signupError]);
+
+  const handleSubmitSignup = async (formData) => {
+    const route = appRoutes[SIGNUP_ENDPOINT]();
+    try {
+      setSignupError('');
+      const response = await axios.post(route, formData);
+      const { data } = response;
+      if (data) {
+        setUser(data);
+        navigate('/');
+      }
+    } catch (e) {
+      if (e.response.status === 409) {
+        setSignupError(t('errors.signup.exists'));
+      } else {
+        rollbar.error('signup error', e);
+        toast.error(t('toasts.networkError'));
+      }
+      setUser(null); // ? remove?
+    }
   };
 
   return (
-    <UserForm
-      eventType="signup"
-      errorCode={409}
-      renderData={renderData}
+    <Formik
       validationSchema={signupSchema}
-    />
+      initialValues={initialValues}
+      validateOnChange={false}
+      onSubmit={async (values) => {
+        await handleSubmitSignup(values);
+      }}
+    >
+      {({
+        handleSubmit,
+        handleChange,
+        values,
+        touched,
+        errors,
+        isSubmitting,
+      }) => (
+        <Form
+          noValidate
+          onSubmit={handleSubmit}
+        >
+
+          <Form.Group
+            key="username"
+            className="form-floating mb-4"
+            controlId="f-username"
+          >
+            <Form.Control
+              type="text"
+              name="username"
+              autoComplete="off"
+              required
+              placeholder={t('ui.signup.username')}
+              value={values.username}
+              onChange={handleChange}
+              isValid={touched.username && !errors.username}
+              isInvalid={touched.username && !!errors.username}
+              ref={inputUsername}
+            />
+            <Form.Label>{t('ui.signup.username')}</Form.Label>
+            <Form.Control.Feedback type="invalid" tooltip>
+              {errors.username}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group
+            key="password"
+            className="form-floating mb-4"
+            controlId="f-password"
+          >
+            <Form.Control
+              type="password"
+              name="password"
+              autoComplete="off"
+              required
+              placeholder={t('ui.signup.password')}
+              value={values.password}
+              onChange={handleChange}
+              isValid={touched.password && !errors.password}
+              isInvalid={touched.password && !!errors.password}
+              ref={inputPassword}
+            />
+            <Form.Label>{t('ui.signup.password')}</Form.Label>
+            <Form.Control.Feedback type="invalid" tooltip>
+              {errors.password}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group
+            key="confirmPassword"
+            className="form-floating mb-4"
+            controlId="f-confirmPassword"
+          >
+            <Form.Control
+              type="password"
+              name="confirmPassword"
+              autoComplete="off"
+              required
+              placeholder={t('ui.signup.confirmPassword')}
+              value={values.confirmPassword}
+              onChange={handleChange}
+              isValid={touched.confirmPassword && !errors.confirmPassword}
+              isInvalid={touched.confirmPassword && !!errors.confirmPassword}
+              ref={inputConfirmPassword}
+            />
+            <Form.Label>{t('ui.signup.confirmPassword')}</Form.Label>
+            <Form.Control.Feedback type="invalid" tooltip>
+              {errors.confirmPassword || signupError}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Button
+            type="submit"
+            variant="outline-primary"
+            className="w-100 mb-3"
+            disabled={isSubmitting}
+          >
+            {t('ui.signup.btnSignup')}
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

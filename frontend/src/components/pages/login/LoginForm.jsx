@@ -17,7 +17,7 @@ const LoginForm = () => {
   const { setUser } = useAuth();
   const rollbar = useRollbar();
 
-  const [formLoginError, setFormLoginError] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const loginSchema = yup
     .object()
@@ -41,18 +41,18 @@ const LoginForm = () => {
   const inputPassword = useRef(null);
 
   useEffect(() => {
-    if (formLoginError !== '') {
+    if (loginError !== '') {
       [inputUsername, inputPassword].forEach((ref) => {
         ref.current.classList.remove('is-valid');
         ref.current.classList.add('is-invalid');
       });
     }
-  }, [formLoginError]);
+  }, [loginError]);
 
   const handleSubmitLogin = async (formData) => {
     const route = appRoutes[LOGIN_ENDPOINT]();
     try {
-      setFormLoginError('');
+      setLoginError('');
       const response = await axios.post(route, formData);
       const { data } = response;
       if (data) {
@@ -61,7 +61,7 @@ const LoginForm = () => {
       }
     } catch (e) {
       if (e.response.status === 401) {
-        setFormLoginError(t('errors.login.invalid'));
+        setLoginError(t('errors.login.invalid'));
       } else {
         rollbar.error('login error', e);
         toast.error(t('toasts.networkError'));
@@ -134,7 +134,7 @@ const LoginForm = () => {
             />
             <Form.Label>{t('ui.login.password')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip>
-              {errors.password || formLoginError}
+              {errors.password || loginError}
             </Form.Control.Feedback>
           </Form.Group>
           <Button
