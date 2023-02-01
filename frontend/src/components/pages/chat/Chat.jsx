@@ -59,11 +59,6 @@ const Chat = () => {
 
   useEffect(() => {
     const initChat = async () => {
-      if (!user) {
-        navigate('/login');
-        return;
-      }
-
       const dataRoute = appRoutes[DATA_ENDPOINT]();
 
       try {
