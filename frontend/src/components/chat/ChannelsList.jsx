@@ -4,7 +4,7 @@ import {
 } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { selectors as channelSelectors, setCurrentChannelId } from '../../../slices/channelsSlice.js';
+import { selectors as channelSelectors, setCurrentChannelId } from '../../slices/channelsSlice.js';
 
 const ChannelButton = ({ color, onClick, channelName }) => (
   <Button

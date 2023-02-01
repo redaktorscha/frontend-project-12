@@ -1,10 +1,10 @@
 // ts-check
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Chat from './pages/chat/Chat';
-import Login from './pages/login/Login';
-import Signup from './pages/signup/Signup';
-import NotFound from './pages/notfound/NotFound';
+import Chat from './chat/Chat';
+import Login from './login/Login';
+import Signup from './signup/Signup';
+import NotFound from './notfound/NotFound';
 import Layout from './Layout';
 import PrivateRoute from './PrivateRoute';
 

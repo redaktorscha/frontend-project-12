@@ -3,7 +3,7 @@ import {
   Container, Image, Row, Col,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import notfound from '../../../assets/404.svg';
+import notfound from '../../assets/404.svg';
 
 const NotFound = () => {
   const { t } = useTranslation();

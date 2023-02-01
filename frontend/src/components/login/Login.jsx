@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import {
   Container, Row, Col, Card, Image,
 } from 'react-bootstrap';
-import login from '../../../assets/login.svg';
+import login from '../../assets/login.svg';
 import LoginForm from './LoginForm';
 
 const Login = () => {

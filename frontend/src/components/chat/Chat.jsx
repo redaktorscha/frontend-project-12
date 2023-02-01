@@ -6,16 +6,16 @@ import { useRollbar } from '@rollbar/react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Container, Row } from 'react-bootstrap';
-import { useAuth, useSocketFunctions } from '../../../hooks';
+import { useAuth, useSocketFunctions } from '../../hooks';
 import Sidebar from './Sidebar';
 import Main from './Main';
 import {
   setChannels, addChannel, updateChannel, deleteChannel, setCurrentChannelId,
-} from '../../../slices/channelsSlice.js';
-import { setMessages, addMessage } from '../../../slices/messagesSlice.js';
+} from '../../slices/channelsSlice.js';
+import { setMessages, addMessage } from '../../slices/messagesSlice.js';
 
-import { appRoutes, DATA_ENDPOINT } from '../../../utils/routes.js';
-import getAuthConfig from '../../../utils/getAuthConfig.js';
+import { appRoutes, DATA_ENDPOINT } from '../../utils/routes.js';
+import getAuthConfig from '../../utils/getAuthConfig.js';
 
 const Chat = () => {
   const { user } = useAuth();

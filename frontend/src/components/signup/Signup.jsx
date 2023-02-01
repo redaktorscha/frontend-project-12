@@ -4,7 +4,7 @@ import {
   Container, Row, Col, Card, Image,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import signup from '../../../assets/signup.svg';
+import signup from '../../assets/signup.svg';
 import SignupForm from './SignupForm';
 
 const Signup = () => {

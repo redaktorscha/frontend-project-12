@@ -8,8 +8,8 @@ import { Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useRollbar } from '@rollbar/react';
-import { appRoutes, SIGNUP_ENDPOINT } from '../../../utils/routes';
-import { useAuth } from '../../../hooks';
+import { appRoutes, SIGNUP_ENDPOINT } from '../../utils/routes';
+import { useAuth } from '../../hooks';
 
 const SignupForm = () => {
   const { t } = useTranslation();

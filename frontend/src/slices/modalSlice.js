@@ -18,6 +18,7 @@ const modalSlice = createSlice({
       state.type = payload;
     },
     setTargetChannel(state, { payload }) {
+      console.log('payload modal targetChannel', payload);
       state.targetChannel = payload;
     },
   },
