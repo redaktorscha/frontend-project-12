@@ -1,17 +1,26 @@
 # ⭐ [Hexlet](https://ru.hexlet.io/my) Frontend Final Project
 ## "Slack" Chat
 
+### Features:
+- user auth (login, logout, signup)
+- send/receive messages
+- add, rename, remove channels
+- profanity filter
+- change language, supported locales: ru (default), en
+
 ### Technologies:
-- React
-- React Redux, Redux Toolkit
-- React-Bootstrap
-- WebSocket (socket.io)
-- [yup](https://github.com/jquense/yup) (validation)
-- [i18next](https://www.i18next.com/) (localisation)
+- [React](https://reactjs.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [React-Bootstrap](https://react-bootstrap.github.io/)
+- [socket.io](https://socket.io/)
+- [yup](https://github.com/jquense/yup)
+- [i18next](https://www.i18next.com/)
 - [axios](https://github.com/axios/axios)
-- [Railway](https://https://railway.app/) (deploy)
-- [testing library](https://testing-library.com/)
-- Github Actions
+- [Rollbar](https://https://railway.app/)
+- [react-toastify](https://www.npmjs.com/package/react-toastify)
+- [leo-profanity](https://github.com/jojoee/leo-profanity)
+- [Github Actions](https://github.com/features/actions)
+- [Railway](https://https://railway.app/)
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/redaktorscha/frontend-project-12/workflows/hexlet-check/badge.svg)](https://github.com/redaktorscha/frontend-project-12/actions)
