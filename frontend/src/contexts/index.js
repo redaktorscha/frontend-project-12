@@ -1,4 +1,6 @@
-import AuthContext from './AuthContext';
-import SocketContext from './SocketContext';
+import { createContext } from 'react';
+
+const AuthContext = createContext({});
+const SocketContext = createContext({});
 
 export { AuthContext, SocketContext };
