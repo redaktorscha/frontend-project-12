@@ -5,7 +5,6 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { I18nextProvider } from 'react-i18next';
 import { createRoot } from 'react-dom/client';
 import App from './components/App';
-import store from './slices/index.js';
 import './styles/index.scss';
 import initApp from './init';
 import SocketProvider from './components/providers/SocketProvider';
@@ -14,7 +13,7 @@ import AuthProvider from './components/providers/AuthProvider';
 (async () => {
   const root = createRoot(document.getElementById('root'));
 
-  const { i18n, socketFunctions } = await initApp();
+  const { i18n, socketFunctions, store } = await initApp();
 
   const NODE_ENV = process.env.NODE_ENV || 'production';
   const IS_DEV_ENV = NODE_ENV === 'development';

@@ -21,7 +21,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
 
   const { t } = useTranslation();
   const rollbar = useRollbar();
-  const { addChannel } = useSocketFunctions();
+  const { addNewChannel } = useSocketFunctions();
   const channels = useSelector(channelSelectors.selectAll) || [];
   const channelsNames = channels.map(({ name }) => name);
 
@@ -34,7 +34,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
       const newChannel = {
         name: filter.clean(data.channelName.trim()),
       };
-      addChannel(newChannel, (response) => {
+      addNewChannel(newChannel, (response) => {
         if (response.status === 'ok') {
           toast.success(t('toasts.channelCreated'));
           return;

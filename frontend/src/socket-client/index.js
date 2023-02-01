@@ -13,8 +13,8 @@ export default () => {
 
   const sendMessage = send(socket, 'newMessage');
   const receiveMessage = receive(socket, 'newMessage');
-  const addChannel = send(socket, 'newChannel');
-  const confirmAddChannel = receive(socket, 'newChannel');
+  const addNewChannel = send(socket, 'newChannel');
+  const confirmAddNewChannel = receive(socket, 'newChannel');
   const renameChannel = send(socket, 'renameChannel');
   const confirmRenameChannel = receive(socket, 'renameChannel');
   const removeChannel = send(socket, 'removeChannel');
@@ -23,8 +23,8 @@ export default () => {
   return {
     sendMessage,
     receiveMessage,
-    addChannel,
-    confirmAddChannel,
+    addNewChannel,
+    confirmAddNewChannel,
     renameChannel,
     confirmRenameChannel,
     removeChannel,

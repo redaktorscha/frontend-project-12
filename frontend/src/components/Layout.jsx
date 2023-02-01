@@ -16,7 +16,7 @@ const switchLanguage = ({ value }, i18n) => {
 };
 
 const LanguagePicker = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   return (
     <select id="select" className="py-2 rounded" onChange={(e) => switchLanguage(e.target, i18n)}>
       {supportedLanguages.map((language) => (
@@ -24,7 +24,7 @@ const LanguagePicker = () => {
           key={language}
           value={language}
         >
-          {t(`ui.header.${language}`)}
+          {language}
 
         </option>
       ))}

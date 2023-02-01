@@ -29,9 +29,6 @@ export default {
     ui: {
       header: {
         btnLogout: 'Logout',
-        language: 'Lang.',
-        ru: 'Рус.',
-        en: 'Англ.',
       },
       footer: {
         picturesCopyright: 'Online illustrations by Storyset',

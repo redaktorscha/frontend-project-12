@@ -5,6 +5,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { selectors as channelSelectors, setCurrentChannelId } from '../../slices/channelsSlice.js';
+import useResponsiveWidth from '../../hooks/useResponsiveWidth';
 
 const ChannelButton = ({ color, onClick, channelName }) => (
   <Button
@@ -49,29 +50,33 @@ const ChannelsList = ({ handleOpenModal }) => {
   const dispatch = useDispatch();
   const setChannel = (channelId) => () => dispatch(setCurrentChannelId(channelId));
   const { t } = useTranslation();
+  const { isMobile } = useResponsiveWidth();
 
   return (
-    <Nav
-      as="ul"
-      variant="pills"
-      className="max-height-95 flex-column justify-content-start px-2 w-100 overflow-auto"
-    >
-      {channels.map(({ id, name, removable }) => {
-        const color = id === currentChannelId ? 'secondary' : 'light';
+    <div className={`overflow-auto ${isMobile ? 'max-height-70' : 'max-height-80'}`}>
+      <Nav
+        as="ul"
+        variant="pills"
+        className="max-height-95 flex-column justify-content-start px-2 w-100 overflow-auto"
+      >
+        {channels.map(({ id, name, removable }) => {
+          const color = id === currentChannelId ? 'secondary' : 'light';
 
-        return (
-          <Channel
-            t={t}
-            handleOpenModal={handleOpenModal}
-            onClick={setChannel(id)}
-            key={`${id}`}
-            color={color}
-            channelName={name}
-            hasDropDown={removable}
-          />
-        );
-      })}
-    </Nav>
+          return (
+            <Channel
+              t={t}
+              handleOpenModal={handleOpenModal}
+              onClick={setChannel(id)}
+              key={`${id}`}
+              color={color}
+              channelName={name}
+              hasDropDown={removable}
+            />
+          );
+        })}
+      </Nav>
+    </div>
+
   );
 };
 
