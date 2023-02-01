@@ -22,7 +22,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
   const { t } = useTranslation();
   const rollbar = useRollbar();
   const { addChannel } = useSocketFunctions();
-  const channels = useSelector(channelSelectors.selectAll) || null;
+  const channels = useSelector(channelSelectors.selectAll) || [];
   const channelsNames = channels.map(({ name }) => name);
 
   const modalType = 'add';

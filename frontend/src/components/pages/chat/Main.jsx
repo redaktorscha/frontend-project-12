@@ -34,13 +34,11 @@ const Messages = ({ currentChannelMessages }) => {
 
 const Main = () => {
   const { t } = useTranslation();
-  const currentChannelId = useSelector((state) => state.currentChannel) || null;
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId) || null;
   const currentChannel = useSelector((state) => channelSelectors
     .selectById(state, currentChannelId)) || null;
-  const messages = useSelector(messagesSelectors.selectAll) || null;
-  const currentChannelMessages = messages
-    ? messages.filter(({ channelId }) => channelId === currentChannelId)
-    : null;
+  const messages = useSelector(messagesSelectors.selectAll) || [];
+  const currentChannelMessages = messages.filter(({ channelId }) => channelId === currentChannelId);
   const messagesCount = currentChannelMessages?.length ?? 0;
 
   return (

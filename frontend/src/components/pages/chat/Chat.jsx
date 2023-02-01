@@ -10,9 +10,8 @@ import { useAuth, useSocketFunctions } from '../../../hooks';
 import Sidebar from './Sidebar';
 import Main from './Main';
 import {
-  setChannels, addChannel, updateChannel, deleteChannel,
+  setChannels, addChannel, updateChannel, deleteChannel, setCurrentChannelId,
 } from '../../../slices/channelsSlice.js';
-import { setCurrentChannel } from '../../../slices/currentChannelSlice.js';
 import { setMessages, addMessage } from '../../../slices/messagesSlice.js';
 
 import { appRoutes, DATA_ENDPOINT } from '../../../utils/routes.js';
@@ -38,7 +37,7 @@ const Chat = () => {
     confirmAddChannel((payload) => {
       const { id } = payload;
       dispatch(addChannel(payload));
-      dispatch(setCurrentChannel(id));
+      dispatch(setCurrentChannelId(id));
     });
   }, []);
 
@@ -46,7 +45,7 @@ const Chat = () => {
     confirmRemoveChannel((payload) => {
       const { id } = payload;
       dispatch(deleteChannel(id));
-      dispatch(setCurrentChannel(1));
+      dispatch(setCurrentChannelId(1));
     });
   }, []);
 
@@ -67,7 +66,7 @@ const Chat = () => {
         const { data } = response;
         if (data) {
           dispatch(setChannels(data.channels));
-          dispatch(setCurrentChannel(data.currentChannelId));
+          dispatch(setCurrentChannelId(data.currentChannelId));
           dispatch(setMessages(data.messages));
         }
       } catch (e) {

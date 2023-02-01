@@ -4,8 +4,7 @@ import {
 } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { selectors as channelSelectors } from '../../../slices/channelsSlice.js';
-import { setCurrentChannel } from '../../../slices/currentChannelSlice.js';
+import { selectors as channelSelectors, setCurrentChannelId } from '../../../slices/channelsSlice.js';
 
 const ChannelButton = ({ color, onClick, channelName }) => (
   <Button
@@ -45,10 +44,10 @@ const Channel = ({
 };
 
 const ChannelsList = ({ handleOpenModal }) => {
-  const channels = useSelector(channelSelectors.selectAll) || null;
-  const currentChannelId = useSelector((state) => state.currentChannel);
+  const channels = useSelector(channelSelectors.selectAll) || [];
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const dispatch = useDispatch();
-  const setChannel = (channelId) => () => dispatch(setCurrentChannel(channelId));
+  const setChannel = (channelId) => () => dispatch(setCurrentChannelId(channelId));
   const { t } = useTranslation();
 
   return (
@@ -58,7 +57,7 @@ const ChannelsList = ({ handleOpenModal }) => {
       className="h-100 flex-column justify-content-start px-2 w-100 overflow-auto"
       style={{ maxHeight: '95%' }}
     >
-      {channels && channels.map(({ id, name, removable }) => {
+      {channels.map(({ id, name, removable }) => {
         const color = id === currentChannelId ? 'secondary' : 'light';
 
         return (
