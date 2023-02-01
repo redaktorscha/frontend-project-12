@@ -21,7 +21,7 @@ const Message = (props) => {
 const Messages = ({ currentChannelMessages }) => {
   const { isMobile } = useResponsiveWidth();
   return (
-    <div className="d-flex flex-column h-100 w-100 overflow-auto px-5" style={isMobile ? { maxHeight: '60vh' } : { maxHeight: '70vh' }}>
+    <div className={`d-flex flex-column h-100 w-100 overflow-auto px-5 ${isMobile ? 'max-height-60' : 'max-height-70'}`}>
       {
         currentChannelMessages.length > 0
           ? currentChannelMessages

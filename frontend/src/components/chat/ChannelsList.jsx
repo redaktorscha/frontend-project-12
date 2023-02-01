@@ -54,8 +54,7 @@ const ChannelsList = ({ handleOpenModal }) => {
     <Nav
       as="ul"
       variant="pills"
-      className="h-100 flex-column justify-content-start px-2 w-100 overflow-auto"
-      style={{ maxHeight: '95%' }}
+      className="max-height-95 flex-column justify-content-start px-2 w-100 overflow-auto"
     >
       {channels.map(({ id, name, removable }) => {
         const color = id === currentChannelId ? 'secondary' : 'light';

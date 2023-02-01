@@ -63,7 +63,7 @@ const AddMessageForm = ({ t, currentChannelId }) => {
     >
       {
       ({
-        handleChange, handleSubmit, values, resetForm,
+        handleChange, handleSubmit, values,
       }) => (
         <Form
           className="flex-fill border rounded-2 py-2 px-2"

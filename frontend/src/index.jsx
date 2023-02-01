@@ -6,7 +6,7 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoot } from 'react-dom/client';
 import App from './components/App';
 import store from './slices/index.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/index.scss';
 import initApp from './init';
 import SocketProvider from './components/providers/SocketProvider';
 import AuthProvider from './components/providers/AuthProvider';

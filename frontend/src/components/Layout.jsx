@@ -4,7 +4,6 @@ import {
   Container, Navbar, Button,
 } from 'react-bootstrap';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks';
 

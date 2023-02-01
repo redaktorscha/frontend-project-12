@@ -33,17 +33,6 @@ const Sidebar = () => {
     }
   }, [isOpen, btnFocused]);
 
-  const buttonNormalStyle = {
-    borderColor: 'transparent',
-    backgroundColor: 'transparent',
-  };
-
-  const buttonFocusedStyle = {
-    boxShadow: '0 0 0 0.25rem rgb(13 110 253 / 25%)',
-    borderColor: 'transparent',
-    backgroundColor: 'transparent',
-  };
-
   return (
     <Col className="col-4 col-md-2 border-end pt-5 px-0 bg-light h-100">
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
@@ -51,9 +40,8 @@ const Sidebar = () => {
         <Button
           tabIndex={0}
           variant="outline-primary"
-          style={btnFocused ? buttonFocusedStyle : buttonNormalStyle}
           ref={buttonRef}
-          className="p-0 text-primary btn-group-vertical"
+          className="p-0 text-primary btn-group-vertical btn-svg"
           onClick={handleOpenModal('add')}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor">
