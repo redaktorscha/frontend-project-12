@@ -41,6 +41,10 @@ const LoginForm = () => {
   const inputPassword = useRef(null);
 
   useEffect(() => {
+    inputUsername.current.focus();
+  }, []);
+
+  useEffect(() => {
     if (loginError !== '') {
       [inputUsername, inputPassword].forEach((ref) => {
         ref.current.classList.remove('is-valid');

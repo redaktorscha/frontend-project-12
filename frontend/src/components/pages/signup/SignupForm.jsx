@@ -51,6 +51,10 @@ const SignupForm = () => {
   const inputConfirmPassword = useRef(null);
 
   useEffect(() => {
+    inputUsername.current.focus();
+  }, []);
+
+  useEffect(() => {
     if (signupError !== '') {
       [inputUsername, inputPassword, inputConfirmPassword].forEach((ref) => {
         ref.current.classList.remove('is-valid');
