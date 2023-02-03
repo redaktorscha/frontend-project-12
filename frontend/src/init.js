@@ -10,6 +10,8 @@ import {
   addChannel, updateChannel, deleteChannel, setCurrentChannelId,
 } from './slices/channelsSlice.js';
 
+const DEFAULT_CHANNEL = 1;
+
 export default async () => {
   const socketFunctions = initSocket();
   const {
@@ -24,24 +26,24 @@ export default async () => {
   } = socketFunctions;
 
   receiveMessage((payload) => {
-    store.dispatch(addMessage(payload));
+    store.dispatch(addMessage({ newMessage: payload }));
   });
 
   confirmAddNewChannel((payload) => {
     const { id } = payload;
-    store.dispatch(addChannel(payload));
-    store.dispatch(setCurrentChannelId(id));
+    store.dispatch(addChannel({ newChannel: payload }));
+    store.dispatch(setCurrentChannelId({ currentChannelId: id }));
   });
 
   confirmRemoveChannel((payload) => {
     const { id } = payload;
-    store.dispatch(deleteChannel(id));
-    store.dispatch(setCurrentChannelId(1));
+    store.dispatch(deleteChannel({ channelForRemoveId: id }));
+    store.dispatch(setCurrentChannelId({ currentChannelId: DEFAULT_CHANNEL }));
   });
 
   confirmRenameChannel((payload) => {
     const { id, name } = payload;
-    store.dispatch(updateChannel({ id, changes: { name } }));
+    store.dispatch(updateChannel({ updateChannelData: { id, changes: { name } } }));
   });
 
   const i18nConfig = getI18nConfig(resources);

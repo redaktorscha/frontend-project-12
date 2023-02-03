@@ -6,13 +6,21 @@ const channelsSlice = createSlice({
   name: 'channels',
   initialState: channelsAdapter.getInitialState({ currentChannelId: null }),
   reducers: {
-    setChannels: channelsAdapter.addMany,
-    addChannel: channelsAdapter.addOne,
-    updateChannel: channelsAdapter.updateOne,
-    deleteChannel: channelsAdapter.removeOne,
+    setChannels(state, { payload }) {
+      channelsAdapter.addMany(state, payload.channels);
+    },
+    addChannel(state, { payload }) {
+      channelsAdapter.addOne(state, payload.newChannel);
+    },
+    updateChannel(state, { payload }) {
+      channelsAdapter.updateOne(state, payload.updateChannelData);
+    },
+    deleteChannel(state, { payload }) {
+      channelsAdapter.removeOne(state, payload.channelForRemoveId);
+    },
     setCurrentChannelId(state, { payload }) {
       // eslint-disable-next-line no-param-reassign
-      state.currentChannelId = payload;
+      state.currentChannelId = payload.currentChannelId;
     },
   },
 });

@@ -14,8 +14,8 @@ import { useSocketFunctions } from '../../hooks';
 const AddChannelModal = ({ setBtnFocused }) => {
   const dispatch = useDispatch();
   const handleClose = () => {
-    dispatch(setIsOpen(false));
-    dispatch(setType(null));
+    dispatch(setIsOpen({ isOpen: false }));
+    dispatch(setType({ type: null }));
     setBtnFocused(true);
   };
 

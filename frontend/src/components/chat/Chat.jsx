@@ -34,9 +34,9 @@ const Chat = () => {
         const response = await axios.get(dataRoute, authConfig);
         const { data } = response;
         if (data) {
-          dispatch(setChannels(data.channels));
-          dispatch(setCurrentChannelId(data.currentChannelId));
-          dispatch(setMessages(data.messages));
+          dispatch(setChannels({ channels: data.channels }));
+          dispatch(setCurrentChannelId({ currentChannelId: data.currentChannelId }));
+          dispatch(setMessages({ messages: data.messages }));
         }
       } catch (e) {
         rollbar.error('getChatDataErr', e);

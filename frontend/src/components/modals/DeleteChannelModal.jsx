@@ -22,9 +22,9 @@ const DeleteChannelModal = () => {
   const channels = useSelector(channelSelectors.selectAll) || [];
 
   const handleClose = () => {
-    dispatch(setIsOpen(false));
-    dispatch(setType(null));
-    dispatch(setTargetChannel(null));
+    dispatch(setIsOpen({ isOpen: false }));
+    dispatch(setType({ type: null }));
+    dispatch(setTargetChannel({ targetChannel: null }));
   };
 
   const handleDelete = () => {

@@ -12,14 +12,13 @@ const modalSlice = createSlice({
   initialState,
   reducers: {
     setIsOpen(state, { payload }) {
-      state.isOpen = payload;
+      state.isOpen = payload.isOpen;
     },
     setType(state, { payload }) {
-      state.type = payload;
+      state.type = payload.type;
     },
     setTargetChannel(state, { payload }) {
-      console.log('payload modal targetChannel', payload);
-      state.targetChannel = payload;
+      state.targetChannel = payload.targetChannel;
     },
   },
 });

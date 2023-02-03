@@ -48,16 +48,18 @@ const ChannelsList = ({ handleOpenModal }) => {
   const channels = useSelector(channelSelectors.selectAll) || [];
   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const dispatch = useDispatch();
-  const setChannel = (channelId) => () => dispatch(setCurrentChannelId(channelId));
+  const setChannel = (channelId) => () => dispatch(setCurrentChannelId({
+    currentChannelId: channelId,
+  }));
   const { t } = useTranslation();
   const { isMobile } = useResponsiveWidth();
 
   return (
-    <div className={`overflow-auto ${isMobile ? 'max-height-70' : 'max-height-80'}`}>
+    <div className={`h-100 overflow-auto ${isMobile ? 'max-height-70' : 'max-height-80'}`}>
       <Nav
         as="ul"
         variant="pills"
-        className="max-height-95 flex-column justify-content-start px-2 w-100 overflow-auto"
+        className="max-height-95 h-100 flex-column justify-content-start px-2 w-100 overflow-auto"
       >
         {channels.map(({ id, name, removable }) => {
           const color = id === currentChannelId ? 'secondary' : 'light';

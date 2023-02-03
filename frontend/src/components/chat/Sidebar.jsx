@@ -18,10 +18,10 @@ const Sidebar = () => {
   const buttonRef = useRef(null);
 
   const handleOpenModal = (modalType, channel = null) => () => {
-    dispatch(setIsOpen(true));
-    dispatch(setType(modalType));
+    dispatch(setIsOpen({ isOpen: true }));
+    dispatch(setType({ type: modalType }));
     if (channel !== null) {
-      dispatch(setTargetChannel(channel));
+      dispatch(setTargetChannel({ targetChannel: channel }));
     }
   };
 
