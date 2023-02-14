@@ -12,7 +12,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
 import signup from '../assets/signup.svg';
-import { appRoutes, SIGNUP_ENDPOINT } from '../utils/routes';
+import appRoutes from '../utils/routes.js';
 import { useAuth } from '../hooks';
 
 const SignupForm = () => {
@@ -20,6 +20,8 @@ const SignupForm = () => {
   const navigate = useNavigate();
   const { logIn } = useAuth();
   const rollbar = useRollbar();
+
+  const rootRoute = appRoutes.rootPath;
 
   const [signupError, setSignupError] = useState('');
 
@@ -57,14 +59,14 @@ const SignupForm = () => {
   }, []);
 
   const handleSubmitSignup = async (formData) => {
-    const route = appRoutes[SIGNUP_ENDPOINT]();
+    const apiRoute = appRoutes.apiV1SignupPath();
     try {
       setSignupError('');
-      const response = await axios.post(route, formData);
+      const response = await axios.post(apiRoute, formData);
       const { data } = response;
       if (data) {
         logIn(data);
-        navigate('/');
+        navigate(rootRoute);
       }
     } catch (e) {
       if (e.response.status === 409) {

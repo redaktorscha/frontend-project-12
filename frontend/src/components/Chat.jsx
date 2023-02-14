@@ -13,7 +13,7 @@ import {
 } from '../slices/channelsSlice.js';
 import { actions as messagesActions } from '../slices/messagesSlice.js';
 
-import { appRoutes, DATA_ENDPOINT } from '../utils/routes.js';
+import appRoutes from '../utils/routes.js';
 import getAuthConfig from '../utils/getAuthConfig.js';
 
 const Chat = () => {
@@ -29,11 +29,12 @@ const Chat = () => {
 
   useEffect(() => {
     const initChat = async () => {
-      const dataRoute = appRoutes[DATA_ENDPOINT]();
+      const apiRoute = appRoutes.apiV1DataPath();
+      const loginRoute = appRoutes.loginPath();
 
       try {
         const authConfig = getAuthConfig(user.token);
-        const response = await axios.get(dataRoute, authConfig);
+        const response = await axios.get(apiRoute, authConfig);
         const { data } = response;
         if (data) {
           dispatch(setChannels({ channels: data.channels }));
@@ -42,7 +43,7 @@ const Chat = () => {
         }
       } catch (e) {
         rollbar.error('getChatDataErr', e);
-        navigate('/login');
+        navigate(loginRoute);
       }
     };
 

@@ -1,16 +1,11 @@
 const APIBASE = '/api/v1';
-const LOGIN_ENDPOINT = 'login';
-const SIGNUP_ENDPOINT = 'signup';
-const DATA_ENDPOINT = 'data';
-
-const getRoute = (endpoint) => [APIBASE, endpoint].join('/');
 
 const appRoutes = {
-  [LOGIN_ENDPOINT]: () => getRoute(LOGIN_ENDPOINT),
-  [SIGNUP_ENDPOINT]: () => getRoute(SIGNUP_ENDPOINT),
-  [DATA_ENDPOINT]: () => getRoute(DATA_ENDPOINT),
+  apiV1LoginPath: () => [APIBASE, 'login'].join('/'),
+  apiV1SignupPath: () => [APIBASE, 'signup'].join('/'),
+  apiV1DataPath: () => [APIBASE, 'data'].join('/'),
+  loginPath: () => '/login',
+  rootPath: () => '/',
 };
 
-export {
-  appRoutes, LOGIN_ENDPOINT, SIGNUP_ENDPOINT, DATA_ENDPOINT,
-};
+export default appRoutes;

@@ -6,8 +6,9 @@ import {
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks';
+import appRoutes from '../utils/routes.js';
 
-const rootRoute = '/';
+const rootRoute = appRoutes.rootPath();
 
 const supportedLanguages = ['ru', 'en'];
 

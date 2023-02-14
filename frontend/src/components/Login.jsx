@@ -12,7 +12,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
 import login from '../assets/login.svg';
-import { appRoutes, LOGIN_ENDPOINT } from '../utils/routes';
+import appRoutes from '../utils/routes.js';
 import { useAuth } from '../hooks';
 
 const LoginForm = () => {
@@ -48,14 +48,15 @@ const LoginForm = () => {
   }, []);
 
   const handleSubmitLogin = async (formData) => {
-    const route = appRoutes[LOGIN_ENDPOINT]();
+    const apiRoute = appRoutes.apiV1LoginPath();
+    const rootRoute = appRoutes.rootPath();
     try {
       setLoginError('');
-      const response = await axios.post(route, formData);
+      const response = await axios.post(apiRoute, formData);
       const { data } = response;
       if (data) {
         logIn(data);
-        navigate('/');
+        navigate(rootRoute);
       }
     } catch (e) {
       if (e.response.status === 401) {
