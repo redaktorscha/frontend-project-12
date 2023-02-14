@@ -7,7 +7,7 @@ import { Button, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import ChannelsList from './ChannelsList';
 import { AddChannelModal, DeleteChannelModal, RenameChannelModal } from '../modals';
-import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
+import { actions as modalActions } from '../../slices/modalSlice.js';
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -15,6 +15,7 @@ const Sidebar = () => {
   const [btnFocused, setBtnFocused] = useState(false);
   const { isOpen } = useSelector((state) => state.modal);
 
+  const { setIsOpen, setType, setTargetChannel } = modalActions;
   const buttonRef = useRef(null);
 
   const handleOpenModal = (modalType, channel = null) => () => {

@@ -6,7 +6,7 @@ import filter from 'leo-profanity';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
-import { setIsOpen, setType, setTargetChannel } from '../../slices/modalSlice.js';
+import { actions as modalActions } from '../../slices/modalSlice.js';
 import Modal from './Modal';
 import ModalForm from './ModalForm';
 import { useSocketFunctions } from '../../hooks';
@@ -21,6 +21,8 @@ const RenameChannelModal = () => {
   const { targetChannel } = useSelector((state) => state.modal);
   const channels = useSelector(channelSelectors.selectAll) || [];
   const channelsNames = channels.map(({ name }) => name);
+
+  const { setIsOpen, setType, setTargetChannel } = modalActions;
 
   const handleClose = () => {
     dispatch(setIsOpen({ isOpen: false }));

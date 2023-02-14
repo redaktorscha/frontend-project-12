@@ -58,14 +58,14 @@ const SignupForm = () => {
     inputUsername.current.focus();
   }, []);
 
-  useEffect(() => {
-    if (signupError !== '') {
-      [inputUsername, inputPassword, inputConfirmPassword].forEach((ref) => {
-        ref.current.classList.remove('is-valid');
-        ref.current.classList.add('is-invalid');
-      });
-    }
-  }, [signupError]);
+  // useEffect(() => {
+  //   if (signupError !== '') {
+  //     [inputUsername, inputPassword, inputConfirmPassword].forEach((ref) => {
+  //       ref.current.classList.remove('is-valid');
+  //       ref.current.classList.add('is-invalid');
+  //     });
+  //   }
+  // }, [signupError]);
 
   const handleSubmitSignup = async (formData) => {
     const route = appRoutes[SIGNUP_ENDPOINT]();
@@ -125,8 +125,8 @@ const SignupForm = () => {
               value={values.username}
               onChange={handleChange}
               onBlur={handleBlur}
-              isValid={touched.username && !errors.username}
-              isInvalid={touched.username && !!errors.username}
+              isValid={touched.username && !errors.username && !signupError}
+              isInvalid={(touched.username && !!errors.username) || !!signupError}
               ref={inputUsername}
             />
             <Form.Label>{t('ui.signup.username')}</Form.Label>
@@ -148,8 +148,8 @@ const SignupForm = () => {
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              isValid={touched.password && !errors.password}
-              isInvalid={touched.password && !!errors.password}
+              isValid={touched.password && !errors.password && !signupError}
+              isInvalid={(touched.password && !!errors.password) || !!signupError}
               ref={inputPassword}
             />
             <Form.Label>{t('ui.signup.password')}</Form.Label>
@@ -171,8 +171,8 @@ const SignupForm = () => {
               value={values.confirmPassword}
               onChange={handleChange}
               onBlur={handleBlur}
-              isValid={touched.confirmPassword && !errors.confirmPassword}
-              isInvalid={touched.confirmPassword && !!errors.confirmPassword}
+              isValid={touched.confirmPassword && !errors.confirmPassword && !signupError}
+              isInvalid={(touched.confirmPassword && !!errors.confirmPassword) || !!signupError}
               ref={inputConfirmPassword}
             />
             <Form.Label>{t('ui.signup.confirmPassword')}</Form.Label>

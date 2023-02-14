@@ -48,14 +48,14 @@ const LoginForm = () => {
     inputUsername.current.focus();
   }, []);
 
-  useEffect(() => {
-    if (loginError !== '') {
-      [inputUsername, inputPassword].forEach((ref) => {
-        ref.current.classList.remove('is-valid');
-        ref.current.classList.add('is-invalid');
-      });
-    }
-  }, [loginError]);
+  // useEffect(() => {
+  //   if (loginError !== '') {
+  //     [inputUsername, inputPassword].forEach((ref) => {
+  //       ref.current.classList.remove('is-valid');
+  //       ref.current.classList.add('is-invalid');
+  //     });
+  //   }
+  // }, [loginError]);
 
   const handleSubmitLogin = async (formData) => {
     const route = appRoutes[LOGIN_ENDPOINT]();
@@ -114,8 +114,8 @@ const LoginForm = () => {
               placeholder={t('ui.login.username')}
               value={values.username}
               onChange={handleChange}
-              isValid={touched.username && !errors.username}
-              isInvalid={touched.username && !!errors.username}
+              isValid={touched.username && !errors.username && !loginError}
+              isInvalid={(touched.username && !!errors.username) || !!loginError}
               ref={inputUsername}
             />
             <Form.Label>{t('ui.login.username')}</Form.Label>
@@ -136,8 +136,8 @@ const LoginForm = () => {
               placeholder={t('ui.login.password')}
               value={values.password}
               onChange={handleChange}
-              isValid={touched.password && !errors.password}
-              isInvalid={touched.password && !!errors.password}
+              isValid={touched.password && !errors.password && !loginError}
+              isInvalid={(touched.password && !!errors.password) || !!loginError}
               ref={inputPassword}
             />
             <Form.Label>{t('ui.login.password')}</Form.Label>

@@ -5,10 +5,10 @@ import store from './slices/index.js';
 import resources from './locales';
 import initSocket from './socket-client';
 import getI18nConfig from './utils/getI18nConfig';
-import { addMessage } from './slices/messagesSlice.js';
 import {
-  addChannel, updateChannel, deleteChannel, setCurrentChannelId,
+  actions as channelActions,
 } from './slices/channelsSlice.js';
+import { actions as messagesActions } from './slices/messagesSlice.js';
 
 const DEFAULT_CHANNEL = 1;
 
@@ -25,25 +25,30 @@ export default async () => {
     confirmRemoveChannel,
   } = socketFunctions;
 
+  const {
+    addChannel, setCurrentChannelId, deleteChannel, updateChannel,
+  } = channelActions;
+  const { addMessage } = messagesActions;
+
   receiveMessage((payload) => {
     store.dispatch(addMessage({ newMessage: payload }));
   });
 
   confirmAddNewChannel((payload) => {
     const { id } = payload;
-    store.dispatch(addChannel({ newChannel: payload }));
+    store.dispatch(addChannel({ channel: payload }));
     store.dispatch(setCurrentChannelId({ currentChannelId: id }));
   });
 
   confirmRemoveChannel((payload) => {
     const { id } = payload;
-    store.dispatch(deleteChannel({ channelForRemoveId: id }));
+    store.dispatch(deleteChannel({ id }));
     store.dispatch(setCurrentChannelId({ currentChannelId: DEFAULT_CHANNEL }));
   });
 
   confirmRenameChannel((payload) => {
     const { id, name } = payload;
-    store.dispatch(updateChannel({ updateChannelData: { id, changes: { name } } }));
+    store.dispatch(updateChannel({ channel: { id, changes: { name } } }));
   });
 
   const i18nConfig = getI18nConfig(resources);

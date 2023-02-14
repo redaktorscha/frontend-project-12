@@ -1,8 +1,8 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
-import { deleteChannel } from './channelsSlice';
+import { actions as channelActions } from './channelsSlice';
 
 const messagesAdapter = createEntityAdapter();
-
+const { deleteChannel } = channelActions;
 const messagesSlice = createSlice({
   name: 'messages',
   initialState: messagesAdapter.getInitialState(),
@@ -22,6 +22,6 @@ const messagesSlice = createSlice({
     });
   },
 });
-export const { setMessages, addMessage } = messagesSlice.actions;
+export const { actions } = messagesSlice;
 export const selectors = messagesAdapter.getSelectors((state) => state.messages);
 export default messagesSlice.reducer;

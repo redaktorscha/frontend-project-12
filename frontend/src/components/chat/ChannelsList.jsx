@@ -4,7 +4,7 @@ import {
 } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { selectors as channelSelectors, setCurrentChannelId } from '../../slices/channelsSlice.js';
+import { selectors as channelSelectors, actions as channelActions } from '../../slices/channelsSlice.js';
 import useResponsiveWidth from '../../hooks/useResponsiveWidth';
 
 const ChannelButton = ({ color, onClick, channelName }) => (
@@ -45,6 +45,7 @@ const Channel = ({
 };
 
 const ChannelsList = ({ handleOpenModal }) => {
+  const { setCurrentChannelId } = channelActions;
   const channels = useSelector(channelSelectors.selectAll) || [];
   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const ChannelsList = ({ handleOpenModal }) => {
       <Nav
         as="ul"
         variant="pills"
-        className="max-height-95 h-100 flex-column justify-content-start px-2 w-100 overflow-auto"
+        className="flex-column px-2 w-100"
       >
         {channels.map(({ id, name, removable }) => {
           const color = id === currentChannelId ? 'secondary' : 'light';

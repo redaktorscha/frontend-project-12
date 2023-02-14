@@ -10,13 +10,13 @@ const channelsSlice = createSlice({
       channelsAdapter.addMany(state, payload.channels);
     },
     addChannel(state, { payload }) {
-      channelsAdapter.addOne(state, payload.newChannel);
+      channelsAdapter.addOne(state, payload.channel);
     },
     updateChannel(state, { payload }) {
-      channelsAdapter.updateOne(state, payload.updateChannelData);
+      channelsAdapter.updateOne(state, payload.channel);
     },
     deleteChannel(state, { payload }) {
-      channelsAdapter.removeOne(state, payload.channelForRemoveId);
+      channelsAdapter.removeOne(state, payload.id);
     },
     setCurrentChannelId(state, { payload }) {
       // eslint-disable-next-line no-param-reassign
@@ -24,8 +24,7 @@ const channelsSlice = createSlice({
     },
   },
 });
-export const {
-  setChannels, addChannel, updateChannel, deleteChannel, setCurrentChannelId,
-} = channelsSlice.actions;
+
+export const { actions } = channelsSlice;
 export const selectors = channelsAdapter.getSelectors((state) => state.channels);
 export default channelsSlice.reducer;

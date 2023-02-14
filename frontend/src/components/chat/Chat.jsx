@@ -10,9 +10,9 @@ import { useAuth } from '../../hooks';
 import Sidebar from './Sidebar';
 import Main from './Main';
 import {
-  setChannels, setCurrentChannelId,
+  actions as channelActions,
 } from '../../slices/channelsSlice.js';
-import { setMessages } from '../../slices/messagesSlice.js';
+import { actions as messagesActions } from '../../slices/messagesSlice.js';
 
 import { appRoutes, DATA_ENDPOINT } from '../../utils/routes.js';
 import getAuthConfig from '../../utils/getAuthConfig.js';
@@ -24,6 +24,9 @@ const Chat = () => {
   const dispatch = useDispatch();
 
   const rollbar = useRollbar();
+
+  const { setChannels, setCurrentChannelId } = channelActions;
+  const { setMessages } = messagesActions;
 
   useEffect(() => {
     const initChat = async () => {

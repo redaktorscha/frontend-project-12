@@ -6,12 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { useRollbar } from '@rollbar/react';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
-import { setIsOpen, setType } from '../../slices/modalSlice.js';
+import { actions as modalActions } from '../../slices/modalSlice.js';
 import Modal from './Modal';
 import ModalForm from './ModalForm';
 import { useSocketFunctions } from '../../hooks';
 
 const AddChannelModal = ({ setBtnFocused }) => {
+  const { setIsOpen, setType } = modalActions;
   const dispatch = useDispatch();
   const handleClose = () => {
     dispatch(setIsOpen({ isOpen: false }));
