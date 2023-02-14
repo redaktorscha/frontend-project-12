@@ -18,7 +18,7 @@ import { useAuth } from '../../hooks';
 const LoginForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { logIn, logOut } = useAuth();
+  const { logIn } = useAuth();
   const rollbar = useRollbar();
 
   const [loginError, setLoginError] = useState('');
@@ -42,20 +42,10 @@ const LoginForm = () => {
   };
 
   const inputUsername = useRef(null);
-  const inputPassword = useRef(null);
 
   useEffect(() => {
     inputUsername.current.focus();
   }, []);
-
-  // useEffect(() => {
-  //   if (loginError !== '') {
-  //     [inputUsername, inputPassword].forEach((ref) => {
-  //       ref.current.classList.remove('is-valid');
-  //       ref.current.classList.add('is-invalid');
-  //     });
-  //   }
-  // }, [loginError]);
 
   const handleSubmitLogin = async (formData) => {
     const route = appRoutes[LOGIN_ENDPOINT]();
@@ -74,7 +64,6 @@ const LoginForm = () => {
         rollbar.error('login error', e);
         toast.error(t('toasts.networkError'));
       }
-      logOut(); // ? remove?
     }
   };
 
@@ -84,9 +73,7 @@ const LoginForm = () => {
       initialValues={initialValues}
       validateOnChange={false}
       validateOnBlur={false}
-      onSubmit={async (values) => {
-        await handleSubmitLogin(values);
-      }}
+      onSubmit={handleSubmitLogin}
     >
       {({
         handleSubmit,
@@ -138,7 +125,6 @@ const LoginForm = () => {
               onChange={handleChange}
               isValid={touched.password && !errors.password && !loginError}
               isInvalid={(touched.password && !!errors.password) || !!loginError}
-              ref={inputPassword}
             />
             <Form.Label>{t('ui.login.password')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip>

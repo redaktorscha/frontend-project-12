@@ -18,7 +18,7 @@ import { useAuth } from '../../hooks';
 const SignupForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { logIn, logOut } = useAuth();
+  const { logIn } = useAuth();
   const rollbar = useRollbar();
 
   const [signupError, setSignupError] = useState('');
@@ -51,21 +51,10 @@ const SignupForm = () => {
   };
 
   const inputUsername = useRef(null);
-  const inputPassword = useRef(null);
-  const inputConfirmPassword = useRef(null);
 
   useEffect(() => {
     inputUsername.current.focus();
   }, []);
-
-  // useEffect(() => {
-  //   if (signupError !== '') {
-  //     [inputUsername, inputPassword, inputConfirmPassword].forEach((ref) => {
-  //       ref.current.classList.remove('is-valid');
-  //       ref.current.classList.add('is-invalid');
-  //     });
-  //   }
-  // }, [signupError]);
 
   const handleSubmitSignup = async (formData) => {
     const route = appRoutes[SIGNUP_ENDPOINT]();
@@ -84,7 +73,6 @@ const SignupForm = () => {
         rollbar.error('signup error', e);
         toast.error(t('toasts.networkError'));
       }
-      logOut(); // ? remove?
     }
   };
 
@@ -93,9 +81,7 @@ const SignupForm = () => {
       validationSchema={signupSchema}
       initialValues={initialValues}
       validateOnChange={false}
-      onSubmit={async (values) => {
-        await handleSubmitSignup(values);
-      }}
+      onSubmit={handleSubmitSignup}
     >
       {({
         handleSubmit,
@@ -150,7 +136,6 @@ const SignupForm = () => {
               onBlur={handleBlur}
               isValid={touched.password && !errors.password && !signupError}
               isInvalid={(touched.password && !!errors.password) || !!signupError}
-              ref={inputPassword}
             />
             <Form.Label>{t('ui.signup.password')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip>
@@ -173,7 +158,6 @@ const SignupForm = () => {
               onBlur={handleBlur}
               isValid={touched.confirmPassword && !errors.confirmPassword && !signupError}
               isInvalid={(touched.confirmPassword && !!errors.confirmPassword) || !!signupError}
-              ref={inputConfirmPassword}
             />
             <Form.Label>{t('ui.signup.confirmPassword')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip>

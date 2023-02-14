@@ -13,7 +13,7 @@ const useLocalStorage = (key, defaultValue = null) => {
       return;
     }
     if (prevValue.current !== null) {
-      localStorage.removeItem(key);
+      localStorage.removeItem(key); // for logout
     }
   }, [storageValue, key]);
 
