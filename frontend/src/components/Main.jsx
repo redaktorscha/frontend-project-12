@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import { Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import AddMessageForm from './AddMessageForm';
-import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
-import { selectors as messagesSelectors } from '../../slices/messagesSlice.js';
-import useResponsiveWidth from '../../hooks/useResponsiveWidth';
+import { selectors as channelSelectors } from '../slices/channelsSlice.js';
+import { selectors as messagesSelectors } from '../slices/messagesSlice.js';
+import useResponsiveWidth from '../hooks/useResponsiveWidth';
 
 const Message = (props) => {
   const { username, text } = props;

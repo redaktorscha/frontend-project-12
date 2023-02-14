@@ -11,9 +11,9 @@ import { toast } from 'react-toastify';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
-import login from '../../assets/login.svg';
-import { appRoutes, LOGIN_ENDPOINT } from '../../utils/routes';
-import { useAuth } from '../../hooks';
+import login from '../assets/login.svg';
+import { appRoutes, LOGIN_ENDPOINT } from '../utils/routes';
+import { useAuth } from '../hooks';
 
 const LoginForm = () => {
   const { t } = useTranslation();

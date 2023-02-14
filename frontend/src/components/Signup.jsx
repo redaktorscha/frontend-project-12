@@ -11,9 +11,9 @@ import { toast } from 'react-toastify';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
-import signup from '../../assets/signup.svg';
-import { appRoutes, SIGNUP_ENDPOINT } from '../../utils/routes';
-import { useAuth } from '../../hooks';
+import signup from '../assets/signup.svg';
+import { appRoutes, SIGNUP_ENDPOINT } from '../utils/routes';
+import { useAuth } from '../hooks';
 
 const SignupForm = () => {
   const { t } = useTranslation();

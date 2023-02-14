@@ -6,8 +6,8 @@ import React, {
 import { Button, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import ChannelsList from './ChannelsList';
-import { AddChannelModal, DeleteChannelModal, RenameChannelModal } from '../modals';
-import { actions as modalActions } from '../../slices/modalSlice.js';
+import { AddChannelModal, DeleteChannelModal, RenameChannelModal } from './modals';
+import { actions as modalActions } from '../slices/modalSlice.js';
 
 const Sidebar = () => {
   const { t } = useTranslation();
