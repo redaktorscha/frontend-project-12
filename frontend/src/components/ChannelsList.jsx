@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // ts-check
 import {
   Button, ButtonGroup, Nav, Dropdown,
@@ -6,7 +5,6 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { selectors as channelSelectors, actions as channelActions } from '../slices/channelsSlice.js';
-import useResponsiveWidth from '../hooks/useResponsiveWidth';
 
 const ChannelButton = ({ color, onClick, channelName }) => (
   <Button
@@ -54,7 +52,6 @@ const ChannelsList = ({ handleOpenModal }) => {
     currentChannelId: channelId,
   }));
   const { t } = useTranslation();
-  const { isMobile } = useResponsiveWidth();
 
   return (
     <div className="h-100 overflow-auto">

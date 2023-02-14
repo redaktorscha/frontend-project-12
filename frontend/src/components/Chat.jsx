@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 // ts-check
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect } from 'react';
@@ -48,12 +47,12 @@ const Chat = () => {
     };
 
     initChat();
-  }, [user, dispatch]);
+  }, [user, dispatch, setChannels, setCurrentChannelId, setMessages, rollbar, navigate]);
 
   return (
     user
       && (
-        <Container className="h-100 overflow-hidden rounded shadow">
+        <Container className="h-100 max-height-90 overflow-hidden rounded shadow">
           <Row className="bg-white h-100 flex-md-row">
             <Sidebar />
             <Main />

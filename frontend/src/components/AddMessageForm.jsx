@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, {
   useRef, useState, useEffect,
 } from 'react';

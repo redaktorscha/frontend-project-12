@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Col } from 'react-bootstrap';
@@ -6,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import AddMessageForm from './AddMessageForm';
 import { selectors as channelSelectors } from '../slices/channelsSlice.js';
 import { selectors as messagesSelectors } from '../slices/messagesSlice.js';
-import useResponsiveWidth from '../hooks/useResponsiveWidth';
 
 const Message = (props) => {
   const { username, text } = props;
@@ -19,19 +17,16 @@ const Message = (props) => {
   );
 };
 
-const Messages = ({ currentChannelMessages }) => {
-  const { isMobile } = useResponsiveWidth();
-  return (
-    <div className="d-flex flex-column h-100 w-100 overflow-auto px-3">
-      {
+const Messages = ({ currentChannelMessages }) => (
+  <div className="d-flex flex-column h-100 w-100 overflow-auto px-3">
+    {
         currentChannelMessages.length > 0
           ? currentChannelMessages
             .map(({ username, body, id }) => (<Message key={id} text={body} username={username} />))
           : null
 }
-    </div>
-  );
-};
+  </div>
+);
 
 const Main = () => {
   const { t } = useTranslation();
