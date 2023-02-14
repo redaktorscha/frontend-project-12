@@ -1,4 +1,4 @@
 import AuthProvider from './AuthProvider';
-import SocketProvider from './SocketProvider';
+import ApiProvider from './ApiProvider';
 
-export { AuthProvider, SocketProvider };
+export { AuthProvider, ApiProvider };

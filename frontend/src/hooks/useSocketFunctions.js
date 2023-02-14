@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { SocketContext } from '../contexts';
+import { ApiContext } from '../contexts';
 
-const useSocketFunctions = () => useContext(SocketContext);
+const useSocketFunctions = () => useContext(ApiContext);
 
 export default useSocketFunctions;
