@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Col } from 'react-bootstrap';
@@ -21,7 +22,7 @@ const Message = (props) => {
 const Messages = ({ currentChannelMessages }) => {
   const { isMobile } = useResponsiveWidth();
   return (
-    <div className={`d-flex flex-column h-100 w-100 overflow-auto ${isMobile ? 'px-3 max-height-60' : 'px-5 max-height-70'}`}>
+    <div className="d-flex flex-column h-100 w-100 overflow-auto px-3">
       {
         currentChannelMessages.length > 0
           ? currentChannelMessages
@@ -56,7 +57,7 @@ const Main = () => {
         </span>
       </div>
       <Messages currentChannelMessages={currentChannelMessages} />
-      <div className="p-3 mt-auto">
+      <div className="px-3 py-4 mt-auto">
         <AddMessageForm t={t} currentChannelId={currentChannelId} />
       </div>
     </Col>
