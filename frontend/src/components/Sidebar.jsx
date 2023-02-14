@@ -35,7 +35,7 @@ const Sidebar = () => {
   }, [isOpen, btnFocused]);
 
   return (
-    <Col className="col-4 col-md-2 border-end pt-5 px-0 bg-light h-100">
+    <Col className="col-4 col-md-2 border-end py-5 px-0 bg-light h-100">
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
         <span>{t('ui.chat.channels')}</span>
         <Button

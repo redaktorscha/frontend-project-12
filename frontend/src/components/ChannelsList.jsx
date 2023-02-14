@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // ts-check
 import {
   Button, ButtonGroup, Nav, Dropdown,
@@ -56,7 +57,7 @@ const ChannelsList = ({ handleOpenModal }) => {
   const { isMobile } = useResponsiveWidth();
 
   return (
-    <div className={`h-100 overflow-auto ${isMobile ? 'max-height-70' : 'max-height-80'}`}>
+    <div className="h-100 overflow-auto">
       <Nav
         as="ul"
         variant="pills"
