@@ -4,13 +4,13 @@ import filter from 'leo-profanity';
 import store from './slices/index.js';
 import resources from './locales';
 import initSocket from './socket-client';
-import getI18nConfig from './utils/getI18nConfig';
 import {
   actions as channelActions,
 } from './slices/channelsSlice.js';
 import { actions as messagesActions } from './slices/messagesSlice.js';
 
 const DEFAULT_CHANNEL = 1;
+const DEFAULT_LOCALE = 'ru';
 
 export default async () => {
   const socketFunctions = initSocket();
@@ -51,10 +51,16 @@ export default async () => {
     store.dispatch(updateChannel({ channel: { id, changes: { name } } }));
   });
 
-  const i18nConfig = getI18nConfig(resources);
   i18n
     .use(initReactI18next)
-    .init(i18nConfig);
+    .init({
+      lng: DEFAULT_LOCALE,
+      debug: true,
+      resources,
+      interpolation: {
+        escapeValue: false,
+      },
+    });
 
   const availableLocales = ['en', 'ru'];
   availableLocales.forEach((locale) => filter.add(filter.getDictionary(locale)));
