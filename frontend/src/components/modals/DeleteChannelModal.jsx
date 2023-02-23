@@ -7,16 +7,16 @@ import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { actions as modalActions } from '../../slices/modalSlice.js';
-import { useSocketFunctions } from '../../hooks';
+import { useChatAPI } from '../../hooks';
 import Modal from './Modal';
 
 const DeleteChannelModal = () => {
-  const { removeChannel } = useSocketFunctions();
+  const { removeChannel } = useChatAPI();
   const [isSending, setIsSending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { setIsOpen, setType, setTargetChannel } = modalActions;
+  const { setModalType, setTargetChannel } = modalActions;
 
   const rollbar = useRollbar();
 
@@ -24,8 +24,7 @@ const DeleteChannelModal = () => {
   const channels = useSelector(channelSelectors.selectAll) || [];
 
   const handleClose = () => {
-    dispatch(setIsOpen({ isOpen: false }));
-    dispatch(setType({ type: null }));
+    dispatch(setModalType({ type: null }));
     dispatch(setTargetChannel({ targetChannel: null }));
   };
 
@@ -56,8 +55,8 @@ const DeleteChannelModal = () => {
   };
 
   const modalType = 'delete';
-  const { isOpen, type } = useSelector((state) => state.modal);
-  const shouldOpen = isOpen && type === modalType;
+  const { type } = useSelector((state) => state.modal);
+  const shouldOpen = type === modalType;
 
   useEffect(() => {
     if (shouldOpen) {

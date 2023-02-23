@@ -13,26 +13,25 @@ const Sidebar = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [btnFocused, setBtnFocused] = useState(false);
-  const { isOpen } = useSelector((state) => state.modal);
+  const { type } = useSelector((state) => state.modal);
 
-  const { setIsOpen, setType, setTargetChannel } = modalActions;
+  const { setModalType, setTargetChannel } = modalActions;
   const buttonRef = useRef(null);
 
   const handleOpenModal = (modalType, channel = null) => () => {
-    dispatch(setIsOpen({ isOpen: true }));
-    dispatch(setType({ type: modalType }));
+    dispatch(setModalType({ type: modalType }));
     if (channel !== null) {
       dispatch(setTargetChannel({ targetChannel: channel }));
     }
   };
 
   useEffect(() => {
-    if (btnFocused && !isOpen) {
+    if (btnFocused && type === 'null') {
       buttonRef.current.focus();
     } else {
       setBtnFocused(false);
     }
-  }, [isOpen, btnFocused]);
+  }, [type, btnFocused]);
 
   return (
     <Col className="col-4 col-md-2 border-end py-5 px-0 bg-light h-100">

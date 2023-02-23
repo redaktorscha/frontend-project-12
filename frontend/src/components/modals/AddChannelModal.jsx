@@ -9,26 +9,25 @@ import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { actions as modalActions } from '../../slices/modalSlice.js';
 import Modal from './Modal';
 import ModalForm from './ModalForm';
-import { useSocketFunctions } from '../../hooks';
+import { useChatAPI } from '../../hooks';
 
 const AddChannelModal = ({ setBtnFocused }) => {
-  const { setIsOpen, setType } = modalActions;
+  const { setModalType } = modalActions;
   const dispatch = useDispatch();
   const handleClose = () => {
-    dispatch(setIsOpen({ isOpen: false }));
-    dispatch(setType({ type: null }));
+    dispatch(setModalType({ type: null }));
     setBtnFocused(true);
   };
 
   const { t } = useTranslation();
   const rollbar = useRollbar();
-  const { addNewChannel } = useSocketFunctions();
+  const { addNewChannel } = useChatAPI();
   const channels = useSelector(channelSelectors.selectAll) || [];
   const channelsNames = channels.map(({ name }) => name);
 
   const modalType = 'add';
-  const { isOpen, type } = useSelector((state) => state.modal);
-  const shouldOpen = isOpen && type === modalType;
+  const { type } = useSelector((state) => state.modal);
+  const shouldOpen = type === modalType;
 
   const handleAdd = (data) => {
     try {

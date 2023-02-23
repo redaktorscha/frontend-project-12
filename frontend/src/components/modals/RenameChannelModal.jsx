@@ -9,10 +9,10 @@ import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { actions as modalActions } from '../../slices/modalSlice.js';
 import Modal from './Modal';
 import ModalForm from './ModalForm';
-import { useSocketFunctions } from '../../hooks';
+import { useChatAPI } from '../../hooks';
 
 const RenameChannelModal = () => {
-  const { renameChannel } = useSocketFunctions();
+  const { renameChannel } = useChatAPI();
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -22,11 +22,10 @@ const RenameChannelModal = () => {
   const channels = useSelector(channelSelectors.selectAll) || [];
   const channelsNames = channels.map(({ name }) => name);
 
-  const { setIsOpen, setType, setTargetChannel } = modalActions;
+  const { setModalType, setTargetChannel } = modalActions;
 
   const handleClose = () => {
-    dispatch(setIsOpen({ isOpen: false }));
-    dispatch(setType({ type: null }));
+    dispatch(setModalType({ type: null }));
     dispatch(setTargetChannel({ targetChannel: null }));
   };
 
@@ -57,8 +56,8 @@ const RenameChannelModal = () => {
     handleClose();
   };
   const modalType = 'rename';
-  const { isOpen, type } = useSelector((state) => state.modal);
-  const shouldOpen = isOpen && type === modalType;
+  const { type } = useSelector((state) => state.modal);
+  const shouldOpen = type === modalType;
 
   const renameChannelSchema = yup
     .object()

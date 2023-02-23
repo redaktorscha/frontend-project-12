@@ -68,7 +68,7 @@ const ChannelsList = ({ handleOpenModal }) => {
               t={t}
               handleOpenModal={handleOpenModal}
               onClick={setChannel(id)}
-              key={`${id}`}
+              key={id}
               color={color}
               channelName={name}
               hasDropDown={removable}
