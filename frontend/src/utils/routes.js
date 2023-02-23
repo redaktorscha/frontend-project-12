@@ -5,6 +5,7 @@ const appRoutes = {
   apiV1SignupPath: () => [APIBASE, 'signup'].join('/'),
   apiV1DataPath: () => [APIBASE, 'data'].join('/'),
   loginPath: () => '/login',
+  signupPath: () => '/signup',
   rootPath: () => '/',
 };
 
