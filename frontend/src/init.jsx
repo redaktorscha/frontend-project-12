@@ -65,7 +65,7 @@ export default async (socketClient) => {
     store.dispatch(updateChannel({ channel: { id, changes: { name } } }));
   });
 
-  i18n
+  await i18n
     .use(initReactI18next)
     .init({
       lng: DEFAULT_LOCALE,
