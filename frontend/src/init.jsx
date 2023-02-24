@@ -18,52 +18,64 @@ const DEFAULT_CHANNEL = 1;
 const DEFAULT_LOCALE = 'ru';
 
 export default async (socketClient) => {
-  const send = (websocket, eventType) => (payload, getResponseStatus) => {
-    websocket.emit(eventType, payload, getResponseStatus);
-  };
-
-  const receive = (websocket, eventType) => (callback) => {
-    websocket.on(eventType, callback);
-  };
-
-  const sendMessage = send(socketClient, 'newMessage');
-  const receiveMessage = receive(socketClient, 'newMessage');
-  const addNewChannel = send(socketClient, 'newChannel');
-  const confirmAddNewChannel = receive(socketClient, 'newChannel');
-  const renameChannel = send(socketClient, 'renameChannel');
-  const confirmRenameChannel = receive(socketClient, 'renameChannel');
-  const removeChannel = send(socketClient, 'removeChannel');
-  const confirmRemoveChannel = receive(socketClient, 'removeChannel');
-
-  const socketFunctions = {
-    sendMessage, addNewChannel, renameChannel, removeChannel,
-  };
-
   const {
     addChannel, setCurrentChannelId, deleteChannel, updateChannel,
   } = channelActions;
   const { addMessage } = messagesActions;
 
-  receiveMessage((payload) => {
+  const acknowledgementCallback = (responseStatus, errorMessage) => {
+    if (responseStatus === 'ok') {
+      return;
+    }
+    throw new Error(errorMessage);
+  };
+
+  const sendMessage = (payload) => socketClient.emit('newMessage', payload, (response) => {
+    const { status } = response;
+    acknowledgementCallback(status);
+  });
+
+  socketClient.on('newMessage', (payload) => {
     store.dispatch(addMessage({ newMessage: payload }));
   });
 
-  confirmAddNewChannel((payload) => {
-    const { id } = payload;
+  const addNewChannel = (payload) => socketClient.emit('newChannel', payload, (response) => {
+    const { status, data } = response;
+    acknowledgementCallback(status);
+    store.dispatch(setCurrentChannelId({ currentChannelId: data.id }));
+  });
+
+  socketClient.on('newChannel', (payload) => {
     store.dispatch(addChannel({ channel: payload }));
-    store.dispatch(setCurrentChannelId({ currentChannelId: id }));
   });
 
-  confirmRemoveChannel((payload) => {
-    const { id } = payload;
-    store.dispatch(deleteChannel({ id }));
-    store.dispatch(setCurrentChannelId({ currentChannelId: DEFAULT_CHANNEL }));
+  const renameChannel = (payload) => socketClient.emit('renameChannel', payload, (response) => {
+    const { status } = response;
+    acknowledgementCallback(status);
   });
 
-  confirmRenameChannel((payload) => {
+  socketClient.on('renameChannel', (payload) => {
     const { id, name } = payload;
     store.dispatch(updateChannel({ channel: { id, changes: { name } } }));
   });
+
+  const removeChannel = (payload) => socketClient.emit('removeChannel', payload, (response) => {
+    const { status } = response;
+    acknowledgementCallback(status);
+  });
+
+  socketClient.on('removeChannel', (payload) => {
+    const { currentChannelId } = store.getState().channels;
+    const { id } = payload;
+    store.dispatch(deleteChannel({ id }));
+    if (id === currentChannelId) {
+      store.dispatch(setCurrentChannelId({ currentChannelId: DEFAULT_CHANNEL }));
+    }
+  });
+
+  const socketFunctions = {
+    sendMessage, addNewChannel, renameChannel, removeChannel,
+  };
 
   await i18n
     .use(initReactI18next)

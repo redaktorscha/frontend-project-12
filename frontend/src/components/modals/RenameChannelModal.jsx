@@ -41,13 +41,8 @@ const RenameChannelModal = () => {
           id,
           name: filter.clean(data.channelName.trim()),
         };
-        renameChannel(renamedChannel, (response) => {
-          if (response.status === 'ok') {
-            toast.success(t('toasts.channelRenamed'));
-            return;
-          }
-          toast.error(t('toasts.networkError'));
-        });
+        renameChannel(renamedChannel);
+        toast.success(t('toasts.channelRenamed'));
       } catch (e) {
         rollbar.error('Rename channel error', e);
         toast.error(t('toasts.networkError'));

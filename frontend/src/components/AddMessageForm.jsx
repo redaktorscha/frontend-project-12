@@ -47,16 +47,10 @@ const AddMessageForm = ({ t, currentChannelId }) => {
             channelId: currentChannelId,
             username,
           };
-
-          sendMessage(messageToSend, (response) => {
-            if (response.status === 'ok') {
-              return;
-            }
-            toast.error(t('toasts.networkError'));
-          });
+          sendMessage(messageToSend);
           resetForm({ values: { message: '' } });
         } catch (e) {
-          rollbar.error('Add msg error', e);
+          rollbar.error(e.message);
           toast.error(t('toasts.networkError'));
         }
       }}

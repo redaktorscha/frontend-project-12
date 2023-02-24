@@ -34,13 +34,8 @@ const AddChannelModal = ({ setBtnFocused }) => {
       const newChannel = {
         name: filter.clean(data.channelName.trim()),
       };
-      addNewChannel(newChannel, (response) => {
-        if (response.status === 'ok') {
-          toast.success(t('toasts.channelCreated'));
-          return;
-        }
-        toast.error(t('toasts.networkError'));
-      });
+      addNewChannel(newChannel);
+      toast.success(t('toasts.channelCreated'));
     } catch (e) {
       rollbar.error('Add channel error', e);
       toast.error(t('toasts.networkError'));

@@ -38,13 +38,8 @@ const DeleteChannelModal = () => {
       setIsSending(true);
       try {
         const channelForDeletion = { id };
-        removeChannel(channelForDeletion, (response) => {
-          if (response.status === 'ok') {
-            toast.success(t('toasts.channelDeleted'));
-            return;
-          }
-          toast.error(t('toasts.networkError'));
-        });
+        removeChannel(channelForDeletion);
+        toast.success(t('toasts.channelDeleted'));
       } catch (e) {
         rollbar.error('Delete channel error', e);
         toast.error(t('toasts.networkError'));
