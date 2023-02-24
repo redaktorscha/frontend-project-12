@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -17,16 +17,27 @@ const Message = (props) => {
   );
 };
 
-const Messages = ({ currentChannelMessages }) => (
-  <div className="d-flex flex-column h-100 w-100 overflow-auto px-3">
-    {
+const Messages = ({ currentChannelMessages }) => {
+  const messagesRef = useRef(null);
+
+  useEffect(() => {
+    const lastMessage = messagesRef.current.lastElementChild;
+    if (lastMessage) {
+      lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  });
+
+  return (
+    <div ref={messagesRef} className="d-flex flex-column h-100 w-100 overflow-auto px-3">
+      {
         currentChannelMessages.length > 0
           ? currentChannelMessages
             .map(({ username, body, id }) => (<Message key={id} text={body} username={username} />))
           : null
 }
-  </div>
-);
+    </div>
+  );
+};
 
 const Main = () => {
   const { t } = useTranslation();

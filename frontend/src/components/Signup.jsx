@@ -21,7 +21,7 @@ const SignupForm = () => {
   const { logIn } = useAuth();
   const rollbar = useRollbar();
 
-  const rootRoute = appRoutes.rootPath;
+  const rootRoute = appRoutes.rootPath();
 
   const [signupError, setSignupError] = useState('');
 
