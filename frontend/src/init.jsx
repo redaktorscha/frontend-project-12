@@ -23,35 +23,44 @@ export default async (socketClient) => {
   } = channelActions;
   const { addMessage } = messagesActions;
 
-  const acknowledgementCallback = (responseStatus, errorMessage) => {
-    if (responseStatus === 'ok') {
-      return;
-    }
-    throw new Error(errorMessage);
-  };
-
-  const sendMessage = (payload) => socketClient.emit('newMessage', payload, (response) => {
-    const { status } = response;
-    acknowledgementCallback(status);
+  const sendMessage = async (payload) => new Promise((resolve, reject) => {
+    socketClient.emit('newMessage', payload, (response) => {
+      const { status } = response;
+      if (status !== 'ok') {
+        reject(new Error('add message error'));
+      }
+    });
   });
 
   socketClient.on('newMessage', (payload) => {
     store.dispatch(addMessage({ newMessage: payload }));
   });
 
-  const addNewChannel = (payload) => socketClient.emit('newChannel', payload, (response) => {
-    const { status, data } = response;
-    acknowledgementCallback(status);
-    store.dispatch(setCurrentChannelId({ currentChannelId: data.id }));
+  const addNewChannel = async (payload) => new Promise((resolve, reject) => {
+    socketClient.emit('newChannel', payload, (response) => {
+      const { status, data } = response;
+      if (status === 'ok') {
+        store.dispatch(setCurrentChannelId({ currentChannelId: data.id }));
+        resolve();
+      } else {
+        reject(new Error('add channel error'));
+      }
+    });
   });
 
   socketClient.on('newChannel', (payload) => {
     store.dispatch(addChannel({ channel: payload }));
   });
 
-  const renameChannel = (payload) => socketClient.emit('renameChannel', payload, (response) => {
-    const { status } = response;
-    acknowledgementCallback(status);
+  const renameChannel = async (payload) => new Promise((resolve, reject) => {
+    socketClient.emit('renameChannel', payload, (response) => {
+      const { status } = response;
+      if (status === 'ok') {
+        resolve();
+      } else {
+        reject(new Error('rename channel error'));
+      }
+    });
   });
 
   socketClient.on('renameChannel', (payload) => {
@@ -59,9 +68,15 @@ export default async (socketClient) => {
     store.dispatch(updateChannel({ channel: { id, changes: { name } } }));
   });
 
-  const removeChannel = (payload) => socketClient.emit('removeChannel', payload, (response) => {
-    const { status } = response;
-    acknowledgementCallback(status);
+  const removeChannel = async (payload) => new Promise((resolve, reject) => {
+    socketClient.emit('removeChannel', payload, (response) => {
+      const { status } = response;
+      if (status === 'ok') {
+        resolve();
+      } else {
+        reject(new Error('remove channel error'));
+      }
+    });
   });
 
   socketClient.on('removeChannel', (payload) => {

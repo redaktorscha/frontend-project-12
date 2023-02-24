@@ -39,20 +39,20 @@ const AddMessageForm = ({ t, currentChannelId }) => {
       initialValues={{
         message: '',
       }}
-      onSubmit={(values, { resetForm }) => {
+      onSubmit={async (values, { resetForm }) => {
         setInputValue('');
-        try {
-          const messageToSend = {
-            body: filter.clean(values.message.trim()),
-            channelId: currentChannelId,
-            username,
-          };
-          sendMessage(messageToSend);
-          resetForm({ values: { message: '' } });
-        } catch (e) {
-          rollbar.error(e.message);
-          toast.error(t('toasts.networkError'));
-        }
+
+        const messageToSend = {
+          body: filter.clean(values.message.trim()),
+          channelId: currentChannelId,
+          username,
+        };
+        resetForm({ values: { message: '' } });
+        await sendMessage(messageToSend)
+          .catch((e) => {
+            rollbar.error(e.message);
+            toast.error(t('toasts.networkError'));
+          });
       }}
     >
       {

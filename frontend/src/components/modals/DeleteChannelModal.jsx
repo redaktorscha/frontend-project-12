@@ -28,25 +28,26 @@ const DeleteChannelModal = () => {
     dispatch(setTargetChannel({ targetChannel: null }));
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!channels) {
       return;
     }
+    handleClose();
     const [{ id }] = channels
       .filter(({ name, removable }) => removable && (name === targetChannel));
     if (targetChannel) {
       setIsSending(true);
-      try {
-        const channelForDeletion = { id };
-        removeChannel(channelForDeletion);
-        toast.success(t('toasts.channelDeleted'));
-      } catch (e) {
-        rollbar.error('Delete channel error', e);
-        toast.error(t('toasts.networkError'));
-      }
-    }
 
-    handleClose();
+      const channelForDeletion = { id };
+      await removeChannel(channelForDeletion)
+        .then(() => {
+          toast.success(t('toasts.channelDeleted'));
+        })
+        .catch((e) => {
+          rollbar.error('Delete channel error', e);
+          toast.error(t('toasts.networkError'));
+        });
+    }
   };
 
   const modalType = 'delete';

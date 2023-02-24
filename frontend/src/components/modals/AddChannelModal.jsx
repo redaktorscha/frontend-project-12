@@ -29,18 +29,19 @@ const AddChannelModal = ({ setBtnFocused }) => {
   const { type } = useSelector((state) => state.modal);
   const shouldOpen = type === modalType;
 
-  const handleAdd = (data) => {
-    try {
-      const newChannel = {
-        name: filter.clean(data.channelName.trim()),
-      };
-      addNewChannel(newChannel);
-      toast.success(t('toasts.channelCreated'));
-    } catch (e) {
-      rollbar.error('Add channel error', e);
-      toast.error(t('toasts.networkError'));
-    }
+  const handleAdd = async (data) => {
     handleClose();
+    const newChannel = {
+      name: filter.clean(data.channelName.trim()),
+    };
+    await addNewChannel(newChannel)
+      .then(() => {
+        toast.success(t('toasts.channelCreated'));
+      })
+      .catch((e) => {
+        rollbar.error('Add channel error', e);
+        toast.error(t('toasts.networkError'));
+      });
   };
 
   const addChannelSchema = yup

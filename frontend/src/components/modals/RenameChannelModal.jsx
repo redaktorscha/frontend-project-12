@@ -29,26 +29,26 @@ const RenameChannelModal = () => {
     dispatch(setTargetChannel({ targetChannel: null }));
   };
 
-  const handleRename = (data) => {
+  const handleRename = async (data) => {
     if (!channels) {
       return;
     }
     const [{ id }] = channels
       .filter(({ name, removable }) => removable && (name === targetChannel));
     if (targetChannel) {
-      try {
-        const renamedChannel = {
-          id,
-          name: filter.clean(data.channelName.trim()),
-        };
-        renameChannel(renamedChannel);
+      handleClose();
+      const renamedChannel = {
+        id,
+        name: filter.clean(data.channelName.trim()),
+      };
+      await renameChannel(renamedChannel).then(() => {
         toast.success(t('toasts.channelRenamed'));
-      } catch (e) {
-        rollbar.error('Rename channel error', e);
-        toast.error(t('toasts.networkError'));
-      }
+      })
+        .catch((e) => {
+          rollbar.error('Rename channel error', e);
+          toast.error(t('toasts.networkError'));
+        });
     }
-    handleClose();
   };
   const modalType = 'rename';
   const { type } = useSelector((state) => state.modal);
