@@ -1,11 +1,14 @@
 // ts-check
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useRollbar } from '@rollbar/react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { Container, Row } from 'react-bootstrap';
-import { useAuth } from '../hooks';
+import {
+  Container, Row, Spinner,
+} from 'react-bootstrap';
+import { useAuth, useChatApi } from '../hooks';
 import Sidebar from './Sidebar';
 import Main from './Main';
 import {
@@ -17,7 +20,10 @@ import appRoutes from '../utils/routes.js';
 import getAuthConfig from '../utils/getAuthConfig.js';
 
 const Chat = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const { connectionError } = useChatApi();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -40,6 +46,7 @@ const Chat = () => {
           dispatch(setChannels({ channels: data.channels }));
           dispatch(setCurrentChannelId({ currentChannelId: data.currentChannelId }));
           dispatch(setMessages({ messages: data.messages }));
+          setTimeout(() => setIsLoading(false), 2000);
         }
       } catch (e) {
         rollbar.error('getChatDataErr', e);
@@ -49,6 +56,32 @@ const Chat = () => {
 
     initChat();
   }, [user, dispatch, setChannels, setCurrentChannelId, setMessages, rollbar, navigate]);
+
+  if (isLoading) {
+    return (
+      <Container className="h-100 max-height-90 overflow-hidden rounded shadow d-flex justify-content-center align-items-center">
+        <Spinner className="loading-spinner" role="status" animation="border" variant="primary">
+          <span className="visually-hidden">{t('notification.loading')}</span>
+        </Spinner>
+      </Container>
+    );
+  }
+
+  if (connectionError) {
+    return (
+      <Container className="h-100 max-height-90 overflow-hidden rounded shadow d-flex justify-content-center align-items-center">
+        <div className="d-flex flex-column">
+          <div className="d-flex">
+            <Spinner size="sm" role="status" animation="grow" variant="secondary" />
+            <Spinner size="sm" role="status" animation="grow" variant="secondary" />
+            <Spinner size="sm" role="status" animation="grow" variant="secondary" />
+          </div>
+          <h4 className="text-muted">{t('notification.connectionAborted')}</h4>
+          <span className="text-muted">{t('notification.tryRefresh')}</span>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     user

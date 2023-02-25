@@ -1,8 +1,12 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { ChatApiContext } from '../../contexts';
 
 const ChatApiProvider = ({ functions, children }) => {
-  const chatApi = useMemo(() => ({ ...functions }), [functions]);
+  const [connectionError, setConnectionError] = useState(false);
+  const chatApi = useMemo(
+    () => ({ ...functions, connectionError, setConnectionError }),
+    [functions, connectionError, setConnectionError],
+  );
 
   return (
     <ChatApiContext.Provider value={chatApi}>

@@ -12,7 +12,7 @@ import ModalForm from './ModalForm';
 import { useChatApi } from '../../hooks';
 
 const RenameChannelModal = () => {
-  const { renameChannel } = useChatApi();
+  const { renameChannel, setConnectionError } = useChatApi();
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -45,6 +45,10 @@ const RenameChannelModal = () => {
         toast.success(t('toasts.channelRenamed'));
       })
         .catch((e) => {
+          if (e.message === 'connection error') {
+            setConnectionError(true);
+            return;
+          }
           rollbar.error('Rename channel error', e);
           toast.error(t('toasts.networkError'));
         });

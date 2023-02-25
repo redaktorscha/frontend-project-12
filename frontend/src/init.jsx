@@ -24,11 +24,17 @@ export default async (socketClient) => {
   const { addMessage } = messagesActions;
 
   const sendMessage = async (payload) => new Promise((resolve, reject) => {
-    socketClient.emit('newMessage', payload, (response) => {
+    socketClient.timeout(3000).emit('newMessage', payload, (error, response) => {
+      if (error) {
+        reject(new Error('connection error'));
+        return;
+      }
       const { status } = response;
       if (status !== 'ok') {
-        reject(new Error('add message error'));
+        reject(new Error('send message error'));
+        return;
       }
+      resolve();
     });
   });
 
@@ -37,7 +43,11 @@ export default async (socketClient) => {
   });
 
   const addNewChannel = async (payload) => new Promise((resolve, reject) => {
-    socketClient.emit('newChannel', payload, (response) => {
+    socketClient.timeout(3000).emit('newChannel', payload, (error, response) => {
+      if (error) {
+        reject(new Error('connection error'));
+        return;
+      }
       const { status, data } = response;
       if (status === 'ok') {
         store.dispatch(setCurrentChannelId({ currentChannelId: data.id }));
@@ -53,7 +63,11 @@ export default async (socketClient) => {
   });
 
   const renameChannel = async (payload) => new Promise((resolve, reject) => {
-    socketClient.emit('renameChannel', payload, (response) => {
+    socketClient.timeout(3000).emit('renameChannel', payload, (error, response) => {
+      if (error) {
+        reject(new Error('connection error'));
+        return;
+      }
       const { status } = response;
       if (status === 'ok') {
         resolve();
@@ -69,7 +83,11 @@ export default async (socketClient) => {
   });
 
   const removeChannel = async (payload) => new Promise((resolve, reject) => {
-    socketClient.emit('removeChannel', payload, (response) => {
+    socketClient.timeout(3000).emit('removeChannel', payload, (error, response) => {
+      if (error) {
+        reject(new Error('connection error'));
+        return;
+      }
       const { status } = response;
       if (status === 'ok') {
         resolve();

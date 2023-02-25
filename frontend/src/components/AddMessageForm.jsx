@@ -14,7 +14,7 @@ import { useAuth, useChatApi } from '../hooks';
 
 const AddMessageForm = ({ t, currentChannelId }) => {
   const { user: { username } } = useAuth();
-  const { sendMessage } = useChatApi();
+  const { sendMessage, setConnectionError } = useChatApi();
   const [inputValue, setInputValue] = useState('');
 
   const rollbar = useRollbar();
@@ -50,6 +50,10 @@ const AddMessageForm = ({ t, currentChannelId }) => {
         resetForm({ values: { message: '' } });
         await sendMessage(messageToSend)
           .catch((e) => {
+            if (e.message === 'connection error') {
+              setConnectionError(true);
+              return;
+            }
             rollbar.error(e.message);
             toast.error(t('toasts.networkError'));
           });

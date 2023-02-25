@@ -11,7 +11,7 @@ import { useChatApi } from '../../hooks';
 import Modal from './Modal';
 
 const DeleteChannelModal = () => {
-  const { removeChannel } = useChatApi();
+  const { removeChannel, setConnectionError } = useChatApi();
   const [isSending, setIsSending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -44,6 +44,10 @@ const DeleteChannelModal = () => {
           toast.success(t('toasts.channelDeleted'));
         })
         .catch((e) => {
+          if (e.message === 'connection error') {
+            setConnectionError(true);
+            return;
+          }
           rollbar.error('Delete channel error', e);
           toast.error(t('toasts.networkError'));
         });

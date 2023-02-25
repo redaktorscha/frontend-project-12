@@ -27,6 +27,11 @@ export default {
       channelDeleted: 'Канал удалён',
       channelRenamed: 'Канал переименован',
     },
+    notification: {
+      loading: 'Загрузка...',
+      connectionAborted: 'Подключение прервано',
+      tryRefresh: 'Попробуйте обновить страницу',
+    },
     ui: {
       header: {
         btnLogout: 'Выйти',

@@ -26,6 +26,11 @@ export default {
       channelDeleted: 'Channel removed',
       channelRenamed: 'Channel renamed',
     },
+    notification: {
+      loading: 'Loading...',
+      connectionAborted: 'Connection aborted',
+      tryRefresh: 'Try refreshing the page',
+    },
     ui: {
       header: {
         btnLogout: 'Logout',
