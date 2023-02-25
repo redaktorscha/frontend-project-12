@@ -5,7 +5,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import filter from 'leo-profanity';
 import store from './slices/index.js';
 import App from './components/App';
-import ApiProvider from './components/providers/ApiProvider';
+import ChatApiProvider from './components/providers/ChatApiProvider';
 import AuthProvider from './components/providers/AuthProvider';
 import resources from './locales';
 
@@ -122,9 +122,9 @@ export default async (socketClient) => {
         <ReduxProvider store={store}>
           <I18nextProvider i18n={i18n}>
             <AuthProvider>
-              <ApiProvider functions={socketFunctions}>
+              <ChatApiProvider functions={socketFunctions}>
                 <App />
-              </ApiProvider>
+              </ChatApiProvider>
             </AuthProvider>
           </I18nextProvider>
         </ReduxProvider>

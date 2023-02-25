@@ -10,11 +10,11 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import filter from 'leo-profanity';
-import { useAuth, useChatAPI } from '../hooks';
+import { useAuth, useChatApi } from '../hooks';
 
 const AddMessageForm = ({ t, currentChannelId }) => {
   const { user: { username } } = useAuth();
-  const { sendMessage } = useChatAPI();
+  const { sendMessage } = useChatApi();
   const [inputValue, setInputValue] = useState('');
 
   const rollbar = useRollbar();

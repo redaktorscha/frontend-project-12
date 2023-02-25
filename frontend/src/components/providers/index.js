@@ -1,4 +1,4 @@
 import AuthProvider from './AuthProvider';
-import ApiProvider from './ApiProvider';
+import ChatApiProvider from './ChatApiProvider';
 
-export { AuthProvider, ApiProvider };
+export { AuthProvider, ChatApiProvider };

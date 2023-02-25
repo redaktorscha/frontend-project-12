@@ -7,11 +7,11 @@ import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { actions as modalActions } from '../../slices/modalSlice.js';
-import { useChatAPI } from '../../hooks';
+import { useChatApi } from '../../hooks';
 import Modal from './Modal';
 
 const DeleteChannelModal = () => {
-  const { removeChannel } = useChatAPI();
+  const { removeChannel } = useChatApi();
   const [isSending, setIsSending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();

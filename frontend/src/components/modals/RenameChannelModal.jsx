@@ -9,10 +9,10 @@ import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { actions as modalActions } from '../../slices/modalSlice.js';
 import Modal from './Modal';
 import ModalForm from './ModalForm';
-import { useChatAPI } from '../../hooks';
+import { useChatApi } from '../../hooks';
 
 const RenameChannelModal = () => {
-  const { renameChannel } = useChatAPI();
+  const { renameChannel } = useChatApi();
   const dispatch = useDispatch();
   const { t } = useTranslation();
 

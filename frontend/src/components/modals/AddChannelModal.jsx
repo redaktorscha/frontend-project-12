@@ -9,7 +9,7 @@ import { selectors as channelSelectors } from '../../slices/channelsSlice.js';
 import { actions as modalActions } from '../../slices/modalSlice.js';
 import Modal from './Modal';
 import ModalForm from './ModalForm';
-import { useChatAPI } from '../../hooks';
+import { useChatApi } from '../../hooks';
 
 const AddChannelModal = ({ setBtnFocused }) => {
   const { setModalType } = modalActions;
@@ -21,7 +21,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
 
   const { t } = useTranslation();
   const rollbar = useRollbar();
-  const { addNewChannel } = useChatAPI();
+  const { addNewChannel } = useChatApi();
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 

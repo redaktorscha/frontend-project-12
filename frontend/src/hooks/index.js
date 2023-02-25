@@ -1,7 +1,7 @@
 import useAuth from './useAuth';
 import useLocalStorage from './useLocalStorage';
-import useChatAPI from './useChatAPI';
+import useChatApi from './useChatApi';
 
 export {
-  useAuth, useLocalStorage, useChatAPI,
+  useAuth, useLocalStorage, useChatApi,
 };
