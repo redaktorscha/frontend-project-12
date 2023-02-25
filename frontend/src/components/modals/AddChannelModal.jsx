@@ -22,7 +22,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
   const { t } = useTranslation();
   const rollbar = useRollbar();
   const { addNewChannel } = useChatAPI();
-  const channels = useSelector(channelSelectors.selectAll) || [];
+  const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 
   const modalType = 'add';

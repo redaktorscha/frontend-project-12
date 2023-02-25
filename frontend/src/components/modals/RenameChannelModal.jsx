@@ -19,7 +19,7 @@ const RenameChannelModal = () => {
   const rollbar = useRollbar();
 
   const { targetChannel } = useSelector((state) => state.modal);
-  const channels = useSelector(channelSelectors.selectAll) || [];
+  const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 
   const { setModalType, setTargetChannel } = modalActions;

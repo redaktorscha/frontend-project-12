@@ -45,7 +45,7 @@ const Channel = ({
 
 const ChannelsList = ({ handleOpenModal }) => {
   const { setCurrentChannelId } = channelActions;
-  const channels = useSelector(channelSelectors.selectAll) || [];
+  const channels = useSelector(channelSelectors.selectAll);
   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const dispatch = useDispatch();
   const setChannel = (channelId) => () => dispatch(setCurrentChannelId({

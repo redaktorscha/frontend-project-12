@@ -44,7 +44,7 @@ const Main = () => {
   const currentChannelId = useSelector((state) => state.channels.currentChannelId) || null;
   const currentChannel = useSelector((state) => channelSelectors
     .selectById(state, currentChannelId)) || null;
-  const messages = useSelector(messagesSelectors.selectAll) || [];
+  const messages = useSelector(messagesSelectors.selectAll);
   const currentChannelMessages = messages.filter(({ channelId }) => channelId === currentChannelId);
   const messagesCount = currentChannelMessages?.length ?? 0;
 

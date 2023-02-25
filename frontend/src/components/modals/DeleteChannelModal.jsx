@@ -21,7 +21,7 @@ const DeleteChannelModal = () => {
   const rollbar = useRollbar();
 
   const { targetChannel } = useSelector((state) => state.modal);
-  const channels = useSelector(channelSelectors.selectAll) || [];
+  const channels = useSelector(channelSelectors.selectAll);
 
   const handleClose = () => {
     dispatch(setModalType({ type: null }));
