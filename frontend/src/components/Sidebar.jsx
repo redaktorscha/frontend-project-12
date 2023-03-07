@@ -16,18 +16,18 @@ const Sidebar = () => {
   const [btnFocused, setBtnFocused] = useState(false);
   const { type } = useSelector((state) => state.modal);
 
-  const { setModalType, setTargetChannel } = modalActions;
+  const { setModalType, setTargetChannelId } = modalActions;
   const buttonRef = useRef(null);
 
-  const handleOpenModal = (modalType, channel = null) => () => {
+  const handleOpenModal = (modalType, channelId = null) => () => {
     dispatch(setModalType({ type: modalType }));
-    if (channel !== null) {
-      dispatch(setTargetChannel({ targetChannel: channel }));
+    if (channelId !== null) {
+      dispatch(setTargetChannelId({ targetChannelId: channelId }));
     }
   };
 
   useEffect(() => {
-    if (btnFocused && type === 'null') {
+    if (btnFocused && type === null) {
       buttonRef.current.focus();
     } else {
       setBtnFocused(false);

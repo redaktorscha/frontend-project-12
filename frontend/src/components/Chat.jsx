@@ -55,7 +55,8 @@ const Chat = () => {
     };
 
     initChat();
-  }, [user, dispatch, setChannels, setCurrentChannelId, setMessages, rollbar, navigate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return (

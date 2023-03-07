@@ -1,4 +1,5 @@
 // ts-check
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
@@ -14,28 +15,28 @@ import { useChatApi } from '../../hooks';
 const AddChannelModal = ({ setBtnFocused }) => {
   const { setModalType } = modalActions;
   const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const rollbar = useRollbar();
+  const { addNewChannel, setConnectionError } = useChatApi();
+
+  const channels = useSelector(channelSelectors.selectAll);
+  const channelsNames = channels.map(({ name }) => name);
+
+  const [isSending, setIsSending] = useState(false);
+
   const handleClose = () => {
     dispatch(setModalType({ type: null }));
     setBtnFocused(true);
   };
 
-  const { t } = useTranslation();
-  const rollbar = useRollbar();
-  const { addNewChannel, setConnectionError } = useChatApi();
-  const channels = useSelector(channelSelectors.selectAll);
-  const channelsNames = channels.map(({ name }) => name);
-
-  const modalType = 'add';
-  const { type } = useSelector((state) => state.modal);
-  const shouldOpen = type === modalType;
-
   const handleAdd = async (data) => {
-    handleClose();
     const newChannel = {
       name: filter.clean(data.channelName.trim()),
     };
+    setIsSending(true);
     await addNewChannel(newChannel)
       .then(() => {
+        handleClose();
         toast.success(t('toasts.channelCreated'));
       })
       .catch((e) => {
@@ -47,6 +48,10 @@ const AddChannelModal = ({ setBtnFocused }) => {
         toast.error(t('toasts.networkError'));
       });
   };
+
+  const modalType = 'add';
+  const { type } = useSelector((state) => state.modal);
+  const shouldOpen = type === modalType;
 
   const addChannelSchema = yup
     .object()
@@ -72,6 +77,8 @@ const AddChannelModal = ({ setBtnFocused }) => {
           eventHandler={handleAdd}
           validationSchema={addChannelSchema}
           initialValues={{ channelName: '' }}
+          isSending={isSending}
+          setIsSending={setIsSending}
         />
       )}
       modalFooter={null}

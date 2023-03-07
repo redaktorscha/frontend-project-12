@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   type: null,
-  targetChannel: null,
+  targetChannelId: null,
 };
 
 const modalSlice = createSlice({
@@ -13,8 +13,8 @@ const modalSlice = createSlice({
     setModalType(state, { payload }) {
       state.type = payload.type;
     },
-    setTargetChannel(state, { payload }) {
-      state.targetChannel = payload.targetChannel;
+    setTargetChannelId(state, { payload }) {
+      state.targetChannelId = payload.targetChannelId;
     },
   },
 });

@@ -6,7 +6,7 @@ import { Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const ModalForm = ({
-  shouldOpen, handleClose, eventHandler, validationSchema, initialValues,
+  shouldOpen, handleClose, eventHandler, validationSchema, initialValues, isSending, setIsSending,
 }) => {
   const inputRef = useRef(null);
 
@@ -14,9 +14,10 @@ const ModalForm = ({
 
   useEffect(() => {
     if (shouldOpen) {
+      setIsSending(false);
       inputRef.current.focus();
     }
-  }, [shouldOpen]);
+  }, [setIsSending, shouldOpen]);
 
   return (
     <Formik
@@ -54,10 +55,10 @@ const ModalForm = ({
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="d-flex align-items-center justify-content-end pt-3">
-              <Button className="me-2" variant="secondary" onClick={handleClose} disabled={isSubmitting}>
+              <Button className="me-2" variant="secondary" onClick={handleClose} disabled={isSubmitting || isSending}>
                 {t('ui.modals.cancel')}
               </Button>
-              <Button type="submit" variant="primary" disabled={isSubmitting}>
+              <Button type="submit" variant="primary" disabled={isSubmitting || isSending}>
                 {t('ui.modals.send')}
               </Button>
             </Form.Group>

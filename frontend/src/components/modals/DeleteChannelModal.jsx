@@ -16,31 +16,32 @@ const DeleteChannelModal = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { setModalType, setTargetChannel } = modalActions;
+  const { setModalType, setTargetChannelId } = modalActions;
 
   const rollbar = useRollbar();
 
-  const { targetChannel } = useSelector((state) => state.modal);
+  const { targetChannelId } = useSelector((state) => state.modal);
   const channels = useSelector(channelSelectors.selectAll);
 
   const handleClose = () => {
     dispatch(setModalType({ type: null }));
-    dispatch(setTargetChannel({ targetChannel: null }));
+    dispatch(setTargetChannelId({ targetChannelId: null }));
   };
 
   const handleDelete = async () => {
     if (!channels) {
       return;
     }
-    handleClose();
-    const [{ id }] = channels
-      .filter(({ name, removable }) => removable && (name === targetChannel));
-    if (targetChannel) {
+    const { removable } = channels
+      .find(({ id }) => id === targetChannelId);
+
+    if (removable) {
       setIsSending(true);
 
-      const channelForDeletion = { id };
+      const channelForDeletion = { id: targetChannelId };
       await removeChannel(channelForDeletion)
         .then(() => {
+          handleClose();
           toast.success(t('toasts.channelDeleted'));
         })
         .catch((e) => {

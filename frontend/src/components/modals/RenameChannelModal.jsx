@@ -1,4 +1,5 @@
 // ts-check
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
@@ -15,33 +16,37 @@ const RenameChannelModal = () => {
   const { renameChannel, setConnectionError } = useChatApi();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const [isSending, setIsSending] = useState(false);
+  const { setModalType, setTargetChannelId } = modalActions;
 
   const rollbar = useRollbar();
 
-  const { targetChannel } = useSelector((state) => state.modal);
+  const { targetChannelId } = useSelector((state) => state.modal);
+
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 
-  const { setModalType, setTargetChannel } = modalActions;
-
   const handleClose = () => {
     dispatch(setModalType({ type: null }));
-    dispatch(setTargetChannel({ targetChannel: null }));
+    dispatch(setTargetChannelId({ targetChannelId: null }));
   };
 
   const handleRename = async (data) => {
     if (!channels) {
       return;
     }
-    const [{ id }] = channels
-      .filter(({ name, removable }) => removable && (name === targetChannel));
-    if (targetChannel) {
-      handleClose();
+    const { removable } = channels
+      .find(({ id }) => id === targetChannelId);
+
+    if (removable) {
+      setIsSending(true);
+
       const renamedChannel = {
-        id,
+        id: targetChannelId,
         name: filter.clean(data.channelName.trim()),
       };
       await renameChannel(renamedChannel).then(() => {
+        handleClose();
         toast.success(t('toasts.channelRenamed'));
       })
         .catch((e) => {
@@ -54,9 +59,11 @@ const RenameChannelModal = () => {
         });
     }
   };
+
   const modalType = 'rename';
   const { type } = useSelector((state) => state.modal);
   const shouldOpen = type === modalType;
+  const { name: channelName } = channels.find(({ id }) => id === targetChannelId) || '';
 
   const renameChannelSchema = yup
     .object()
@@ -81,7 +88,9 @@ const RenameChannelModal = () => {
           handleClose={handleClose}
           eventHandler={handleRename}
           validationSchema={renameChannelSchema}
-          initialValues={{ channelName: `${targetChannel}` }}
+          initialValues={{ channelName: `${channelName}` }}
+          isSending={isSending}
+          setIsSending={setIsSending}
         />
       )}
       modalFooter={null}
