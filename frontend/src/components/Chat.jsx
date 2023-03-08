@@ -1,5 +1,4 @@
 // ts-check
-import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRollbar } from '@rollbar/react';
@@ -22,10 +21,9 @@ import getAuthConfig from '../utils/getAuthConfig.js';
 const Chat = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { connectionError } = useChatApi();
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
   const { t } = useTranslation();
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const rollbar = useRollbar();
@@ -36,7 +34,6 @@ const Chat = () => {
   useEffect(() => {
     const initChat = async () => {
       const apiRoute = appRoutes.apiV1DataPath();
-      const loginRoute = appRoutes.loginPath();
 
       try {
         const authConfig = getAuthConfig(user.token);
@@ -49,8 +46,8 @@ const Chat = () => {
           setTimeout(() => setIsLoading(false), 2000);
         }
       } catch (e) {
+        logOut();
         rollbar.error('getChatDataErr', e);
-        navigate(loginRoute);
       }
     };
 
