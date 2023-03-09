@@ -24,14 +24,9 @@ export default async (socketClient) => {
   const { addMessage } = messagesActions;
 
   const sendMessage = async (payload) => new Promise((resolve, reject) => {
-    socketClient.timeout(3000).emit('newMessage', payload, (error, response) => {
+    socketClient.timeout(3000).emit('newMessage', payload, (error) => {
       if (error) {
-        reject(new Error('connection error'));
-        return;
-      }
-      const { status } = response;
-      if (status !== 'ok') {
-        reject(new Error('send message error'));
+        reject(new Error('network error'));
         return;
       }
       resolve();
@@ -45,16 +40,13 @@ export default async (socketClient) => {
   const addNewChannel = async (payload) => new Promise((resolve, reject) => {
     socketClient.timeout(3000).emit('newChannel', payload, (error, response) => {
       if (error) {
-        reject(new Error('connection error'));
+        reject(new Error('network error'));
         return;
       }
-      const { status, data } = response;
-      if (status === 'ok') {
-        store.dispatch(setCurrentChannelId({ currentChannelId: data.id }));
-        resolve();
-      } else {
-        reject(new Error('add channel error'));
-      }
+
+      const { data } = response;
+      store.dispatch(setCurrentChannelId({ currentChannelId: data.id }));
+      resolve();
     });
   });
 
@@ -63,17 +55,12 @@ export default async (socketClient) => {
   });
 
   const renameChannel = async (payload) => new Promise((resolve, reject) => {
-    socketClient.timeout(3000).emit('renameChannel', payload, (error, response) => {
+    socketClient.timeout(3000).emit('renameChannel', payload, (error) => {
       if (error) {
-        reject(new Error('connection error'));
+        reject(new Error('network error'));
         return;
       }
-      const { status } = response;
-      if (status === 'ok') {
-        resolve();
-      } else {
-        reject(new Error('rename channel error'));
-      }
+      resolve();
     });
   });
 
@@ -83,17 +70,12 @@ export default async (socketClient) => {
   });
 
   const removeChannel = async (payload) => new Promise((resolve, reject) => {
-    socketClient.timeout(3000).emit('removeChannel', payload, (error, response) => {
+    socketClient.timeout(3000).emit('removeChannel', payload, (error) => {
       if (error) {
-        reject(new Error('connection error'));
+        reject(new Error('network error'));
         return;
       }
-      const { status } = response;
-      if (status === 'ok') {
-        resolve();
-      } else {
-        reject(new Error('remove channel error'));
-      }
+      resolve();
     });
   });
 
