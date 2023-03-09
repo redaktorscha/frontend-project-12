@@ -1,5 +1,4 @@
 // ts-check
-import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
@@ -13,11 +12,10 @@ import ModalForm from './ModalForm';
 import { useChatApi } from '../../hooks';
 
 const RenameChannelModal = () => {
-  const { renameChannel, setConnectionError } = useChatApi();
+  const { renameChannel, setHasNetworkError } = useChatApi();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const [isSending, setIsSending] = useState(false);
-  const { setModalType, setTargetChannelId } = modalActions;
+  const { setModalType, setTargetChannelId, setIsClosed } = modalActions;
 
   const rollbar = useRollbar();
 
@@ -28,10 +26,11 @@ const RenameChannelModal = () => {
 
   const handleClose = () => {
     dispatch(setModalType({ type: null }));
+    dispatch(setIsClosed({ isOpen: false }));
     dispatch(setTargetChannelId({ targetChannelId: null }));
   };
 
-  const handleRename = async (data) => {
+  const handleRename = async (data, setFormSubmitting) => {
     if (!channels) {
       return;
     }
@@ -39,21 +38,18 @@ const RenameChannelModal = () => {
       .find(({ id }) => id === targetChannelId);
 
     if (removable) {
-      setIsSending(true);
-
       const renamedChannel = {
         id: targetChannelId,
         name: filter.clean(data.channelName.trim()),
       };
       await renameChannel(renamedChannel).then(() => {
         handleClose();
+        setFormSubmitting(false);
         toast.success(t('toasts.channelRenamed'));
       })
         .catch((e) => {
-          if (e.message === 'connection error') {
-            setConnectionError(true);
-            return;
-          }
+          setHasNetworkError(true);
+          setTimeout(() => setFormSubmitting(false), 2000);
           rollbar.error('Rename channel error', e);
           toast.error(t('toasts.networkError'));
         });
@@ -62,7 +58,8 @@ const RenameChannelModal = () => {
 
   const modalType = 'rename';
   const { type } = useSelector((state) => state.modal);
-  const shouldOpen = type === modalType;
+  const { isOpen } = useSelector(((state) => state.modal));
+  const shouldOpen = isOpen && type === modalType;
   const { name: channelName } = channels.find(({ id }) => id === targetChannelId) || '';
 
   const renameChannelSchema = yup
@@ -89,8 +86,6 @@ const RenameChannelModal = () => {
           eventHandler={handleRename}
           validationSchema={renameChannelSchema}
           initialValues={{ channelName: `${channelName}` }}
-          isSending={isSending}
-          setIsSending={setIsSending}
         />
       )}
       modalFooter={null}

@@ -1,5 +1,4 @@
 // ts-check
-import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
@@ -13,37 +12,35 @@ import ModalForm from './ModalForm';
 import { useChatApi } from '../../hooks';
 
 const AddChannelModal = ({ setBtnFocused }) => {
-  const { setModalType } = modalActions;
+  const { setModalType, setIsClosed } = modalActions;
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const rollbar = useRollbar();
-  const { addNewChannel, setConnectionError } = useChatApi();
+  const { addNewChannel, setHasNetworkError } = useChatApi();
 
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 
-  const [isSending, setIsSending] = useState(false);
-
   const handleClose = () => {
     dispatch(setModalType({ type: null }));
+    dispatch(setIsClosed({ isOpen: false }));
     setBtnFocused(true);
   };
 
-  const handleAdd = async (data) => {
+  const handleAdd = async (data, setFormSubmitting) => {
     const newChannel = {
       name: filter.clean(data.channelName.trim()),
     };
-    setIsSending(true);
+
     await addNewChannel(newChannel)
       .then(() => {
         handleClose();
+        setFormSubmitting(false);
         toast.success(t('toasts.channelCreated'));
       })
       .catch((e) => {
-        if (e.message === 'connection error') {
-          setConnectionError(true);
-          return;
-        }
+        setHasNetworkError(true);
+        setTimeout(() => setFormSubmitting(false), 2000);
         rollbar.error('Add channel error', e);
         toast.error(t('toasts.networkError'));
       });
@@ -51,7 +48,8 @@ const AddChannelModal = ({ setBtnFocused }) => {
 
   const modalType = 'add';
   const { type } = useSelector((state) => state.modal);
-  const shouldOpen = type === modalType;
+  const { isOpen } = useSelector(((state) => state.modal));
+  const shouldOpen = isOpen && type === modalType;
 
   const addChannelSchema = yup
     .object()
@@ -77,8 +75,6 @@ const AddChannelModal = ({ setBtnFocused }) => {
           eventHandler={handleAdd}
           validationSchema={addChannelSchema}
           initialValues={{ channelName: '' }}
-          isSending={isSending}
-          setIsSending={setIsSending}
         />
       )}
       modalFooter={null}

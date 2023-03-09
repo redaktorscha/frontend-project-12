@@ -1,5 +1,5 @@
 // ts-check
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useRollbar } from '@rollbar/react';
@@ -11,12 +11,12 @@ import { useChatApi } from '../../hooks';
 import Modal from './Modal';
 
 const DeleteChannelModal = () => {
-  const { removeChannel, setConnectionError } = useChatApi();
-  const [isSending, setIsSending] = useState(false);
+  const { removeChannel, setHasNetworkError } = useChatApi();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { setModalType, setTargetChannelId } = modalActions;
+  const { setModalType, setIsClosed, setTargetChannelId } = modalActions;
 
   const rollbar = useRollbar();
 
@@ -25,6 +25,7 @@ const DeleteChannelModal = () => {
 
   const handleClose = () => {
     dispatch(setModalType({ type: null }));
+    dispatch(setIsClosed({ isOpen: false }));
     dispatch(setTargetChannelId({ targetChannelId: null }));
   };
 
@@ -36,19 +37,18 @@ const DeleteChannelModal = () => {
       .find(({ id }) => id === targetChannelId);
 
     if (removable) {
-      setIsSending(true);
+      setIsSubmitting(true);
 
       const channelForDeletion = { id: targetChannelId };
       await removeChannel(channelForDeletion)
         .then(() => {
           handleClose();
+          setIsSubmitting(false);
           toast.success(t('toasts.channelDeleted'));
         })
         .catch((e) => {
-          if (e.message === 'connection error') {
-            setConnectionError(true);
-            return;
-          }
+          setHasNetworkError(true);
+          setTimeout(() => setIsSubmitting(false), 2000);
           rollbar.error('Delete channel error', e);
           toast.error(t('toasts.networkError'));
         });
@@ -57,13 +57,8 @@ const DeleteChannelModal = () => {
 
   const modalType = 'delete';
   const { type } = useSelector((state) => state.modal);
-  const shouldOpen = type === modalType;
-
-  useEffect(() => {
-    if (shouldOpen) {
-      setIsSending(false);
-    }
-  }, [shouldOpen]);
+  const { isOpen } = useSelector(((state) => state.modal));
+  const shouldOpen = isOpen && type === modalType;
 
   return (
     <Modal
@@ -73,10 +68,10 @@ const DeleteChannelModal = () => {
       modalBody={t('ui.modals.deleteChannelBody')}
       modalFooter={(
         <>
-          <Button variant="secondary" onClick={handleClose} disabled={isSending}>
+          <Button variant="secondary" onClick={handleClose} disabled={isSubmitting}>
             {t('ui.modals.cancel')}
           </Button>
-          <Button variant="danger" onClick={handleDelete} disabled={isSending}>
+          <Button variant="danger" onClick={handleDelete} disabled={isSubmitting}>
             {t('ui.modals.delete')}
           </Button>
         </>

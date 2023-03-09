@@ -7,7 +7,7 @@ import axios from 'axios';
 import {
   Container, Row, Spinner,
 } from 'react-bootstrap';
-import { useAuth, useChatApi } from '../hooks';
+import { useAuth } from '../hooks';
 import Sidebar from './Sidebar';
 import Main from './Main';
 import {
@@ -20,7 +20,7 @@ import getAuthConfig from '../utils/getAuthConfig.js';
 
 const Chat = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { connectionError } = useChatApi();
+  // const { hasNetworkError } = useChatApi();
   const { user, logOut } = useAuth();
   const { t } = useTranslation();
 
@@ -61,22 +61,6 @@ const Chat = () => {
         <Spinner className="loading-spinner" role="status" animation="border" variant="primary">
           <span className="visually-hidden">{t('notification.loading')}</span>
         </Spinner>
-      </Container>
-    );
-  }
-
-  if (connectionError) {
-    return (
-      <Container className="h-100 max-height-90 overflow-hidden rounded shadow d-flex justify-content-center align-items-center">
-        <div className="d-flex flex-column">
-          <div className="d-flex">
-            <Spinner size="sm" role="status" animation="grow" variant="secondary" />
-            <Spinner size="sm" role="status" animation="grow" variant="secondary" />
-            <Spinner size="sm" role="status" animation="grow" variant="secondary" />
-          </div>
-          <h4 className="text-muted">{t('notification.connectionAborted')}</h4>
-          <span className="text-muted">{t('notification.tryRefresh')}</span>
-        </div>
       </Container>
     );
   }

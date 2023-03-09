@@ -14,7 +14,7 @@ import { useAuth, useChatApi } from '../hooks';
 
 const AddMessageForm = ({ t, currentChannelId }) => {
   const { user: { username } } = useAuth();
-  const { sendMessage, setConnectionError } = useChatApi();
+  const { sendMessage, setHasNetworkError } = useChatApi();
   const [inputValue, setInputValue] = useState('');
 
   const rollbar = useRollbar();
@@ -39,7 +39,7 @@ const AddMessageForm = ({ t, currentChannelId }) => {
       initialValues={{
         message: '',
       }}
-      onSubmit={async (values, { resetForm }) => {
+      onSubmit={async (values, { resetForm, setSubmitting }) => {
         setInputValue('');
 
         const messageToSend = {
@@ -49,19 +49,20 @@ const AddMessageForm = ({ t, currentChannelId }) => {
         };
         resetForm({ values: { message: '' } });
         await sendMessage(messageToSend)
+          .then(() => {
+            setSubmitting(false);
+          })
           .catch((e) => {
-            if (e.message === 'connection error') {
-              setConnectionError(true);
-              return;
-            }
-            rollbar.error(e.message);
+            setHasNetworkError(true);
+            setTimeout(() => setSubmitting(false), 2000);
+            rollbar.error('add message error', e);
             toast.error(t('toasts.networkError'));
           });
       }}
     >
       {
       ({
-        handleChange, handleSubmit, values,
+        handleChange, handleSubmit, values, isSubmitting,
       }) => (
         <Form
           className="flex-fill border rounded-2 py-2 px-2"
@@ -86,7 +87,7 @@ const AddMessageForm = ({ t, currentChannelId }) => {
               autoComplete="off"
               ref={inputRef}
             />
-            <Button type="submit" variant="outline-light" className="btn btn-group-vertical" disabled={!inputValue}>
+            <Button type="submit" variant="outline-light" className="btn btn-group-vertical" disabled={!inputValue || isSubmitting}>
               <ArrowRightSquare size={20} title="add message" color="#212529" />
               <span className="visually-hidden">{t('ui.chat.send')}</span>
             </Button>
