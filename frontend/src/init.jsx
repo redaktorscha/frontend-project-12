@@ -96,7 +96,7 @@ export default async (socketClient) => {
     .use(initReactI18next)
     .init({
       lng: DEFAULT_LOCALE,
-      debug: true,
+      debug: false,
       resources,
       interpolation: {
         escapeValue: false,
