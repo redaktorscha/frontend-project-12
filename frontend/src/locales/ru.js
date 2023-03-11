@@ -1,8 +1,6 @@
 export default {
   translation: {
     errors: {
-      network: 'Ошибка соединения',
-      unknown: 'Неизвестная ошибка',
       required: 'Обязательное поле',
       login: {
         invalid: 'Неверные имя пользователя или пароль',
@@ -26,11 +24,10 @@ export default {
       channelCreated: 'Канал создан',
       channelDeleted: 'Канал удалён',
       channelRenamed: 'Канал переименован',
+      unknownError: 'Что-то пошло не так...',
     },
     notification: {
       loading: 'Загрузка...',
-      connectionAborted: 'Подключение прервано',
-      tryRefresh: 'Попробуйте обновить страницу',
     },
     ui: {
       header: {

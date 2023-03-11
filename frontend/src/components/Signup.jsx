@@ -73,7 +73,11 @@ const SignupForm = () => {
         setSignupError(t('errors.signup.exists'));
       } else {
         rollbar.error('signup error', e);
-        toast.error(t('toasts.networkError'));
+        if (e.isAxiosError) {
+          toast.error(t('toasts.networkError'));
+        } else {
+          toast.error(t('toasts.unknownError'));
+        }
       }
     }
   };

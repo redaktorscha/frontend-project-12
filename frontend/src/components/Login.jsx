@@ -63,7 +63,11 @@ const LoginForm = () => {
         setLoginError(t('errors.login.invalid'));
       } else {
         rollbar.error('login error', e);
-        toast.error(t('toasts.networkError'));
+        if (e.isAxiosError) {
+          toast.error(t('toasts.networkError'));
+        } else {
+          toast.error(t('toasts.unknownError'));
+        }
       }
     }
   };

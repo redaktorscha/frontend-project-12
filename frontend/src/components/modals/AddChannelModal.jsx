@@ -16,7 +16,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const rollbar = useRollbar();
-  const { addNewChannel, setHasNetworkError } = useChatApi();
+  const { addNewChannel } = useChatApi();
 
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
@@ -38,10 +38,13 @@ const AddChannelModal = ({ setBtnFocused }) => {
         toast.success(t('toasts.channelCreated'));
       })
       .catch((e) => {
-        setHasNetworkError(true);
+        if (e.message === 'network error') {
+          toast.error(t('toasts.networkError'));
+        } else {
+          toast.error(t('toasts.unknownError'));
+        }
         setTimeout(() => setFormSubmitting(false), 2000);
         rollbar.error('Add channel error', e);
-        toast.error(t('toasts.networkError'));
       });
   };
 

@@ -14,7 +14,7 @@ import { useAuth, useChatApi } from '../hooks';
 
 const AddMessageForm = ({ t, currentChannelId }) => {
   const { user: { username } } = useAuth();
-  const { sendMessage, setHasNetworkError } = useChatApi();
+  const { sendMessage } = useChatApi();
   const [inputValue, setInputValue] = useState('');
 
   const rollbar = useRollbar();
@@ -53,10 +53,13 @@ const AddMessageForm = ({ t, currentChannelId }) => {
             setSubmitting(false);
           })
           .catch((e) => {
-            setHasNetworkError(true);
+            if (e.message === 'network error') {
+              toast.error(t('toasts.networkError'));
+            } else {
+              toast.error(t('toasts.unknownError'));
+            }
             setTimeout(() => setSubmitting(false), 2000);
-            rollbar.error('add message error', e);
-            toast.error(t('toasts.networkError'));
+            rollbar.error('Add message error', e);
           });
       }}
     >

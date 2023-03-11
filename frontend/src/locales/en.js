@@ -1,8 +1,6 @@
 export default {
   translation: {
     errors: {
-      network: 'Network error',
-      unknown: 'Unknown error',
       login: {
         invalid: 'Wrong username or password',
         required: 'Required field',
@@ -25,11 +23,10 @@ export default {
       channelCreated: 'Channel created',
       channelDeleted: 'Channel removed',
       channelRenamed: 'Channel renamed',
+      unknownError: 'Something went wrong...',
     },
     notification: {
       loading: 'Loading...',
-      connectionAborted: 'Connection aborted',
-      tryRefresh: 'Try refreshing the page',
     },
     ui: {
       header: {

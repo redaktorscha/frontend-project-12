@@ -20,7 +20,6 @@ import getAuthConfig from '../utils/getAuthConfig.js';
 
 const Chat = () => {
   const [isLoading, setIsLoading] = useState(true);
-  // const { hasNetworkError } = useChatApi();
   const { user, logOut } = useAuth();
   const { t } = useTranslation();
 
@@ -46,6 +45,11 @@ const Chat = () => {
           setTimeout(() => setIsLoading(false), 2000);
         }
       } catch (e) {
+        if (e.isAxiosError) {
+          console.log(t('toasts.networkError'));
+        } else {
+          console.log(t('toasts.unknownError'));
+        }
         logOut();
         rollbar.error('getChatDataErr', e);
       }

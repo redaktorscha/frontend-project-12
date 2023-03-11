@@ -25,7 +25,7 @@ const Messages = ({ currentChannelMessages }) => {
     if (lastMessage) {
       lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
-  }, []);
+  }, [currentChannelMessages]);
 
   return (
     <div ref={messagesRef} className="d-flex flex-column h-100 w-100 overflow-auto px-3">
