@@ -16,7 +16,7 @@ const DeleteChannelModal = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { setModalType, setIsClosed, setTargetChannelId } = modalActions;
+  const { handleModal } = modalActions;
 
   const rollbar = useRollbar();
 
@@ -24,9 +24,7 @@ const DeleteChannelModal = () => {
   const channels = useSelector(channelSelectors.selectAll);
 
   const handleClose = () => {
-    dispatch(setModalType({ type: null }));
-    dispatch(setIsClosed({ isOpen: false }));
-    dispatch(setTargetChannelId({ targetChannelId: null }));
+    dispatch(handleModal({ type: null, isOpened: false, targetChannelId: null }));
   };
 
   const handleDelete = async () => {
@@ -57,8 +55,8 @@ const DeleteChannelModal = () => {
 
   const modalType = 'delete';
   const { type } = useSelector((state) => state.modal);
-  const { isOpen } = useSelector(((state) => state.modal));
-  const shouldOpen = isOpen && type === modalType;
+  const { isOpened } = useSelector(((state) => state.modal));
+  const shouldOpen = isOpened && type === modalType;
 
   return (
     <Modal

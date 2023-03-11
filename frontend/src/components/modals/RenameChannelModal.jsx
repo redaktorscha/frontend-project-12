@@ -15,7 +15,7 @@ const RenameChannelModal = () => {
   const { renameChannel, setHasNetworkError } = useChatApi();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { setModalType, setTargetChannelId, setIsClosed } = modalActions;
+  const { handleModal } = modalActions;
 
   const rollbar = useRollbar();
 
@@ -25,9 +25,7 @@ const RenameChannelModal = () => {
   const channelsNames = channels.map(({ name }) => name);
 
   const handleClose = () => {
-    dispatch(setModalType({ type: null }));
-    dispatch(setIsClosed({ isOpen: false }));
-    dispatch(setTargetChannelId({ targetChannelId: null }));
+    dispatch(handleModal({ type: null, isOpened: false, targetChannelId: null }));
   };
 
   const handleRename = async (data, setFormSubmitting) => {
@@ -48,6 +46,7 @@ const RenameChannelModal = () => {
         toast.success(t('toasts.channelRenamed'));
       })
         .catch((e) => {
+          console.log('error rename', e);
           setHasNetworkError(true);
           setTimeout(() => setFormSubmitting(false), 2000);
           rollbar.error('Rename channel error', e);
@@ -58,8 +57,8 @@ const RenameChannelModal = () => {
 
   const modalType = 'rename';
   const { type } = useSelector((state) => state.modal);
-  const { isOpen } = useSelector(((state) => state.modal));
-  const shouldOpen = isOpen && type === modalType;
+  const { isOpened } = useSelector(((state) => state.modal));
+  const shouldOpen = isOpened && type === modalType;
   const { name: channelName } = channels.find(({ id }) => id === targetChannelId) || '';
 
   const renameChannelSchema = yup

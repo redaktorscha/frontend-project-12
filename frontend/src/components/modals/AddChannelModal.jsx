@@ -12,7 +12,7 @@ import ModalForm from './ModalForm';
 import { useChatApi } from '../../hooks';
 
 const AddChannelModal = ({ setBtnFocused }) => {
-  const { setModalType, setIsClosed } = modalActions;
+  const { handleModal } = modalActions;
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const rollbar = useRollbar();
@@ -22,8 +22,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
   const channelsNames = channels.map(({ name }) => name);
 
   const handleClose = () => {
-    dispatch(setModalType({ type: null }));
-    dispatch(setIsClosed({ isOpen: false }));
+    dispatch(handleModal({ type: null, isOpened: false, targetChannelId: null }));
     setBtnFocused(true);
   };
 
@@ -48,8 +47,8 @@ const AddChannelModal = ({ setBtnFocused }) => {
 
   const modalType = 'add';
   const { type } = useSelector((state) => state.modal);
-  const { isOpen } = useSelector(((state) => state.modal));
-  const shouldOpen = isOpen && type === modalType;
+  const { isOpened } = useSelector(((state) => state.modal));
+  const shouldOpen = isOpened && type === modalType;
 
   const addChannelSchema = yup
     .object()
