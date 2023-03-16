@@ -15,7 +15,7 @@ const RenameChannelModal = () => {
   const { renameChannel } = useChatApi();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { handleModal } = modalActions;
+  const { handleClose } = modalActions;
 
   const rollbar = useRollbar();
 
@@ -24,8 +24,8 @@ const RenameChannelModal = () => {
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 
-  const handleClose = () => {
-    dispatch(handleModal({ type: null, isOpened: false, targetChannelId: null }));
+  const handleCloseModal = () => {
+    dispatch(handleClose({ type: null, isOpened: false, targetChannelId: null }));
   };
 
   const handleRename = async (data, setFormSubmitting) => {
@@ -41,7 +41,7 @@ const RenameChannelModal = () => {
         name: filter.clean(data.channelName.trim()),
       };
       await renameChannel(renamedChannel).then(() => {
-        handleClose();
+        handleCloseModal();
         setFormSubmitting(false);
         toast.success(t('toasts.channelRenamed'));
       })
@@ -78,12 +78,12 @@ const RenameChannelModal = () => {
   return (
     <Modal
       shouldOpen={shouldOpen}
-      handleClose={handleClose}
+      handleClose={handleCloseModal}
       modalTitle={t('ui.modals.renameChannelHeader')}
       modalBody={(
         <ModalForm
           shouldOpen={shouldOpen}
-          handleClose={handleClose}
+          handleClose={handleCloseModal}
           eventHandler={handleRename}
           validationSchema={renameChannelSchema}
           initialValues={{ channelName: `${channelName}` }}

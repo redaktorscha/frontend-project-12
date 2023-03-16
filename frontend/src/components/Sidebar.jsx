@@ -16,11 +16,11 @@ const Sidebar = () => {
   const [btnFocused, setBtnFocused] = useState(false);
   const { type } = useSelector((state) => state.modal);
 
-  const { handleModal } = modalActions;
+  const { handleOpen } = modalActions;
   const buttonRef = useRef(null);
 
   const handleOpenModal = (modalType, channelId = null) => () => {
-    dispatch(handleModal({ type: modalType, isOpened: true, targetChannelId: channelId }));
+    dispatch(handleOpen({ type: modalType, targetChannelId: channelId }));
   };
 
   useEffect(() => {

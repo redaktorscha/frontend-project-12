@@ -12,7 +12,7 @@ import ModalForm from './ModalForm';
 import { useChatApi } from '../../hooks';
 
 const AddChannelModal = ({ setBtnFocused }) => {
-  const { handleModal } = modalActions;
+  const { handleClose } = modalActions;
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const rollbar = useRollbar();
@@ -21,8 +21,8 @@ const AddChannelModal = ({ setBtnFocused }) => {
   const channels = useSelector(channelSelectors.selectAll);
   const channelsNames = channels.map(({ name }) => name);
 
-  const handleClose = () => {
-    dispatch(handleModal({ type: null, isOpened: false, targetChannelId: null }));
+  const handleCloseModal = () => {
+    dispatch(handleClose({ type: null, targetChannelId: null }));
     setBtnFocused(true);
   };
 
@@ -33,7 +33,7 @@ const AddChannelModal = ({ setBtnFocused }) => {
 
     await addNewChannel(newChannel)
       .then(() => {
-        handleClose();
+        handleCloseModal();
         setFormSubmitting(false);
         toast.success(t('toasts.channelCreated'));
       })
@@ -68,12 +68,12 @@ const AddChannelModal = ({ setBtnFocused }) => {
   return (
     <Modal
       shouldOpen={shouldOpen}
-      handleClose={handleClose}
+      handleClose={handleCloseModal}
       modalTitle={t('ui.modals.addChannelHeader')}
       modalBody={(
         <ModalForm
           shouldOpen={shouldOpen}
-          handleClose={handleClose}
+          handleClose={handleCloseModal}
           eventHandler={handleAdd}
           validationSchema={addChannelSchema}
           initialValues={{ channelName: '' }}

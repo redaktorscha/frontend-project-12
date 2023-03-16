@@ -16,15 +16,15 @@ const DeleteChannelModal = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { handleModal } = modalActions;
+  const { handleClose } = modalActions;
 
   const rollbar = useRollbar();
 
   const { targetChannelId } = useSelector((state) => state.modal);
   const channels = useSelector(channelSelectors.selectAll);
 
-  const handleClose = () => {
-    dispatch(handleModal({ type: null, isOpened: false, targetChannelId: null }));
+  const handleCloseModal = () => {
+    dispatch(handleClose({ type: null, targetChannelId: null }));
   };
 
   const handleDelete = async () => {
@@ -40,7 +40,7 @@ const DeleteChannelModal = () => {
       const channelForDeletion = { id: targetChannelId };
       await removeChannel(channelForDeletion)
         .then(() => {
-          handleClose();
+          handleCloseModal();
           setIsSubmitting(false);
           toast.success(t('toasts.channelDeleted'));
         })
@@ -64,12 +64,12 @@ const DeleteChannelModal = () => {
   return (
     <Modal
       shouldOpen={shouldOpen}
-      handleClose={handleClose}
+      handleClose={handleCloseModal}
       modalTitle={t('ui.modals.deleteChannelHeader')}
       modalBody={t('ui.modals.deleteChannelBody')}
       modalFooter={(
         <>
-          <Button variant="secondary" onClick={handleClose} disabled={isSubmitting}>
+          <Button variant="secondary" onClick={handleCloseModal} disabled={isSubmitting}>
             {t('ui.modals.cancel')}
           </Button>
           <Button variant="danger" onClick={handleDelete} disabled={isSubmitting}>
