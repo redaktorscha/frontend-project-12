@@ -19,8 +19,9 @@ const ChannelButton = ({ color, onClick, channelName }) => (
 );
 
 const Channel = ({
-  t, onClick, id, color, channelName, hasDropDown, handleOpenModal,
+  onClick, id, color, channelName, hasDropDown, handleOpenModal,
 }) => {
+  const { t } = useTranslation();
   const NavPill = (
     <ChannelButton color={color} onClick={onClick} channelName={channelName} />
   );
@@ -51,7 +52,6 @@ const ChannelsList = ({ handleOpenModal }) => {
   const setChannel = (channelId) => () => dispatch(setCurrentChannelId({
     currentChannelId: channelId,
   }));
-  const { t } = useTranslation();
 
   return (
     <div className="h-100 overflow-auto">
@@ -65,7 +65,6 @@ const ChannelsList = ({ handleOpenModal }) => {
 
           return (
             <Channel
-              t={t}
               handleOpenModal={handleOpenModal}
               onClick={setChannel(id)}
               key={id}

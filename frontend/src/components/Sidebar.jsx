@@ -46,7 +46,7 @@ const Sidebar = () => {
           <span className="visually-hidden">+</span>
         </Button>
       </div>
-      <ChannelsList t={t} handleOpenModal={handleOpenModal} />
+      <ChannelsList handleOpenModal={handleOpenModal} />
       <AddChannelModal setBtnFocused={setBtnFocused} />
       <DeleteChannelModal />
       <RenameChannelModal />

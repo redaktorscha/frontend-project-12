@@ -64,7 +64,7 @@ const Main = () => {
       </div>
       <Messages currentChannelMessages={currentChannelMessages} />
       <div className="px-3 py-4 mt-auto">
-        <AddMessageForm t={t} currentChannelId={currentChannelId} />
+        <AddMessageForm currentChannelId={currentChannelId} />
       </div>
     </Col>
   );

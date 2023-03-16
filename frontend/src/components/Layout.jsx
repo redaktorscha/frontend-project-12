@@ -34,32 +34,37 @@ const LanguagePicker = () => {
 };
 
 const Header = ({
-  t, logOut, hasBtn,
-}) => (
-  <Navbar expand="lg" className="flex-shrink-0 shadow-sm bg-white">
-    <Container>
-      <Link className="navbar-brand" to="/">Hexlet Chat</Link>
-      <LanguagePicker />
-      { hasBtn && <Button variant="primary" onClick={() => { logOut(); }}>{t('ui.header.btnLogout')}</Button>}
-    </Container>
-  </Navbar>
-);
+  logOut, hasBtn,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Navbar expand="lg" className="flex-shrink-0 shadow-sm bg-white">
+      <Container>
+        <Link className="navbar-brand" to="/">Hexlet Chat</Link>
+        <LanguagePicker />
+        { hasBtn && <Button variant="primary" onClick={() => { logOut(); }}>{t('ui.header.btnLogout')}</Button>}
+      </Container>
+    </Navbar>
+  );
+};
 
-const Footer = ({ t }) => (
-  <footer className="container-fluid mt-auto d-flex justify-content-center flex-shrink-0 bg-light border-top border-light">
-    <a
-      href="https://storyset.com/online"
-      target="_blank"
-      className="py-3 link-dark text-muted"
-      rel="noreferrer"
-    >
-      {t('ui.footer.picturesCopyright')}
-    </a>
-  </footer>
-);
+const Footer = () => {
+  const { t } = useTranslation();
+  return (
+    <footer className="container-fluid mt-auto d-flex justify-content-center flex-shrink-0 bg-light border-top border-light">
+      <a
+        href="https://storyset.com/online"
+        target="_blank"
+        className="py-3 link-dark text-muted"
+        rel="noreferrer"
+      >
+        {t('ui.footer.picturesCopyright')}
+      </a>
+    </footer>
+  );
+};
 
 const Layout = () => {
-  const { t } = useTranslation();
   const { logOut } = useAuth();
   const { pathname } = useLocation();
   const hasFooter = pathname !== rootRoute;
@@ -67,11 +72,11 @@ const Layout = () => {
 
   return (
     <div className="vh-100 d-flex flex-column justify-content-between bg-light">
-      <Header t={t} logOut={logOut} hasBtn={hasBtn} />
+      <Header logOut={logOut} hasBtn={hasBtn} />
       <main className="d-flex align-items-center flex-grow-1 my-auto py-2">
         <Outlet />
       </main>
-      {hasFooter && <Footer t={t} />}
+      {hasFooter && <Footer />}
       <ToastContainer />
     </div>
   );

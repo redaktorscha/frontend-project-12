@@ -10,12 +10,14 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import filter from 'leo-profanity';
+import { useTranslation } from 'react-i18next';
 import { useAuth, useChatApi } from '../hooks';
 
-const AddMessageForm = ({ t, currentChannelId }) => {
+const AddMessageForm = ({ currentChannelId }) => {
   const { user: { username } } = useAuth();
   const { sendMessage } = useChatApi();
   const [inputValue, setInputValue] = useState('');
+  const { t } = useTranslation();
 
   const rollbar = useRollbar();
   const inputRef = useRef(null);
