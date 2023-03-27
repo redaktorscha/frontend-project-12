@@ -7,6 +7,7 @@
 - add, rename, remove channels
 - profanity filter
 - change language, supported locales: ru (default), en
+- toast notifications
 
 ### Technologies:
 - [React](https://reactjs.org/)
