@@ -28,6 +28,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/1c691bc60420376f7684/maintainability)](https://codeclimate.com/github/redaktorscha/frontend-project-12/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/1c691bc60420376f7684/test_coverage)](https://codeclimate.com/github/redaktorscha/frontend-project-12/test_coverage)
 
+
 ### Setup
 ```
 make install
