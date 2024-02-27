@@ -24,7 +24,6 @@
 - [react-toastify](https://www.npmjs.com/package/react-toastify)
 - [leo-profanity](https://github.com/jojoee/leo-profanity)
 - [Github Actions](https://github.com/features/actions)
-- [Railway](https://https://railway.app/)
 
 ### Hexlet tests and linter status:
 
